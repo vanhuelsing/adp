@@ -294,248 +294,6 @@
       line-height: 1.7;
     }
 
-    /* ─── HOW IT WORKS ─── */
-    #how { background: var(--surface); }
-
-    .steps {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1px;
-      margin-top: 64px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
-    }
-
-    .step {
-      background: var(--surface2);
-      padding: 40px;
-      position: relative;
-      transition: background 0.2s;
-    }
-    .step:hover { background: var(--surface3); }
-
-    .step-num {
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      color: var(--accent);
-      font-family: 'JetBrains Mono', monospace;
-      margin-bottom: 20px;
-      display: block;
-    }
-
-    .step-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: var(--radius-sm);
-      background: var(--accent-dim);
-      border: 1px solid var(--accent-border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 20px;
-      font-size: 1.2rem;
-    }
-
-    .step h3 {
-      font-size: 1.15rem;
-      font-weight: 700;
-      margin-bottom: 10px;
-      letter-spacing: -0.01em;
-    }
-
-    .step p {
-      color: var(--muted);
-      font-size: 0.9rem;
-      line-height: 1.65;
-    }
-
-    .step-connector {
-      position: absolute;
-      right: -1px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--accent);
-      font-size: 1rem;
-      z-index: 1;
-    }
-
-    /* ─── MARKET TABLE ─── */
-    .market-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 32px;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-
-    .live-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(63, 185, 80, 0.1);
-      border: 1px solid rgba(63, 185, 80, 0.25);
-      border-radius: 100px;
-      padding: 5px 12px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--green);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-
-    .live-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--green);
-      animation: pulse 1.5s infinite;
-    }
-
-    .table-wrap {
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.9rem;
-    }
-
-    thead tr {
-      background: var(--surface2);
-    }
-
-    thead th {
-      padding: 14px 20px;
-      text-align: left;
-      font-size: 0.75rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--muted);
-      border-bottom: 1px solid var(--border);
-    }
-
-    tbody tr {
-      border-bottom: 1px solid var(--border);
-      transition: background 0.15s;
-    }
-    tbody tr:last-child { border-bottom: none; }
-    tbody tr:hover { background: var(--surface2); }
-
-    tbody td {
-      padding: 16px 20px;
-      vertical-align: middle;
-    }
-
-    .provider-cell {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .provider-icon {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.85rem;
-      font-weight: 700;
-      flex-shrink: 0;
-    }
-
-    .provider-name { font-weight: 600; color: var(--text); }
-    .model-name { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; color: var(--text-sub); }
-
-    .price-cell {
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 500;
-      color: var(--text);
-      transition: color 0.3s;
-    }
-
-    .change-up {
-      color: var(--green);
-      font-size: 0.82rem;
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 500;
-    }
-    .change-down {
-      color: var(--red);
-      font-size: 0.82rem;
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 500;
-    }
-
-    .volume-bar-wrap {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .volume-bar {
-      height: 4px;
-      border-radius: 2px;
-      background: linear-gradient(90deg, var(--accent), var(--accent2));
-      min-width: 20px;
-      max-width: 80px;
-    }
-    .volume-label { color: var(--muted); font-size: 0.78rem; }
-
-    /* ─── WHY ─── */
-    #why { background: var(--surface); }
-
-    .features {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 24px;
-      margin-top: 64px;
-    }
-
-    .feature-card {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 32px;
-      transition: border-color 0.2s, transform 0.2s;
-    }
-    .feature-card:hover {
-      border-color: var(--accent-border);
-      transform: translateY(-2px);
-    }
-
-    .feature-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: var(--radius-sm);
-      background: var(--accent-dim);
-      border: 1px solid var(--accent-border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.1rem;
-      margin-bottom: 20px;
-    }
-
-    .feature-card h3 {
-      font-size: 1rem;
-      font-weight: 700;
-      margin-bottom: 8px;
-      letter-spacing: -0.01em;
-    }
-
-    .feature-card p {
-      color: var(--muted);
-      font-size: 0.875rem;
-      line-height: 1.65;
-    }
-
     /* ─── CODE SECTION ─── */
     #code {
       background: var(--bg);
@@ -655,116 +413,6 @@
       50% { opacity: 0; }
     }
 
-    /* ─── EARLY ACCESS MODAL ─── */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(8, 12, 16, 0.85);
-      backdrop-filter: blur(8px);
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s;
-    }
-    .modal-overlay.open {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    .modal {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 40px;
-      max-width: 480px;
-      width: 100%;
-      position: relative;
-      transform: translateY(16px);
-      transition: transform 0.25s;
-    }
-    .modal-overlay.open .modal {
-      transform: translateY(0);
-    }
-
-    .modal-close {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      background: transparent;
-      border: none;
-      color: var(--muted);
-      font-size: 1.2rem;
-      cursor: pointer;
-      padding: 4px 8px;
-      border-radius: 4px;
-      transition: color 0.2s;
-    }
-    .modal-close:hover { color: var(--text); }
-
-    .modal h2 {
-      font-size: 1.5rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      margin-bottom: 8px;
-    }
-
-    .modal p {
-      color: var(--muted);
-      font-size: 0.9rem;
-      margin-bottom: 28px;
-      line-height: 1.6;
-    }
-
-    .email-form {
-      display: flex;
-      gap: 10px;
-      flex-direction: column;
-    }
-
-    .email-input {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 13px 16px;
-      color: var(--text);
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.9rem;
-      outline: none;
-      transition: border-color 0.2s;
-      width: 100%;
-    }
-    .email-input::placeholder { color: var(--muted); }
-    .email-input:focus { border-color: var(--accent-border); }
-
-    .form-submit {
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      color: #080c10;
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 700;
-      font-size: 0.95rem;
-      padding: 13px;
-      border: none;
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      width: 100%;
-      transition: opacity 0.2s, transform 0.15s;
-    }
-    .form-submit:hover {
-      opacity: 0.9;
-      transform: translateY(-1px);
-    }
-
-    .form-note {
-      font-size: 0.75rem;
-      color: var(--muted);
-      text-align: center;
-      margin-top: 8px;
-    }
-
     /* ─── FOOTER ─── */
     footer {
       background: var(--surface);
@@ -810,25 +458,10 @@
       border-top: 1px solid var(--border);
     }
 
-    /* ─── PRICE FLASH ANIMATION ─── */
-    @keyframes flash-up {
-      0% { color: var(--text); }
-      30% { color: var(--green); }
-      100% { color: var(--text); }
-    }
-    @keyframes flash-down {
-      0% { color: var(--text); }
-      30% { color: var(--red); }
-      100% { color: var(--text); }
-    }
-    .flash-up { animation: flash-up 0.8s ease; }
-    .flash-down { animation: flash-down 0.8s ease; }
-
     /* ─── RESPONSIVE ─── */
     @media (max-width: 640px) {
       section { padding: 72px 16px; }
       .hero { padding: 100px 16px 60px; }
-      thead th:nth-child(4), tbody td:nth-child(4) { display: none; }
     }
   </style>
 </head>
@@ -844,10 +477,7 @@
   <nav>
     <a href="#" class="logo"><span>APIDeals</span><span>.ai</span></a>
     <ul class="nav-links">
-      <li><a href="#how">How it works</a></li>
-      <li><a href="#market">Market</a></li>
-      <li><a href="#why">Why APIDeals</a></li>
-      <li><a href="#" class="nav-cta" onclick="openModal(event)">Get Early Access</a></li>
+
     </ul>
   </nav>
 
@@ -865,112 +495,14 @@
     </p>
 
     <div class="hero-actions">
-      <button class="btn-primary" onclick="openModal(event)">
-        ⚡ Get Early Access
-      </button>
-      <a href="#market" class="btn-secondary">
-        → View live market
+      <a href="mailto:hello@apideals.ai" class="btn-primary">
+        ✉️ Get in touch
       </a>
     </div>
 
     <div class="ticker-wrap">
       <div class="ticker-track" id="ticker-track">
         <!-- filled by JS -->
-      </div>
-    </div>
-  </section>
-
-  <!-- HOW IT WORKS -->
-  <section id="how">
-    <div class="section-inner">
-      <p class="section-label">How it works</p>
-      <h2 class="section-title">From zero to production in minutes.</h2>
-      <p class="section-sub">No lengthy onboarding. No sales calls. Just an API key and you're trading.</p>
-
-      <div class="steps">
-        <div class="step">
-          <span class="step-num">// 01</span>
-          <div class="step-icon">🔑</div>
-          <h3>Connect your stack</h3>
-          <p>Get your API key in under 60 seconds. Drop it into your existing code — it's fully compatible with OpenAI's SDK. Zero refactoring required.</p>
-        </div>
-        <div class="step">
-          <span class="step-num">// 02</span>
-          <div class="step-icon">📈</div>
-          <h3>Set your price</h3>
-          <p>Bid for capacity at the price you want, or buy instantly at market rate. Dynamic routing always finds the best deal across all providers.</p>
-        </div>
-        <div class="step">
-          <span class="step-num">// 03</span>
-          <div class="step-icon">⚡</div>
-          <h3>Scale freely</h3>
-          <p>Automatic failover across providers means your app keeps running even when one goes down. One endpoint, all the resilience.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- LIVE MARKET -->
-  <section id="market">
-    <div class="section-inner">
-      <div class="market-header">
-        <div>
-          <p class="section-label">Live market</p>
-          <h2 class="section-title" style="margin-bottom:0">Compute prices, right now.</h2>
-        </div>
-        <div class="live-badge">
-          <span class="live-dot"></span>
-          Live — updates every few seconds
-        </div>
-      </div>
-
-      <div class="table-wrap">
-        <table id="market-table">
-          <thead>
-            <tr>
-              <th>Provider</th>
-              <th>Model</th>
-              <th>Market Price <span style="font-weight:400;opacity:0.6">/ 1M tokens</span></th>
-              <th>24h Change</th>
-              <th>Volume</th>
-            </tr>
-          </thead>
-          <tbody id="market-tbody">
-            <!-- filled by JS -->
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </section>
-
-  <!-- WHY APIDEALS -->
-  <section id="why">
-    <div class="section-inner">
-      <p class="section-label">Why APIDeals</p>
-      <h2 class="section-title">Every advantage. No tradeoffs.</h2>
-      <p class="section-sub">We built this because paying vendor-set prices for compute is like paying a monopoly for electricity.</p>
-
-      <div class="features">
-        <div class="feature-card">
-          <div class="feature-icon">💹</div>
-          <h3>Price Discovery</h3>
-          <p>Real market rates set by supply and demand — not by what OpenAI's finance team decided. Average 23% below vendor list prices.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">🔓</div>
-          <h3>Zero Lock-in</h3>
-          <p>Switch providers in one line of code. Use <code style="font-family:'JetBrains Mono',monospace;color:var(--accent);font-size:0.8rem">model: 'auto'</code> and we pick the cheapest available model for your use case.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">🛡️</div>
-          <h3>99.9% Uptime</h3>
-          <p>One provider goes down? Traffic reroutes automatically within 150ms. Your users never notice. Your on-call rotation stays quiet.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">📊</div>
-          <h3>Usage Analytics</h3>
-          <p>Cost breakdown by model, endpoint, and team. Know exactly where your budget goes. Export to Grafana, Datadog, or raw JSON.</p>
-        </div>
       </div>
     </div>
   </section>
@@ -1033,20 +565,6 @@
     <div class="footer-copy">© 2026 APIDeals.ai — The LLM Compute Exchange</div>
   </footer>
 
-</div>
-
-<!-- MODAL -->
-<div class="modal-overlay" id="modal-overlay" onclick="closeModalOnBg(event)">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal()">✕</button>
-    <h2>Get Early Access</h2>
-    <p>We're onboarding developers in waves. Drop your email and we'll reach out when your spot is ready — usually within 48h.</p>
-    <div class="email-form">
-      <input class="email-input" type="email" id="email-input" placeholder="you@yourcompany.com" />
-      <button class="form-submit" onclick="submitEmail()">Claim your spot →</button>
-      <p class="form-note">No spam. No marketing sequences. Just one email when you're in.</p>
-    </div>
-  </div>
 </div>
 
 <script>
@@ -1132,67 +650,6 @@ function buildTicker() {
 buildTicker();
 
 // ═══════════════════════════════════════════════
-// MARKET TABLE DATA
-// ═══════════════════════════════════════════════
-const MARKET_DATA = [
-  { provider: 'OpenAI',    icon: '⬛', color: '#10a37f', bg: '#0a2318', model: 'gpt-4o',              price: 5.00,  change: +1.2,  volume: 85 },
-  { provider: 'Anthropic', icon: '🔶', color: '#cc785c', bg: '#2a1810', model: 'claude-3-5-sonnet',   price: 3.00,  change: -0.8,  volume: 72 },
-  { provider: 'Google',    icon: '🔷', color: '#4285f4', bg: '#0d1a2e', model: 'gemini-1.5-pro',      price: 3.50,  change: +0.4,  volume: 61 },
-  { provider: 'Mistral',   icon: '🟧', color: '#f7931a', bg: '#2a1a00', model: 'mistral-large',       price: 2.00,  change: -1.5,  volume: 48 },
-  { provider: 'Meta',      icon: '🟦', color: '#0082fb', bg: '#0a1a2e', model: 'llama-3.1-405b',      price: 1.80,  change: +2.1,  volume: 55 },
-  { provider: 'Cohere',    icon: '🟩', color: '#39d353', bg: '#0a2218', model: 'command-r-plus',      price: 2.50,  change: -0.3,  volume: 38 },
-];
-
-let tableState = MARKET_DATA.map(d => ({ ...d }));
-
-function renderTable() {
-  const tbody = document.getElementById('market-tbody');
-  tbody.innerHTML = tableState.map((r, i) => `
-    <tr>
-      <td>
-        <div class="provider-cell">
-          <div class="provider-icon" style="background:${r.bg};color:${r.color}">${r.icon}</div>
-          <span class="provider-name">${r.provider}</span>
-        </div>
-      </td>
-      <td><span class="model-name">${r.model}</span></td>
-      <td><span class="price-cell" id="price-${i}">$${r.price.toFixed(2)}</span></td>
-      <td><span class="${r.change >= 0 ? 'change-up' : 'change-down'}" id="change-${i}">${r.change >= 0 ? '▲' : '▼'} ${Math.abs(r.change).toFixed(1)}%</span></td>
-      <td>
-        <div class="volume-bar-wrap">
-          <div class="volume-bar" style="width:${r.volume}px"></div>
-          <span class="volume-label">${r.volume}k req/s</span>
-        </div>
-      </td>
-    </tr>
-  `).join('');
-}
-
-renderTable();
-
-function updatePrices() {
-  tableState.forEach((r, i) => {
-    const delta = (Math.random() - 0.48) * 0.12;
-    r.price = Math.max(0.01, r.price + delta);
-    r.change = r.change + (Math.random() - 0.5) * 0.3;
-
-    const priceEl = document.getElementById(`price-${i}`);
-    const changeEl = document.getElementById(`change-${i}`);
-    if (!priceEl) return;
-
-    const dir = delta > 0 ? 'up' : 'down';
-    priceEl.className = `price-cell flash-${dir}`;
-    setTimeout(() => { priceEl.className = 'price-cell'; }, 800);
-
-    priceEl.textContent = `$${r.price.toFixed(2)}`;
-    changeEl.className = r.change >= 0 ? 'change-up' : 'change-down';
-    changeEl.textContent = `${r.change >= 0 ? '▲' : '▼'} ${Math.abs(r.change).toFixed(1)}%`;
-  });
-}
-
-setInterval(updatePrices, 3200);
-
-// ═══════════════════════════════════════════════
 // CODE TYPEWRITER
 // ═══════════════════════════════════════════════
 const CODE_LINES = [
@@ -1257,46 +714,6 @@ function typeNextLine() {
 }
 
 typeNextLine();
-
-// ═══════════════════════════════════════════════
-// MODAL
-// ═══════════════════════════════════════════════
-function openModal(e) {
-  if (e) e.preventDefault();
-  document.getElementById('modal-overlay').classList.add('open');
-  setTimeout(() => document.getElementById('email-input').focus(), 200);
-}
-
-function closeModal() {
-  document.getElementById('modal-overlay').classList.remove('open');
-}
-
-function closeModalOnBg(e) {
-  if (e.target === document.getElementById('modal-overlay')) closeModal();
-}
-
-function submitEmail() {
-  const val = document.getElementById('email-input').value.trim();
-  if (!val || !val.includes('@')) {
-    document.getElementById('email-input').style.borderColor = 'var(--red)';
-    setTimeout(() => {
-      document.getElementById('email-input').style.borderColor = '';
-    }, 1500);
-    return;
-  }
-  // Simple mailto fallback — swap for a real endpoint later
-  const subject = encodeURIComponent('Early Access Request — APIDeals.ai');
-  const body = encodeURIComponent(`Email: ${val}\n\nRequesting early access to APIDeals.ai`);
-  // Silently capture — show success state
-  document.querySelector('.modal h2').textContent = "You're in. 🎉";
-  document.querySelector('.modal p').textContent = `We'll ping ${val} within 48 hours. Ship something cool in the meantime.`;
-  document.querySelector('.email-form').style.display = 'none';
-}
-
-// Close on Escape
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeModal();
-});
 </script>
 </body>
 </html>
