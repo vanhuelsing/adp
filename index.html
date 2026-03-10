@@ -116,31 +116,8 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 120px 24px 80px;
+      padding: 80px 24px;
       text-align: center;
-    }
-
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--accent-dim);
-      border: 1px solid var(--accent-border);
-      border-radius: 100px;
-      padding: 6px 16px;
-      font-size: 0.8rem;
-      font-weight: 500;
-      color: var(--accent);
-      margin-bottom: 32px;
-      letter-spacing: 0.04em;
-    }
-
-    .hero-badge .dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--accent);
-      animation: pulse 2s infinite;
     }
 
     @keyframes pulse {
@@ -178,7 +155,7 @@
       gap: 12px;
       flex-wrap: wrap;
       justify-content: center;
-      margin-bottom: 64px;
+      margin-bottom: 48px;
     }
 
     .btn-primary {
@@ -223,6 +200,30 @@
       background: var(--accent-dim);
     }
 
+    /* ─── BETA BADGE (unter Ticker) ─── */
+    .beta-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 16px;
+      padding: 4px 12px;
+      background: rgba(0, 212, 255, 0.08);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      border-radius: 20px;
+      font-size: 0.72rem;
+      color: #00d4ff;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+    .beta-dot {
+      width: 6px;
+      height: 6px;
+      background: #00d4ff;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
     /* ─── LIVE TICKER ─── */
     .ticker-wrap {
       width: 100%;
@@ -262,7 +263,7 @@
 
     /* ─── SECTION COMMON ─── */
     section {
-      padding: 100px 24px;
+      padding: 80px 24px;
     }
 
     .section-inner {
@@ -297,6 +298,8 @@
     /* ─── CODE SECTION ─── */
     #code {
       background: var(--bg);
+      padding-top: 60px;
+      padding-bottom: 80px;
     }
 
     .code-layout {
@@ -304,7 +307,7 @@
       grid-template-columns: 1fr 1fr;
       gap: 64px;
       align-items: center;
-      margin-top: 64px;
+      margin-top: 0;
     }
 
     @media (max-width: 768px) {
@@ -417,7 +420,7 @@
     footer {
       background: var(--surface);
       border-top: 1px solid var(--border);
-      padding: 48px 24px;
+      padding: 40px 24px;
     }
 
     .footer-inner {
@@ -460,8 +463,10 @@
 
     /* ─── RESPONSIVE ─── */
     @media (max-width: 640px) {
-      section { padding: 72px 16px; }
-      .hero { padding: 100px 16px 60px; }
+      section { padding: 64px 16px; }
+      .hero { padding: 80px 16px; }
+      #code { padding-top: 40px; padding-bottom: 64px; }
+      footer { padding: 32px 16px; }
     }
   </style>
 </head>
@@ -483,11 +488,6 @@
 
   <!-- HERO -->
   <section class="hero">
-    <div class="hero-badge">
-      <span class="dot"></span>
-      Now in private beta — 40+ providers live
-    </div>
-
     <h1>The API Exchange.<br /><span class="gradient">Buy compute at market price.</span></h1>
 
     <p class="hero-sub">
@@ -504,6 +504,11 @@
       <div class="ticker-track" id="ticker-track">
         <!-- filled by JS -->
       </div>
+    </div>
+
+    <div class="beta-badge">
+      <span class="beta-dot"></span>
+      Beta
     </div>
   </section>
 
