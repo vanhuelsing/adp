@@ -3,7 +3,7 @@
 **Version:** 0.1.1-draft  
 **Erstellt:** 2026-03-09  
 **Überarbeitet:** 2026-03-10  
-**Autor:** Luca & Dani
+**Autor:** apideals.ai
 **Status:** REVISED (2026-03-10)  
 **Lizenz (Spezifikation):** CC-BY 4.0  
 **Lizenz (SDKs & Code):** Apache 2.0  
@@ -961,7 +961,7 @@ deal-protocol/
 
 | Phase | Governance | Wer entscheidet? |
 |-------|-----------|-----------------|
-| v0.x (jetzt) | **BDFL** (Benevolent Dictator) | apideals.ai Team (Dani + Luca 🦊) |
+| v0.x (jetzt) | **BDFL** (Benevolent Dictator) | apideals.ai |
 | v1.0 | **RFC-Prozess** | Community-Proposals via GitHub Issues mit Label `rfc` |
 | v2.0+ | **Steering Committee** | Anbieter-Vertreter + Community-Maintainer |
 
@@ -1406,5 +1406,5 @@ Jede ADP-Nachricht darf ein optionales `extensions`-Objekt enthalten:
 
 *Ende der Spezifikation v0.1.1*
 
-*Erstellt durch den Protocol Architect Subagent für apideals.ai, koordiniert von Luca (🦊)*  
+  
 *Überarbeitet nach Multi-Rollen-Review (Jurist, Consultant, Backend Dev, QA Engineer)*
