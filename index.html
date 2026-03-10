@@ -623,31 +623,87 @@
 // ═══════════════════════════════════════════════
 // TICKER DATA & LOGIC
 // ═══════════════════════════════════════════════
-const TICKER_MODELS = [
-  { label: 'GPT-4o', price: 5.00, change: +1.2 },
-  { label: 'Claude 3.5 Sonnet', price: 3.00, change: -0.8 },
-  { label: 'Gemini 1.5 Pro', price: 3.50, change: +0.4 },
-  { label: 'Mistral Large', price: 2.00, change: -1.5 },
-  { label: 'Llama 3.1 405B', price: 1.80, change: +2.1 },
-  { label: 'Command R+', price: 2.50, change: -0.3 },
-  { label: 'GPT-4o mini', price: 0.15, change: +0.6 },
-  { label: 'Claude Haiku', price: 0.25, change: -0.9 },
+
+// Fallback data in case Supabase is unreachable
+const TICKER_FALLBACK = [
+  { label: 'GPT-4o', price: 5.00 },
+  { label: 'Claude 3.5 Sonnet', price: 3.00 },
+  { label: 'Gemini 1.5 Pro', price: 3.50 },
+  { label: 'Mistral Large', price: 2.00 },
+  { label: 'Llama 3.1 405B', price: 1.80 },
+  { label: 'Command R+', price: 2.50 },
+  { label: 'GPT-4o mini', price: 0.15 },
+  { label: 'Claude Haiku', price: 0.25 },
 ];
 
-function buildTicker() {
+// Preferred providers to feature in the ticker
+const PREFERRED_PROVIDERS = new Set([
+  'openai', 'anthropic', 'google', 'mistralai', 'meta-llama'
+]);
+
+const SUPABASE_URL = 'REDACTED_SUPABASE_URL';
+const SUPABASE_ANON_KEY = 'REDACTED_ANON_KEY';
+
+function buildTickerHTML(models) {
   const track = document.getElementById('ticker-track');
-  const items = [...TICKER_MODELS, ...TICKER_MODELS]; // duplicate for seamless loop
+  // Duplicate for seamless infinite scroll
+  const items = [...models, ...models];
   track.innerHTML = items.map(m => {
-    const dir = m.change >= 0 ? 'up' : 'down';
-    const sign = m.change >= 0 ? '▲' : '▼';
     return `<span class="ticker-item">
       <span class="ticker-model">${m.label}</span>
-      <span class="ticker-price">$${m.price.toFixed(2)}</span>
-      <span class="ticker-change-${dir}">${sign} ${Math.abs(m.change)}%</span>
+      <span class="ticker-price">$${m.price.toFixed(2)}/1M</span>
     </span><span class="ticker-sep">│</span>`;
   }).join('');
 }
-buildTicker();
+
+async function fetchTickerFromSupabase() {
+  const endpoint = `${SUPABASE_URL}/rest/v1/price_snapshots_raw`
+    + `?select=openrouter_id,name,input_price,output_price,provider_slug`
+    + `&order=input_price.asc`
+    + `&limit=50`;
+
+  const res = await fetch(endpoint, {
+    headers: {
+      'apikey': SUPABASE_ANON_KEY,
+      'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+    }
+  });
+
+  if (!res.ok) throw new Error(`Supabase responded with ${res.status}`);
+
+  const data = await res.json();
+  if (!Array.isArray(data) || data.length === 0) throw new Error('Empty response from Supabase');
+
+  // Prefer rows from known top providers; fall back to all rows
+  const preferred = data.filter(row =>
+    row.provider_slug && PREFERRED_PROVIDERS.has(row.provider_slug.toLowerCase())
+  );
+  const pool = preferred.length >= 5 ? preferred : data;
+
+  // Take the 20 cheapest (already ordered asc from API), skip rows without a price or name
+  const models = pool
+    .filter(row => row.name && typeof row.input_price === 'number')
+    .slice(0, 20)
+    .map(row => ({
+      label: row.name,
+      price: row.input_price,
+    }));
+
+  if (models.length === 0) throw new Error('No usable models in Supabase response');
+  return models;
+}
+
+async function initTicker() {
+  try {
+    const models = await fetchTickerFromSupabase();
+    buildTickerHTML(models);
+  } catch (err) {
+    console.warn('[Ticker] Supabase fetch failed, using fallback data.', err);
+    buildTickerHTML(TICKER_FALLBACK);
+  }
+}
+
+initTicker();
 
 // ═══════════════════════════════════════════════
 // CODE TYPEWRITER
