@@ -1,0 +1,31 @@
+{
+  "adp": {
+    "version": "0.1.1",
+    "type": "DealIntent",
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "timestamp": "2026-03-10T12:00:10Z",
+    "correlation_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7"
+  },
+  "intent": {
+    "binding": false,
+    "requires_human_confirmation": true,
+    "party_type": "business",
+    "requester": {
+      "agent_id": "agent:mycompany:procurement-bot",
+      "is_automated": true
+    },
+    "accepted_offer_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "accepted_pricing_snapshot": {
+      "input_per_mtok": 3.00,
+      "output_per_mtok": 12.00,
+      "modifiers_applied": []
+    },
+    "volume_commitment": {
+      "commitment_type": "soft"
+    },
+    "activation": {
+      "type": "redirect",
+      "redirect_url": "https://example-provider.ai/signup?ref=apideals&offer=7c9e6679-7425-40de-944b-e07fc1f90ae7"
+    }
+  }
+}
