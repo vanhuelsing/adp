@@ -3,8 +3,8 @@
 **Version:** 0.1.1-draft  
 **Erstellt:** 2026-03-09  
 **Überarbeitet:** 2026-03-10  
-**Autor:** Protocol Architect (Subagent), überarbeitet von Luca (🦊)  
-**Status:** REVISED — Review durch Jurist, Consultant, Backend Dev, QA Engineer (2026-03-10)  
+**Autor:** Luca & Dani
+**Status:** REVISED (2026-03-10)  
 **Lizenz (Spezifikation):** CC-BY 4.0  
 **Lizenz (SDKs & Code):** Apache 2.0  
 
