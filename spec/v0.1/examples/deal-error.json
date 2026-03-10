@@ -1,0 +1,22 @@
+{
+  "adp": {
+    "version": "0.1.1",
+    "type": "DealError",
+    "id": "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
+    "timestamp": "2026-03-10T12:00:01Z",
+    "correlation_id": "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+  },
+  "error": {
+    "code": "INVALID_REQUEST",
+    "message": "requirements.task_classes contains unknown value 'superreasoning'",
+    "field_errors": [
+      {
+        "field": "requirements.task_classes[0]",
+        "code": "INVALID_ENUM",
+        "message": "Expected one of: general, reasoning, coding, creative, classification, extraction, embedding, multimodal"
+      }
+    ],
+    "retryable": false,
+    "retry_after_ms": null
+  }
+}

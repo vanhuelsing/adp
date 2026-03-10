@@ -1,0 +1,33 @@
+{
+  "adp": {
+    "version": "0.1.1",
+    "type": "DealRequest",
+    "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "timestamp": "2026-03-10T12:00:00Z",
+    "correlation_id": null
+  },
+  "request": {
+    "requester": {
+      "agent_id": "agent:mycompany:procurement-bot",
+      "is_automated": true,
+      "name": "MyCompany Procurement Agent",
+      "contact": {
+        "email": "api@mycompany.com"
+      }
+    },
+    "requirements": {
+      "task_classes": ["reasoning"],
+      "min_context_window": 200000,
+      "modalities": ["text"],
+      "capabilities": ["tool_use", "structured_output"],
+      "compliance": ["gdpr", "eu_hosting"]
+    },
+    "budget": {
+      "max_cost_per_mtok_input": 5.00,
+      "max_cost_per_mtok_output": 20.00,
+      "currency": "USD"
+    },
+    "valid_until": "2026-03-17T12:00:00Z",
+    "request_ttl_hours": 24
+  }
+}

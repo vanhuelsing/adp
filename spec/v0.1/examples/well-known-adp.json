@@ -1,0 +1,13 @@
+{
+  "adp_supported": true,
+  "adp_versions": ["0.1.1"],
+  "offer_endpoint": "https://api.example-provider.ai/adp/offers",
+  "models_endpoint": "https://api.example-provider.ai/adp/models",
+  "contact": {
+    "email": "api@example-provider.ai",
+    "support_url": "https://docs.example-provider.ai/adp"
+  },
+  "provider_id": "example-provider",
+  "provider_name": "Example Provider AI",
+  "last_updated": "2026-03-10T00:00:00Z"
+}

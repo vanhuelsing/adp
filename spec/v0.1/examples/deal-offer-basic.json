@@ -1,0 +1,63 @@
+{
+  "adp": {
+    "version": "0.1.1",
+    "type": "DealOffer",
+    "id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "timestamp": "2026-03-10T12:00:05Z",
+    "correlation_id": "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+  },
+  "offer": {
+    "provider": {
+      "provider_id": "example-provider",
+      "name": "Example Provider AI",
+      "url": "https://example-provider.ai",
+      "contact": {
+        "email": "api@example-provider.ai",
+        "support_url": "https://docs.example-provider.ai"
+      }
+    },
+    "model": {
+      "model_id": "example-reasoning-v1",
+      "name": "Example Reasoning Model v1",
+      "task_classes": ["general", "reasoning", "coding"],
+      "context_window": 500000,
+      "max_output_tokens": 32768,
+      "modalities": ["text"],
+      "capabilities": ["tool_use", "structured_output", "streaming"],
+      "ai_act_risk_class": "minimal"
+    },
+    "pricing": {
+      "currency": "USD",
+      "base": {
+        "input_per_mtok": 3.00,
+        "output_per_mtok": 12.00
+      },
+      "modifiers": [
+        {
+          "type": "batch",
+          "discount_pct": 50,
+          "conditions": "Async processing, 24h SLA"
+        }
+      ]
+    },
+    "compliance": {
+      "compliance_verified_by": "self-declared",
+      "certifications": ["soc2"],
+      "data_regions": ["EU"],
+      "gdpr_compliant": true,
+      "dpa_available": true,
+      "data_retention_days": 0,
+      "training_on_data": false,
+      "privacy_policy_url": "https://example-provider.ai/privacy"
+    },
+    "sla": {
+      "uptime_pct": 99.9,
+      "ttft_p50_ms": 500,
+      "ttft_p99_ms": 2000,
+      "tps_median": 100
+    },
+    "valid_from": "2026-03-10T00:00:00Z",
+    "valid_until": "2026-04-10T00:00:00Z",
+    "terms_url": "https://example-provider.ai/terms"
+  }
+}
