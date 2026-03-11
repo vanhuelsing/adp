@@ -129,18 +129,7 @@
               "format": "uri"
             }
           },
-          "required": ["type"],
-          "allOf": [
-            {
-              "if": {
-                "properties": { "type": { "const": "redirect" } },
-                "required": ["type"]
-              },
-              "then": {
-                "required": ["redirect_url"]
-              }
-            }
-          ]
+          "required": ["type"]
         },
         "notes": {
           "type": ["string", "null"],

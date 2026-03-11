@@ -1,4 +1,4 @@
-import Ajv from 'ajv';
+import Ajv from 'ajv/dist/2020';
 import addFormats from 'ajv-formats';
 
 // Import schemas
@@ -13,9 +13,9 @@ import complianceSchema from './schemas/compliance.schema';
 import type { DealRequest, DealOffer, DealIntent, DealError } from './types';
 import type { ValidateFunction } from 'ajv';
 
-const ajv = new Ajv({ 
-  strict: false,
-  allErrors: true 
+const ajv = new Ajv({
+  strict: true,
+  allErrors: true
 });
 addFormats(ajv);
 
