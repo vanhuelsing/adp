@@ -62,7 +62,7 @@
     "compliance": {
       "compliance_verified_by": "self-declared",
       "certifications": ["soc2", "iso27001"],
-      "data_regions": ["US", "EU", "APAC"],
+      "data_regions": ["US", "EU", "JP"],
       "gdpr_compliant": true,
       "dpa_available": true,
       "data_retention_days": 30,

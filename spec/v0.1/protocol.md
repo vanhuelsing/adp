@@ -538,4 +538,27 @@ CC-BY 4.0 for specifications (better for standards/docs), Apache 2.0 for code/SD
 
 ---
 
+## 8. Security Considerations
+
+ADP v0.1.1 ist bewusst transport-agnostisch und enthält keine integrierte Authentifizierung, Autorisierung oder kryptographische Signaturen. Diese Designentscheidung ermöglicht eine schnelle Implementierung, erfordert aber zusätzliche Sicherheitsmaßnahmen auf Transportschicht.
+
+### Kritische Bedrohungen
+
+Die wichtigsten Risiken in v0.1 sind **Provider Impersonation** (gefälschte Angebote mit Phishing-URLs), **Replay-Attacken** (Wiederverwendung gültiger Nachrichten) und **Man-in-the-Middle-Angriffe** bei unsicherem Transport. Ohne Signaturen können Angebotspreise, Redirect-URLs und Compliance-Behauptungen manipuliert werden.
+
+### Empfohlene Gegenmaßnahmen
+
+Bis v0.2 mit integrierten Sicherheitsmechanismen verfügbar ist, müssen Implementierer:
+
+- **TLS 1.3** für alle Kommunikationswege erzwingen
+- **API-Keys** außerhalb des ADP-JSON-Schemas implementieren (HTTP-Header)
+- **Rate Limiting** auf Basis von `DealError` mit `code: "RATE_LIMITED"` etablieren
+- **JSON-Schema-Validierung** mit strikten Payload-Limits (max. 250 KB für `DealOffer`)
+- **URL-Validierung** (nur HTTPS, keine private IPs) für alle `redirect_url` und `terms_url`
+- **Data Retention** gemäß `request_ttl_hours` für GDPR-Konformität implementieren
+
+Ausführliche Sicherheitsrichtlinien, Threat Model und Empfehlungen für v0.2 (JWS-Signaturen, Nonces, Certificate Pinning) finden sich in [`docs/security-considerations.md`](../../docs/security-considerations.md).
+
+---
+
 *End of Specification v0.1.1*
