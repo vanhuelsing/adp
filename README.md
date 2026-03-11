@@ -1,107 +1,142 @@
 # ADP
 
-**The open protocol for AI agents to discover and compare LLM API deals.**
+<p align="center">
+  <img src="https://raw.githubusercontent.com/vanhuelsing/adp/main/assets/logo.svg" width="120" height="120" alt="ADP Logo">
+</p>
 
-[![Spec](https://img.shields.io/badge/spec-v0.1.1--draft-blue)](spec/v0.1/protocol.md)
-[![License: CC-BY 4.0](https://img.shields.io/badge/license-CC--BY%204.0-lightgrey)](LICENSE-SPEC)
-[![License: Apache 2.0](https://img.shields.io/badge/code-Apache%202.0-green)](LICENSE-CODE)
+<h1 align="center">ADP</h1>
+
+<p align="center">
+  <strong>The open protocol for AI agents to discover and compare LLM API deals</strong>
+</p>
+
+<p align="center">
+  <a href="https://github.com/vanhuelsing/adp/releases"><img src="https://img.shields.io/github/v/release/vanhuelsing/adp?include_prereleases" alt="Release"></a>
+  <a href="spec/v0.1/protocol.md"><img src="https://img.shields.io/badge/spec-v0.1.1--draft-blue" alt="Spec"></a>
+  <a href="LICENSE-SPEC"><img src="https://img.shields.io/badge/license-CC--BY%204.0-lightgrey" alt="License: CC-BY 4.0"></a>
+  <a href="LICENSE-CODE"><img src="https://img.shields.io/badge/code-Apache%202.0-green" alt="License: Apache 2.0"></a>
+</p>
+
+<p align="center">
+  <a href="https://adp.sh/docs">Documentation</a> •
+  <a href="https://adp.sh/playground">Playground</a> •
+  <a href="https://github.com/vanhuelsing/adp/discussions">Discussions</a> •
+  <a href="https://github.com/vanhuelsing/adp/issues">Issues</a>
+</p>
 
 ---
 
 ## Why ADP?
 
-Today, AI agents procuring LLM APIs face a fragmented mess:
+LLM API pricing is a fragmented mess. Agents today must:
 
-- **15+ pricing pages** to parse (HTML, PDFs, sales calls)
-- **Inconsistent units** ($/MTok vs $/1k tokens vs credits)
-- **Hidden conditions** (batch discounts, cache hits, free tiers)
-- **Manual compliance checks** (GDPR, SOC2, EU hosting)
-- **Individual signups** at each provider
+```
+❌ Parse 15+ pricing pages (HTML, PDFs, sales calls)
+❌ Normalize units ($/MTok vs $/1k tokens vs credits)
+❌ Hunt for hidden conditions (batch discounts, cache hits, free tiers)
+❌ Manually verify compliance (GDPR, SOC2, EU hosting)
+❌ Sign up individually at each provider
+```
 
 **ADP solves this.** One JSON protocol for agents to request, compare, and signal intent for LLM API deals — machine-readable, provider-agnostic, legally safe.
+
+```
+✅ Standardized JSON messages
+✅ Machine-readable pricing with modifiers
+✅ Built-in compliance vocabulary
+✅ Provider discovery via .well-known
+✅ Non-binding intent signaling
+```
 
 ---
 
 ## Quick Start
 
-### 1. Provider hosts discovery file
+### Provider: Host a discovery file
 
-```json
-// https://provider.com/.well-known/adp.json
+```bash
+# Serve at https://your-domain.com/.well-known/adp.json
 {
   "adp_supported": true,
   "adp_versions": ["0.1.1"],
-  "offer_endpoint": "https://api.provider.com/adp/offers"
+  "offer_endpoint": "https://api.your-domain.com/adp/offers"
 }
 ```
 
-### 2. Agent sends DealRequest
+### Agent: Send a DealRequest
 
-```json
-{
-  "adp": {
-    "version": "0.1.1",
-    "type": "DealRequest",
-    "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    "timestamp": "2026-03-10T12:00:00Z"
+```typescript
+import { DealRequest } from '@adp/sdk';
+
+const request: DealRequest = {
+  adp: {
+    version: "0.1.1",
+    type: "DealRequest",
+    id: crypto.randomUUID(),
+    timestamp: new Date().toISOString()
   },
-  "request": {
-    "requester": {
-      "agent_id": "agent:acme:bot",
-      "is_automated": true
+  request: {
+    requester: {
+      agent_id: "agent:acme:bot",
+      is_automated: true
     },
-    "requirements": {
-      "task_classes": ["reasoning"],
-      "compliance": ["gdpr", "eu_hosting"]
+    requirements: {
+      task_classes: ["reasoning"],
+      compliance: ["gdpr", "eu_hosting"]
     },
-    "budget": {
-      "max_cost_per_mtok_output": 20.00,
-      "currency": "USD"
+    budget: {
+      max_cost_per_mtok_output: 20.00,
+      currency: "USD"
     }
   }
-}
+};
 ```
 
-### 3. Provider responds with DealOffer(s)
+### Provider: Respond with DealOffer(s)
 
-```json
-{
-  "adp": {
-    "version": "0.1.1",
-    "type": "DealOffer",
-    "id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
-    "correlation_id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    "timestamp": "2026-03-10T12:00:05Z"
+```typescript
+import { DealOffer } from '@adp/sdk';
+
+const offer: DealOffer = {
+  adp: {
+    version: "0.1.1",
+    type: "DealOffer",
+    id: crypto.randomUUID(),
+    correlation_id: request.adp.id,
+    timestamp: new Date().toISOString()
   },
-  "offer": {
-    "provider": { "provider_id": "example", "name": "Example AI" },
-    "model": { "model_id": "gpt-large", "task_classes": ["reasoning"] },
-    "pricing": {
-      "currency": "USD",
-      "base": { "input_per_mtok": 3.00, "output_per_mtok": 12.00 }
+  offer: {
+    provider: { provider_id: "example", name: "Example AI" },
+    model: { model_id: "gpt-large", task_classes: ["reasoning"] },
+    pricing: {
+      currency: "USD",
+      base: { input_per_mtok: 3.00, output_per_mtok: 12.00 }
     },
-    "valid_until": "2026-04-10T00:00:00Z"
+    valid_until: "2026-04-10T00:00:00Z"
   }
-}
+};
 ```
 
-### 4. Agent signals DealIntent
+---
 
-```json
-{
-  "adp": {
-    "version": "0.1.1",
-    "type": "DealIntent",
-    "id": "550e8400-e29b-41d4-a716-446655440000",
-    "correlation_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
-    "timestamp": "2026-03-10T12:00:10Z"
-  },
-  "intent": {
-    "binding": false,
-    "accepted_offer_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
-    "activation": { "type": "redirect", "redirect_url": "https://example.com/signup" }
-  }
-}
+## Installation
+
+### npm
+
+```bash
+npm install @adp/sdk
+```
+
+### Python
+
+```bash
+pip install adp-sdk
+```
+
+### Go
+
+```bash
+go get github.com/vanhuelsing/adp/sdk/go
 ```
 
 ---
@@ -110,21 +145,36 @@ Today, AI agents procuring LLM APIs face a fragmented mess:
 
 | Type | Direction | Purpose |
 |------|-----------|---------|
-| `DealRequest` | Agent → Provider | "I need an LLM API with these requirements" |
-| `DealOffer` | Provider → Agent | "I offer this model at this price" |
-| `DealIntent` | Agent → Provider | "I intend to take this deal" (non-binding) |
-| `DealError` | Both | Machine-readable error response |
+| `DealRequest` | Agent → Provider | Request LLM API with requirements |
+| `DealOffer` | Provider → Agent | Offer model at specific terms |
+| `DealIntent` | Agent → Provider | Signal intent (non-binding) |
+| `DealError` | Both | Machine-readable error |
 
 ---
 
 ## Documentation
 
-| Resource | Description |
-|----------|-------------|
-| [Full Specification](spec/v0.1/protocol.md) | Complete protocol reference, field definitions, design decisions |
-| [Implementation Guide](docs/implementation-guide.md) | Step-by-step integration for providers and agents |
-| [FAQ](docs/faq.md) | Common questions and answers |
-| [Examples](spec/v0.1/examples/) | JSON message examples |
+- **[Full Specification](spec/v0.1/protocol.md)** — Complete protocol reference
+- **[JSON Schemas](spec/v0.1/schemas/)** — Draft 2020-12 validation schemas
+- **[Implementation Guide](docs/implementation-guide.md)** — Integration guide
+- **[Security Considerations](docs/security-considerations.md)** — Threat model & mitigations
+- **[FAQ](docs/faq.md)** — Common questions
+- **[Examples](spec/v0.1/examples/)** — JSON message examples
+
+---
+
+## Validation
+
+All messages can be validated against JSON Schema:
+
+```typescript
+import { validateDealRequest } from '@adp/sdk/validator';
+
+const result = validateDealRequest(json);
+if (!result.valid) {
+  console.error(result.errors);
+}
+```
 
 ---
 
@@ -132,16 +182,20 @@ Today, AI agents procuring LLM APIs face a fragmented mess:
 
 | Version | Focus | ETA |
 |---------|-------|-----|
-| **v0.1.1** | Core messages, discovery, legal safety | Now |
+| **v0.1.1** | Core messages, discovery, legal safety | ✅ Now |
 | **v0.2.0** | Auth, HTTP binding, multimodal pricing | +3 months |
 | **v0.3.0** | Counter-offers, usage reporting | +5 months |
-| **v1.0.0** | Payment escrow, governance, JSON schemas | +8 months |
+| **v1.0.0** | Payment escrow, governance | +8 months |
 
 ---
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). For protocol changes, open an issue with the `rfc` label.
+We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+- **Bug reports**: [Issues](https://github.com/vanhuelsing/adp/issues)
+- **Feature requests**: [Discussions](https://github.com/vanhuelsing/adp/discussions)
+- **Protocol changes**: Open an issue with the `rfc` label
 
 ---
 
@@ -152,4 +206,6 @@ See [CONTRIBUTING.md](CONTRIBUTING.md). For protocol changes, open an issue with
 
 ---
 
-*Published by [vanhuelsing](https://github.com/vanhuelsing)*
+<p align="center">
+  <em>Published by <a href="https://github.com/vanhuelsing">vanhuelsing</a></em>
+</p>

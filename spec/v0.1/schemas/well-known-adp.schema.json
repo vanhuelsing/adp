@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://adp.sh/schemas/well-known-adp.json",
+  "title": "Well-Known ADP Discovery",
+  "description": "Discovery file for ADP provider endpoints",
+  "type": "object",
+  "required": ["adp_supported", "adp_versions"],
+  "properties": {
+    "adp_supported": {
+      "type": "boolean",
+      "const": true
+    },
+    "adp_versions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^\\d+\\.\\d+\\.\\d+(-[a-zA-Z0-9]+)?$"
+      },
+      "minItems": 1
+    },
+    "offer_endpoint": {
+      "type": "string",
+      "format": "uri"
+    },
+    "models_endpoint": {
+      "type": "string",
+      "format": "uri"
+    },
+    "static_offers_url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "contact": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "support_url": {
+          "type": "string",
+          "format": "uri"
+        }
+      }
+    },
+    "provider_id": {
+      "type": "string",
+      "maxLength": 100
+    },
+    "provider_name": {
+      "type": "string",
+      "maxLength": 100
+    },
+    "last_updated": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+    }
+  }
+}

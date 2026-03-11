@@ -1,0 +1,77 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate-schemas:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: sdk/typescript/package.json
+      
+      - name: Install dependencies
+        run: cd sdk/typescript && npm ci
+      
+      - name: Validate JSON schemas
+        run: cd sdk/typescript && npm run validate-examples
+      
+      - name: Type check
+        run: cd sdk/typescript && npm run typecheck
+
+  test-typescript:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: sdk/typescript/package.json
+      
+      - name: Install dependencies
+        run: cd sdk/typescript && npm ci
+      
+      - name: Run tests
+        run: cd sdk/typescript && npm run test:ci
+      
+      - name: Build
+        run: cd sdk/typescript && npm run build
+
+  validate-spec:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Check schema files exist
+        run: |
+          test -f spec/v0.1/schemas/adp-header.schema.json
+          test -f spec/v0.1/schemas/deal-request.schema.json
+          test -f spec/v0.1/schemas/deal-offer.schema.json
+          test -f spec/v0.1/schemas/deal-intent.schema.json
+          test -f spec/v0.1/schemas/deal-error.schema.json
+          test -f spec/v0.1/schemas/pricing.schema.json
+          test -f spec/v0.1/schemas/compliance.schema.json
+      
+      - name: Validate JSON syntax
+        run: |
+          for file in spec/v0.1/schemas/*.json; do
+            jq empty "$file" || exit 1
+          done
+      
+      - name: Check examples
+        run: |
+          for file in spec/v0.1/examples/*.json; do
+            jq empty "$file" || exit 1
+          done
