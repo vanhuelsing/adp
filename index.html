@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ADP - apideals Deal Protocol</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+      color: #1a1a1a;
+      background: #fff;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    header {
+      text-align: center;
+      padding: 4rem 0;
+    }
+    .logo {
+      width: 120px;
+      height: 120px;
+      margin-bottom: 1.5rem;
+    }
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #3b82f6, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .tagline {
+      font-size: 1.25rem;
+      color: #666;
+      margin-bottom: 2rem;
+    }
+    .badges {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .badge:hover { opacity: 0.8; }
+    .badge-blue { background: #3b82f6; color: white; }
+    .badge-gray { background: #6b7280; color: white; }
+    .badge-green { background: #22c55e; color: white; }
+    .nav {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+    .nav a {
+      color: #3b82f6;
+      text-decoration: none;
+    }
+    .nav a:hover { text-decoration: underline; }
+    .section {
+      margin: 3rem 0;
+    }
+    h2 {
+      font-size: 1.75rem;
+      margin-bottom: 1rem;
+      color: #1a1a1a;
+    }
+    .problem {
+      background: #fef2f2;
+      border-left: 4px solid #ef4444;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      border-radius: 0 8px 8px 0;
+    }
+    .solution {
+      background: #f0fdf4;
+      border-left: 4px solid #22c55e;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      border-radius: 0 8px 8px 0;
+    }
+    .problem h3, .solution h3 {
+      margin-bottom: 0.75rem;
+      font-size: 1.1rem;
+    }
+    .problem h3 { color: #dc2626; }
+    .solution h3 { color: #16a34a; }
+    code {
+      background: #f3f4f6;
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      font-family: 'Monaco', 'Consolas', monospace;
+      font-size: 0.9em;
+    }
+    pre {
+      background: #1f2937;
+      color: #f9fafb;
+      padding: 1.5rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 1rem 0;
+    }
+    pre code {
+      background: none;
+      padding: 0;
+      color: inherit;
+    }
+    .cta {
+      text-align: center;
+      padding: 3rem 0;
+    }
+    .button {
+      display: inline-block;
+      padding: 0.875rem 2rem;
+      background: linear-gradient(135deg, #3b82f6, #06b6d4);
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 500;
+      margin: 0.5rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+    }
+    .button-outline {
+      background: transparent;
+      border: 2px solid #3b82f6;
+      color: #3b82f6;
+    }
+    .button-outline:hover {
+      background: #3b82f6;
+      color: white;
+    }
+    footer {
+      text-align: center;
+      padding: 3rem 0;
+      color: #6b7280;
+      border-top: 1px solid #e5e7eb;
+      margin-top: 3rem;
+    }
+    footer a {
+      color: #3b82f6;
+    }
+    .roadmap {
+      display: grid;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    .roadmap-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      background: #f9fafb;
+      border-radius: 8px;
+    }
+    .roadmap-item.done {
+      background: #f0fdf4;
+    }
+    .version {
+      font-weight: 600;
+      color: #3b82f6;
+      min-width: 80px;
+    }
+    .check { color: #22c55e; }
+    @media (max-width: 600px) {
+      h1 { font-size: 2rem; }
+      .container { padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <img src="assets/logo.svg" alt="ADP Logo" class="logo">
+      <h1>ADP</h1>
+      <p class="tagline">The open protocol for AI agents to discover and compare LLM API deals</p>
+      
+      <div class="badges">
+        <span class="badge badge-blue">v0.1.1-draft</span>
+        <span class="badge badge-gray">CC-BY 4.0</span>
+        <span class="badge badge-green">Apache 2.0</span>
+      </div>
+      
+      <nav class="nav">
+        <a href="spec/v0.1/protocol.md">Spec</a>
+        <a href="docs/implementation-guide.md">Docs</a>
+        <a href="https://github.com/vanhuelsing/adp">GitHub</a>
+        <a href="spec/v0.1/examples/">Examples</a>
+      </nav>
+    </header>
+
+    <section class="section">
+      <div class="problem">
+        <h3>❌ The Problem</h3>
+        <p>AI agents procuring LLM APIs today must:</p>
+        <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+          <li>Parse 15+ pricing pages (HTML, PDFs, sales calls)</li>
+          <li>Normalize units ($/MTok vs $/1k tokens vs credits)</li>
+          <li>Hunt for hidden conditions (batch discounts, cache hits, free tiers)</li>
+          <li>Manually verify compliance (GDPR, SOC2, EU hosting)</li>
+          <li>Sign up individually at each provider</li>
+        </ul>
+      </div>
+      
+      <div class="solution">
+        <h3>✅ The Solution</h3>
+        <p><strong>ADP</strong> — One JSON protocol for agents to request, compare, and signal intent for LLM API deals:</p>
+        <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+          <li>Standardized JSON messages</li>
+          <li>Machine-readable pricing with modifiers</li>
+          <li>Built-in compliance vocabulary</li>
+          <li>Provider discovery via <code>.well-known</code></li>
+          <li>Non-binding intent signaling</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Quick Start</h2>
+      
+      <h3 style="margin-top: 1.5rem;">1. Provider hosts discovery file</h3>
+      <pre><code>// https://provider.com/.well-known/adp.json
+{
+  "adp_supported": true,
+  "adp_versions": ["0.1.1"],
+  "offer_endpoint": "https://api.provider.com/adp/offers"
+}</code></pre>
+
+      <h3 style="margin-top: 1.5rem;">2. Agent sends DealRequest</h3>
+      <pre><code>import { DealRequest } from '@adp/sdk';
+
+const request: DealRequest = {
+  adp: {
+    version: "0.1.1",
+    type: "DealRequest",
+    id: crypto.randomUUID(),
+    timestamp: new Date().toISOString()
+  },
+  request: {
+    requester: { agent_id: "agent:acme:bot", is_automated: true },
+    requirements: {
+      task_classes: ["reasoning"],
+      compliance: ["gdpr", "eu_hosting"]
+    },
+    budget: {
+      max_cost_per_mtok_output: 20.00,
+      currency: "USD"
+    }
+  }
+};</code></pre>
+
+      <h3 style="margin-top: 1.5rem;">3. Provider responds with DealOffer(s)</h3>
+      <pre><code>import { DealOffer } from '@adp/sdk';
+
+const offer: DealOffer = {
+  adp: {
+    version: "0.1.1",
+    type: "DealOffer",
+    id: crypto.randomUUID(),
+    correlation_id: request.adp.id,
+    timestamp: new Date().toISOString()
+  },
+  offer: {
+    provider: { provider_id: "example", name: "Example AI" },
+    model: { model_id: "gpt-large", task_classes: ["reasoning"] },
+    pricing: {
+      currency: "USD",
+      base: { input_per_mtok: 3.00, output_per_mtok: 12.00 }
+    },
+    valid_until: "2026-04-10T00:00:00Z"
+  }
+};</code></pre>
+    </section>
+
+    <section class="section">
+      <h2>Message Types</h2>
+      <table style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
+        <tr style="background: #f9fafb;">
+          <th style="text-align: left; padding: 0.75rem; border-bottom: 2px solid #e5e7eb;">Type</th>
+          <th style="text-align: left; padding: 0.75rem; border-bottom: 2px solid #e5e7eb;">Direction</th>
+          <th style="text-align: left; padding: 0.75rem; border-bottom: 2px solid #e5e7eb;">Purpose</th>
+        </tr>
+        <tr>
+          <td style="padding: 0.75rem; border-bottom: 1px solid #e5e7eb;"><code>DealRequest</code></td>
+          <td style="padding: 0.75rem; border-bottom: 1px solid #e5e7eb;">Agent → Provider</td>
+          <td style="padding: 0.75rem; border-bottom: 1px solid #e5e7eb;">Request LLM API with requirements</td>
+        </tr>
+        <tr>
+          <td style="padding: 0.75rem; border-bottom: 1px solid #e5e7eb;"><code>DealOffer</code></td>
+          <td style="padding: 0.75rem; border-bottom: 1px solid #e5e7eb;">Provider → Agent</td>
+          <td style="padding: 0.75rem; border-bottom: 1px solid #e5e7eb;">Offer model at specific terms</td>
+        </tr>
+        <tr>
+          <td style="padding: 0.75rem; border-bottom: 1px solid #e5e7eb;"><code>DealIntent</code></td>
+          <td style="padding: 0.75rem; border-bottom: 1px solid #e5e7eb;">Agent → Provider</td>
+          <td style="padding: 0.75rem; border-bottom: 1px solid #e5e7eb;">Signal intent (non-binding)</td>
+        </tr>
+        <tr>
+          <td style="padding: 0.75rem;"><code>DealError</code></td>
+          <td style="padding: 0.75rem;">Both</td>
+          <td style="padding: 0.75rem;">Machine-readable error</td>
+        </tr>
+      </table>
+    </section>
+
+    <section class="section">
+      <h2>Roadmap</h2>
+      <div class="roadmap">
+        <div class="roadmap-item done">
+          <span class="version">v0.1.1</span>
+          <span><span class="check">✓</span> Core messages, discovery, legal safety, TypeScript SDK</span>
+        </div>
+        <div class="roadmap-item">
+          <span class="version">v0.2.0</span>
+          <span>Auth, HTTP binding, multimodal pricing</span>
+        </div>
+        <div class="roadmap-item">
+          <span class="version">v0.3.0</span>
+          <span>Counter-offers, usage reporting</span>
+        </div>
+        <div class="roadmap-item">
+          <span class="version">v1.0.0</span>
+          <span>Payment escrow, governance</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="cta">
+      <a href="https://github.com/vanhuelsing/adp" class="button">View on GitHub</a>
+      <a href="spec/v0.1/protocol.md" class="button button-outline">Read the Spec</a>
+    </div>
+
+    <footer>
+      <p>Published by <a href="https://github.com/vanhuelsing">vanhuelsing</a></p>
+      <p style="margin-top: 0.5rem; font-size: 0.875rem;">
+        Spec: <a href="LICENSE-SPEC">CC-BY 4.0</a> • 
+        Code: <a href="LICENSE-CODE">Apache 2.0</a>
+      </p>
+    </footer>
+  </div>
+</body>
+</html>
