@@ -1,21 +1,19 @@
-# ADP Trademark Policy
+# Trademark Policy
 
-## Who may use "ADP-compatible"?
+## Permitted Use
 
-Any implementation that:
+You may describe your implementation as **"ADP-compatible"** or **"supports ADP v0.x"** if:
 
-1. Correctly implements all **required fields** of the DealRequest, DealOffer, DealIntent, and DealError message types as defined in the current specification
-2. Passes the ADP validation suite (when available)
-3. Does not misrepresent compliance tags (`compliance_verified_by` must be accurate)
+1. You correctly implement all required fields of DealRequest, DealOffer, DealIntent, and DealError
+2. You accurately represent compliance verification status
+3. You don't imply official endorsement by apideals.ai
 
-may describe itself as **"ADP-compatible"** or **"supports ADP v0.x"**.
+## Prohibited Use
 
-## What is NOT allowed
-
-- Claiming ADP compatibility without implementing the required fields
-- Using the "apideals" or "ADP" trademark in a way that implies official endorsement by apideals.ai without written permission
-- Creating a fork and calling it "ADP" — forks must be clearly named differently
+- Claiming ADP compatibility without implementing required fields
+- Using "apideals" or "ADP" to imply endorsement without written permission
+- Creating a fork and calling it "ADP" (forks must use different names)
 
 ## Questions
 
-Open an issue or contact: adp@apideals.ai
+Contact: adp@apideals.ai

@@ -6,26 +6,26 @@ labels: rfc
 
 ## Summary
 
-One paragraph explaining the proposed change.
+One paragraph describing the proposed change.
 
 ## Problem
 
 What problem does this solve? Who is affected?
 
-## Proposed Solution
+## Proposal
 
-Describe the change. Include:
-- New/changed fields (with types, required/optional)
+- New/changed fields (with types)
 - Updated message examples
 - Impact on existing implementations
 
-## Alternatives Considered
+## Alternatives
 
-What other approaches were considered and why were they rejected?
+What else was considered and why rejected?
 
 ## Open Questions
 
-What still needs to be decided?
+What still needs discussion?
 
 ---
-*RFC proposals require a 14-day community discussion period before acceptance.*
+
+*RFCs require a 14-day community discussion period before acceptance.*

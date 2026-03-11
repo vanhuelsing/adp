@@ -7,7 +7,7 @@
 - Welcome diverse perspectives
 - Assume good intent
 
-## Not Acceptable
+## Unacceptable Behavior
 
 - Personal attacks or harassment
 - Dismissing contributions without explanation
@@ -15,4 +15,4 @@
 
 ## Enforcement
 
-Violations can be reported to adp@apideals.ai. Maintainers may remove comments or ban users who violate this policy.
+Report violations to adp@apideals.ai. Maintainers may remove comments or ban violators.

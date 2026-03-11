@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://apideals.org/adp/v0.1.1/schemas/adp-header.schema.json",
+  "title": "ADP Common Header",
+  "description": "Common header for all ADP messages",
+  "type": "object",
+  "properties": {
+    "adp": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "description": "Protocol version (semver)",
+          "pattern": "^\\d+\\.\\d+\\.\\d+(-[a-zA-Z0-9.-]+)?$",
+          "examples": ["0.1.1", "0.1.1-draft"]
+        },
+        "type": {
+          "type": "string",
+          "enum": ["DealRequest", "DealOffer", "DealIntent", "DealError"],
+          "description": "Message type"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+          "description": "Unique message ID (UUID v4)"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+          "description": "Creation time in ISO 8601 UTC format"
+        },
+        "correlation_id": {
+          "oneOf": [
+            {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+              "description": "UUID of the triggering message"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "References triggering message (UUID v4 or null)"
+        }
+      },
+      "required": ["version", "type", "id", "timestamp", "correlation_id"]
+    }
+  },
+  "required": ["adp"]
+}

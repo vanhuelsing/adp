@@ -1,38 +1,42 @@
 # Contributing to ADP
 
-Thank you for your interest in improving the apideals Deal Protocol.
+Thanks for your interest in improving ADP.
 
-## Current Phase: v0.x (BDFL)
+## Governance
 
-During the v0.x phase, the apideals.ai team makes final decisions on all changes. Community input is welcome and actively considered.
+| Phase | Model | Decision Maker |
+|-------|-------|----------------|
+| v0.x (now) | BDFL | vanhuelsing |
+| v1.0+ | RFC process | Community via GitHub Issues |
+| v2.0+ | Steering Committee | Provider + community representatives |
 
 ## How to Contribute
 
-### Bug Reports & Clarifications
-Open an issue with the `bug` or `clarification` label. Include:
-- Which section of the spec is affected
-- What is unclear or incorrect
-- Your proposed fix
+### Bug Reports
+Open an issue with the `bug` label. Include:
+- Affected spec section
+- What's unclear or incorrect
+- Suggested fix
 
 ### Feature Requests
-Open an issue with the `feature-request` label. Describe:
-- The use case
-- Why existing fields don't cover it
-- A sketch of the proposed change
+Open an issue with the `feature-request` label:
+- Describe the use case
+- Explain why existing fields don't cover it
+- Sketch the proposed change
 
-### RFC Proposals (Protocol Changes)
-For changes to the core protocol:
+### RFC Proposals
+For protocol changes:
 1. Open an issue with the `rfc` label using the RFC template
-2. Describe the problem, proposed solution, and trade-offs
-3. Community discussion period: minimum 14 days
-4. If accepted, submit a PR with spec changes + example updates
+2. Problem, proposed solution, trade-offs
+3. Minimum 14-day community discussion
+4. Submit PR with spec changes + examples if accepted
 
-## What We're Looking For
+## What We Need
 
-- **Implementer feedback** — Did you implement ADP? What was confusing or missing?
-- **Provider perspective** — Are you an LLM provider? What would make ADP easier to adopt?
-- **Agent developer perspective** — What fields would your agent need?
+- **Implementer feedback** — What was confusing or missing?
+- **Provider perspective** — What would make adoption easier?
+- **Agent developer input** — What fields does your agent need?
 
 ## Code of Conduct
 
-Be respectful. Focus on technical merit. See [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
+See [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).

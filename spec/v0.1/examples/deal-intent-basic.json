@@ -11,21 +11,28 @@
     "requires_human_confirmation": true,
     "party_type": "business",
     "requester": {
-      "agent_id": "agent:mycompany:procurement-bot",
-      "is_automated": true
+      "agent_id": "agent:acme:procurement-bot",
+      "is_automated": true,
+      "name": "Acme Procurement Agent",
+      "contact": {
+        "email": "api@acme.com"
+      }
     },
     "accepted_offer_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
     "accepted_pricing_snapshot": {
-      "input_per_mtok": 3.00,
-      "output_per_mtok": 12.00,
-      "modifiers_applied": []
+      "input_per_mtok": 1.25,
+      "output_per_mtok": 10.00,
+      "modifiers_applied": ["batch"]
     },
     "volume_commitment": {
+      "estimated_monthly_input_tokens": 50000000,
+      "estimated_monthly_output_tokens": 10000000,
       "commitment_type": "soft"
     },
     "activation": {
       "type": "redirect",
-      "redirect_url": "https://example-provider.ai/signup?ref=apideals&offer=7c9e6679-7425-40de-944b-e07fc1f90ae7"
-    }
+      "redirect_url": "https://cloud.google.com/vertex-ai/signup?ref=adp&offer=7c9e6679-7425-40de-944b-e07fc1f90ae7"
+    },
+    "notes": null
   }
 }
