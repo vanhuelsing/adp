@@ -2,15 +2,16 @@ import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
 
 // Import schemas
-import adpHeaderSchema from '../../spec/v0.1/schemas/adp-header.schema.json';
-import dealRequestSchema from '../../spec/v0.1/schemas/deal-request.schema.json';
-import dealOfferSchema from '../../spec/v0.1/schemas/deal-offer.schema.json';
-import dealIntentSchema from '../../spec/v0.1/schemas/deal-intent.schema.json';
-import dealErrorSchema from '../../spec/v0.1/schemas/deal-error.schema.json';
-import pricingSchema from '../../spec/v0.1/schemas/pricing.schema.json';
-import complianceSchema from '../../spec/v0.1/schemas/compliance.schema.json';
+import adpHeaderSchema from './schemas/adp-header.schema';
+import dealRequestSchema from './schemas/deal-request.schema';
+import dealOfferSchema from './schemas/deal-offer.schema';
+import dealIntentSchema from './schemas/deal-intent.schema';
+import dealErrorSchema from './schemas/deal-error.schema';
+import pricingSchema from './schemas/pricing.schema';
+import complianceSchema from './schemas/compliance.schema';
 
 import type { DealRequest, DealOffer, DealIntent, DealError } from './types';
+import type { ValidateFunction } from 'ajv';
 
 const ajv = new Ajv({ 
   strict: false,
@@ -19,23 +20,23 @@ const ajv = new Ajv({
 addFormats(ajv);
 
 // Register schemas
-ajv.addSchema(adpHeaderSchema, 'adp-header');
-ajv.addSchema(pricingSchema, 'pricing');
-ajv.addSchema(complianceSchema, 'compliance');
+ajv.addSchema(adpHeaderSchema as object, 'adp-header');
+ajv.addSchema(pricingSchema as object, 'pricing');
+ajv.addSchema(complianceSchema as object, 'compliance');
 
-const validateDealRequestFn = ajv.compile(dealRequestSchema);
-const validateDealOfferFn = ajv.compile(dealOfferSchema);
-const validateDealIntentFn = ajv.compile(dealIntentSchema);
-const validateDealErrorFn = ajv.compile(dealErrorSchema);
+const validateDealRequestFn = ajv.compile(dealRequestSchema as object);
+const validateDealOfferFn = ajv.compile(dealOfferSchema as object);
+const validateDealIntentFn = ajv.compile(dealIntentSchema as object);
+const validateDealErrorFn = ajv.compile(dealErrorSchema as object);
 
 export interface ValidationResult {
   valid: boolean;
   errors?: string[];
 }
 
-function formatErrors(validator: Ajv.ValidateFunction): string[] {
+function formatErrors(validator: ValidateFunction<unknown>): string[] {
   if (!validator.errors) return [];
-  return validator.errors.map(err => {
+  return validator.errors.map((err: { instancePath?: string; message?: string }) => {
     const path = err.instancePath || 'root';
     return `${path}: ${err.message}`;
   });
