@@ -35,7 +35,7 @@ export interface Requirements {
 export interface Volume {
   estimated_monthly_input_tokens?: number;
   estimated_monthly_output_tokens?: number;
-  pattern?: 'steady' | 'bursty' | 'batch' | 'on_demand';
+  pattern?: 'steady' | 'bursty' | 'batch';
   batch_eligible?: boolean;
 }
 
@@ -47,10 +47,10 @@ export interface Budget {
 }
 
 export interface Preferences {
-  commitment?: 'none' | 'monthly' | 'annual';
+  commitment?: 'none' | 'soft' | 'hard';
   preferred_providers?: string[];
   excluded_providers?: string[];
-  deal_type?: 'pay_as_you_go' | 'commitment' | 'prepaid' | 'enterprise_custom';
+  deal_type?: 'pay_as_you_go' | 'commitment' | 'batch_only';
 }
 
 export interface DealRequest {
@@ -112,7 +112,7 @@ export interface FreeTier {
 }
 
 export interface CommitmentDeal {
-  type: 'monthly_prepaid' | 'annual_prepaid' | 'enterprise_custom';
+  type: 'annual_prepaid' | 'monthly_commitment' | 'sustained_use';
   discount_pct: number;
   min_monthly_spend?: number;
   duration_months?: number;

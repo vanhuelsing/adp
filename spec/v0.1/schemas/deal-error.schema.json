@@ -86,7 +86,7 @@
           ]
         }
       },
-      "required": ["code", "message", "retryable", "retry_after_ms"]
+      "required": ["code", "message", "retryable"]
     }
   },
   "required": ["adp", "error"]

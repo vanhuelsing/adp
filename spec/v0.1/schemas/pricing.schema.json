@@ -85,17 +85,7 @@
             "description": "Conditions for applying this modifier"
           }
         },
-        "required": ["type"],
-        "oneOf": [
-          {
-            "required": ["discount_pct"],
-            "not": { "required": ["input_per_mtok"] }
-          },
-          {
-            "required": ["input_per_mtok"],
-            "not": { "required": ["discount_pct"] }
-          }
-        ]
+        "required": ["type"]
       }
     },
     "free_tier": {
