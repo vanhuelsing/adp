@@ -1,13 +1,14 @@
 {
   "adp_supported": true,
   "adp_versions": ["0.1.1"],
-  "offer_endpoint": "https://api.example-provider.ai/adp/offers",
-  "models_endpoint": "https://api.example-provider.ai/adp/models",
+  "offer_endpoint": "https://api.vertex-ai.google.com/adp/offers",
+  "models_endpoint": "https://api.vertex-ai.google.com/adp/models",
+  "static_offers_url": "https://cloud.google.com/vertex-ai/adp/offers.json",
   "contact": {
-    "email": "api@example-provider.ai",
-    "support_url": "https://docs.example-provider.ai/adp"
+    "email": "cloud-sales@google.com",
+    "support_url": "https://cloud.google.com/vertex-ai/docs/adp"
   },
-  "provider_id": "example-provider",
-  "provider_name": "Example Provider AI",
+  "provider_id": "vertex-ai",
+  "provider_name": "Google Cloud Vertex AI",
   "last_updated": "2026-03-10T00:00:00Z"
 }

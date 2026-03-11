@@ -8,56 +8,75 @@
   },
   "offer": {
     "provider": {
-      "provider_id": "example-provider",
-      "name": "Example Provider AI",
-      "url": "https://example-provider.ai",
+      "provider_id": "vertex-ai",
+      "name": "Google Cloud Vertex AI",
+      "url": "https://cloud.google.com/vertex-ai",
       "contact": {
-        "email": "api@example-provider.ai",
-        "support_url": "https://docs.example-provider.ai"
+        "email": "cloud-sales@google.com",
+        "support_url": "https://cloud.google.com/support"
       }
     },
     "model": {
-      "model_id": "example-reasoning-v1",
-      "name": "Example Reasoning Model v1",
-      "task_classes": ["general", "reasoning", "coding"],
-      "context_window": 500000,
-      "max_output_tokens": 32768,
-      "modalities": ["text"],
-      "capabilities": ["tool_use", "structured_output", "streaming"],
-      "ai_act_risk_class": "minimal"
+      "model_id": "gemini-2.5-pro",
+      "name": "Gemini 2.5 Pro",
+      "version": "2026-03",
+      "task_classes": ["general", "reasoning", "coding", "multimodal"],
+      "context_window": 1048576,
+      "max_output_tokens": 65536,
+      "modalities": ["text", "image_input", "video_input"],
+      "capabilities": ["tool_use", "structured_output", "streaming", "batch_api", "prompt_caching"],
+      "ai_act_risk_class": "minimal",
+      "gpai_model_card_url": "https://cloud.google.com/vertex-ai/docs/ai-act"
     },
     "pricing": {
       "currency": "USD",
       "base": {
-        "input_per_mtok": 3.00,
-        "output_per_mtok": 12.00
+        "input_per_mtok": 1.25,
+        "output_per_mtok": 10.00
       },
+      "tiers": [
+        {
+          "threshold_mtok_monthly": 100,
+          "input_per_mtok": 1.00,
+          "output_per_mtok": 8.00
+        }
+      ],
       "modifiers": [
         {
           "type": "batch",
           "discount_pct": 50,
           "conditions": "Async processing, 24h SLA"
+        },
+        {
+          "type": "cache_read",
+          "input_per_mtok": 0.10,
+          "conditions": "Cached prompt prefix, min 1024 tokens"
         }
-      ]
+      ],
+      "free_tier": {
+        "monthly_input_tokens": 0,
+        "monthly_output_tokens": 0,
+        "notes": "No free tier for this model"
+      }
     },
     "compliance": {
       "compliance_verified_by": "self-declared",
-      "certifications": ["soc2"],
-      "data_regions": ["EU"],
+      "certifications": ["soc2", "iso27001"],
+      "data_regions": ["US", "EU", "APAC"],
       "gdpr_compliant": true,
       "dpa_available": true,
-      "data_retention_days": 0,
+      "data_retention_days": 30,
       "training_on_data": false,
-      "privacy_policy_url": "https://example-provider.ai/privacy"
+      "privacy_policy_url": "https://cloud.google.com/terms/cloud-privacy-notice"
     },
     "sla": {
       "uptime_pct": 99.9,
-      "ttft_p50_ms": 500,
+      "ttft_p50_ms": 400,
       "ttft_p99_ms": 2000,
-      "tps_median": 100
+      "tps_median": 120
     },
     "valid_from": "2026-03-10T00:00:00Z",
     "valid_until": "2026-04-10T00:00:00Z",
-    "terms_url": "https://example-provider.ai/terms"
+    "terms_url": "https://cloud.google.com/terms/service-terms"
   }
 }

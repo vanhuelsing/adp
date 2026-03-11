@@ -8,26 +8,44 @@
   },
   "request": {
     "requester": {
-      "agent_id": "agent:mycompany:procurement-bot",
+      "agent_id": "agent:acme:procurement-bot",
       "is_automated": true,
-      "name": "MyCompany Procurement Agent",
+      "name": "Acme Procurement Agent",
       "contact": {
-        "email": "api@mycompany.com"
+        "email": "api@acme.com"
       }
     },
     "requirements": {
       "task_classes": ["reasoning"],
       "min_context_window": 200000,
+      "min_output_tokens": 8192,
       "modalities": ["text"],
       "capabilities": ["tool_use", "structured_output"],
-      "compliance": ["gdpr", "eu_hosting"]
+      "compliance": ["gdpr", "eu_hosting"],
+      "max_latency_ms": {
+        "ttft": 2000,
+        "tps": 50
+      }
+    },
+    "volume": {
+      "estimated_monthly_input_tokens": 50000000,
+      "estimated_monthly_output_tokens": 10000000,
+      "pattern": "steady",
+      "batch_eligible": true
     },
     "budget": {
       "max_cost_per_mtok_input": 5.00,
       "max_cost_per_mtok_output": 20.00,
-      "currency": "USD"
+      "currency": "USD",
+      "max_monthly_spend": 500.00
+    },
+    "preferences": {
+      "commitment": "none",
+      "preferred_providers": [],
+      "excluded_providers": [],
+      "deal_type": "pay_as_you_go"
     },
     "valid_until": "2026-03-17T12:00:00Z",
-    "request_ttl_hours": 24
+    "request_ttl_hours": 168
   }
 }

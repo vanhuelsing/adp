@@ -2,21 +2,25 @@
 
 **Status:** Draft  
 **Version:** 0.1.1  
-**Last updated:** 2026-03-10
 
 ## Contents
 
-- [`protocol.md`](protocol.md) — Full specification
-- [`examples/`](examples/) — Example JSON messages
-  - `deal-request-basic.json` — Minimal DealRequest
-  - `deal-offer-basic.json` — Minimal DealOffer
-  - `deal-intent-basic.json` — Minimal DealIntent
-  - `deal-error.json` — DealError example
-  - `well-known-adp.json` — Example `/.well-known/adp.json`
+- [`protocol.md`](protocol.md) — Full specification with all fields and design decisions
+- [`examples/`](examples/) — JSON message examples
 - [`schemas/`](schemas/) — JSON Schemas *(coming in v0.1.x)*
 
-## Quick Start
+## Quick Links
 
-1. Read the [implementation guide](../../docs/implementation-guide.md)
-2. Look at the [examples](examples/)
-3. Read the [full spec](protocol.md) for edge cases and design decisions
+| Resource | Description |
+|----------|-------------|
+| [Implementation Guide](../../docs/implementation-guide.md) | Step-by-step integration guide |
+| [FAQ](../../docs/faq.md) | Common questions |
+
+## Message Types
+
+| Type | Purpose |
+|------|---------|
+| `DealRequest` | Agent requests LLM API offers |
+| `DealOffer` | Provider responds with pricing |
+| `DealIntent` | Agent signals non-binding interest |
+| `DealError` | Error response |
