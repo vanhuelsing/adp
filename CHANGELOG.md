@@ -1,31 +1,61 @@
 # Changelog
 
-All notable changes to this project are documented here.
+All notable changes to the ADP (apideals Deal Protocol) will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.1.1-draft] — 2026-03-10
-
-Initial public release after multi-role review.
-
-### Breaking
-- `DealAccept` renamed to `DealIntent` (legal safety)
-- `expires_at` renamed to `valid_until` in DealRequest
-- `task_class` (singular) → `task_classes[]` (array)
+## [0.1.1] - 2026-03-11
 
 ### Added
-- `DealError` message type
-- `compliance_verified_by` required field
-- `is_automated` required field (EU AI Act compliance)
-- `binding`, `requires_human_confirmation`, `party_type` in DealIntent
-- `ai_act_risk_class`, `gpai_model_card_url`, `prohibited_uses` in model
-- `request_ttl_hours` for GDPR Art. 17 compliance
-- `/.well-known/adp.json` discovery convention
-- Legal disclaimers for compliance tags
+- **JSON Schemas** (Draft 2020-12) for all message types
+  - `adp-header.schema.json`
+  - `deal-request.schema.json`
+  - `deal-offer.schema.json`
+  - `deal-intent.schema.json`
+  - `deal-error.schema.json`
+  - `pricing.schema.json`
+  - `compliance.schema.json`
+  - `well-known-adp.schema.json`
+- **TypeScript SDK** (`@adp/sdk`) with runtime validation
+  - Type definitions for all message types
+  - Validator functions using AJV
+  - Full test suite with Vitest
+- **Security documentation** (`docs/security-considerations.md`)
+  - Threat model
+  - Authentication roadmap
+  - Data validation guidelines
+  - GDPR compliance notes
+- **CI/CD pipeline** (GitHub Actions)
+  - Schema validation
+  - Example file validation
+  - TypeScript build and test
 
 ### Changed
-- Dual licensing: CC-BY 4.0 (spec) + Apache 2.0 (code)
+- **Complete i18n**: All documentation now in English
+- **Author attribution**: Changed to `vanhuelsing` throughout
+- **README overhaul**: Hero section, installation instructions, badges
+- **Protocol spec**: Added Section 8 "Security Considerations"
 
-## [0.1.0-draft] — 2026-03-09
+### Fixed
+- Example `deal-offer-basic.json`: Changed `APAC` to `JP` (2-letter ISO code)
+- Example `deal-error.json`: Fixed UUID v4 format (was v1)
+- All examples now validate against schemas
 
-Initial internal draft.
+### Security
+- UUID v4 format strictly enforced in schemas
+- ISO 8601 UTC timestamps strictly enforced
+- String length limits added (name: 100, conditions: 500, notes: 1000)
+
+## [0.1.0] - 2026-03-09
+
+### Added
+- Initial protocol specification
+- Four core message types: DealRequest, DealOffer, DealIntent, DealError
+- Pricing schema with tiers, modifiers, and commitment deals
+- Compliance and capabilities vocabulary
+- Provider discovery via `.well-known/adp.json`
+- Dual licensing (CC-BY 4.0 for spec, Apache 2.0 for code)
+
+[0.1.1]: https://github.com/vanhuelsing/adp/releases/tag/v0.1.1
+[0.1.0]: https://github.com/vanhuelsing/adp/releases/tag/v0.1.0
