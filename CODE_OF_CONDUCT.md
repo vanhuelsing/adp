@@ -15,4 +15,4 @@
 
 ## Enforcement
 
-Report violations to adp@apideals.ai. Maintainers may remove comments or ban violators.
+Report violations to adp@apideals.ai or open a private issue. Maintainers may remove comments or ban violators.
