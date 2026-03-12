@@ -12,7 +12,8 @@
 
 <p align="center">
   <a href="https://github.com/vanhuelsing/adp/releases"><img src="https://img.shields.io/github/v/release/vanhuelsing/adp?include_prereleases" alt="Release"></a>
-  <a href="spec/v0.1/protocol.md"><img src="https://img.shields.io/badge/spec-v0.1.1--draft-blue" alt="Spec"></a>
+  <a href="spec/v0.1/protocol.md"><img src="https://img.shields.io/badge/spec-v0.1.1-blue" alt="Spec v0.1.1"></a>
+  <a href="spec/v0.2/README.md"><img src="https://img.shields.io/badge/spec-v0.2.0--draft-orange" alt="Spec v0.2.0 Draft"></a>
   <a href="LICENSE-SPEC"><img src="https://img.shields.io/badge/license-CC--BY%204.0-lightgrey" alt="License: CC-BY 4.0"></a>
   <a href="LICENSE-CODE"><img src="https://img.shields.io/badge/code-Apache%202.0-green" alt="License: Apache 2.0"></a>
 </p>
@@ -50,6 +51,20 @@ LLM API pricing is a fragmented mess. Agents today must:
 
 ---
 
+## What's New in v0.2.0 (Draft)
+
+> **[Read the full v0.2.0 spec →](spec/v0.2/README.md)**
+
+| Feature | Description | Spec |
+|---------|-------------|------|
+| 🔐 **Authentication** | API Key, OAuth 2.0, HMAC Request Signing | [`auth.md`](spec/v0.2/auth.md) |
+| 🌐 **HTTP Binding** | Standardized endpoints, headers, status codes, OpenAPI 3.1 | [`http-binding.md`](spec/v0.2/http-binding.md) |
+| 🖼️ **Multimodal Pricing** | Image, Audio, Video pricing ($/Megapixel, $/Minute, $/Frame) | [`pricing-multimodal.md`](spec/v0.2/pricing-multimodal.md) |
+| ✅ **DealIntentAck** | New 5th message type — provider confirms intent receipt | [`http-binding.md`](spec/v0.2/http-binding.md#25) |
+| 📋 **Error Code Registry** | Central registry of all 10 error codes | [`http-binding.md`](spec/v0.2/http-binding.md#3) |
+
+---
+
 ## Quick Start
 
 ### Provider: Host a discovery file
@@ -58,8 +73,8 @@ LLM API pricing is a fragmented mess. Agents today must:
 # Serve at https://your-domain.com/.well-known/adp.json
 {
   "adp_supported": true,
-  "adp_versions": ["0.1.1"],
-  "offer_endpoint": "https://api.your-domain.com/adp/offers"
+  "adp_versions": ["0.1.1", "0.2.0"],
+  "offer_endpoint": "https://api.your-domain.com/adp/offer"
 }
 ```
 
@@ -143,23 +158,35 @@ go get github.com/vanhuelsing/adp/sdk/go
 
 ## Message Types
 
-| Type | Direction | Purpose |
-|------|-----------|---------|
-| `DealRequest` | Agent → Provider | Request LLM API with requirements |
-| `DealOffer` | Provider → Agent | Offer model at specific terms |
-| `DealIntent` | Agent → Provider | Signal intent (non-binding) |
-| `DealError` | Both | Machine-readable error |
+| Type | Direction | Purpose | Since |
+|------|-----------|---------|-------|
+| `DealRequest` | Agent → Provider | Request LLM API with requirements | v0.1 |
+| `DealOffer` | Provider → Agent | Offer model at specific terms | v0.1 |
+| `DealIntent` | Agent → Provider | Signal intent (non-binding) | v0.1 |
+| `DealError` | Both | Machine-readable error | v0.1 |
+| `DealIntentAck` | Provider → Agent | Confirm intent receipt | v0.2 |
 
 ---
 
 ## Documentation
 
-- **[Full Specification](spec/v0.1/protocol.md)** — Complete protocol reference
+### v0.1.1 (Stable)
+- **[Full Specification](spec/v0.1/protocol.md)** — Core protocol reference
 - **[JSON Schemas](spec/v0.1/schemas/)** — Draft 2020-12 validation schemas
+- **[Examples](spec/v0.1/examples/)** — JSON message examples
+
+### v0.2.0 (Draft)
+- **[Overview & Migration Guide](spec/v0.2/README.md)** — What's new, how to migrate
+- **[Auth & Security](spec/v0.2/auth.md)** — API Key, OAuth 2.0, Rate Limiting
+- **[HTTP Binding](spec/v0.2/http-binding.md)** — Endpoints, OpenAPI 3.1, Error Codes
+- **[Multimodal Pricing](spec/v0.2/pricing-multimodal.md)** — Image, Audio, Video
+- **[JSON Schemas](spec/v0.2/schemas/)** — v0.2.0 validation schemas
+- **[Examples](spec/v0.2/examples/)** — v0.2.0 message examples
+
+### General
 - **[Implementation Guide](docs/implementation-guide.md)** — Integration guide
 - **[Security Considerations](docs/security-considerations.md)** — Threat model & mitigations
 - **[FAQ](docs/faq.md)** — Common questions
-- **[Examples](spec/v0.1/examples/)** — JSON message examples
 
 ---
 
@@ -180,12 +207,12 @@ if (!result.valid) {
 
 ## Roadmap
 
-| Version | Focus | ETA |
-|---------|-------|-----|
-| **v0.1.1** | Core messages, discovery, legal safety | ✅ Now |
-| **v0.2.0** | Auth, HTTP binding, multimodal pricing | +3 months |
-| **v0.3.0** | Counter-offers, usage reporting | +5 months |
-| **v1.0.0** | Payment escrow, governance | +8 months |
+| Version | Focus | Status |
+|---------|-------|--------|
+| **v0.1.1** | Core messages, discovery, legal safety | ✅ Released |
+| **v0.2.0** | Auth, HTTP binding, multimodal pricing | 📝 [Draft available](spec/v0.2/README.md) |
+| **v0.3.0** | Counter-offers, pagination, usage reporting | 🔜 Planned |
+| **v1.0.0** | Payment escrow, governance, formal schemas | 📋 Planned |
 
 ---
 
