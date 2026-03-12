@@ -1,0 +1,21 @@
+{
+  "adp": {
+    "version": "0.2.0",
+    "type": "DealError",
+    "id": "f6a7b8c9-d0e1-2345-f012-345678901bcd",
+    "timestamp": "2026-03-12T10:07:00Z",
+    "correlation_id": "550e8400-e29b-41d4-a716-446655440000"
+  },
+  "error": {
+    "code": "RATE_LIMITED",
+    "message": "Rate limit exceeded. Try again after 60 seconds.",
+    "retryable": true,
+    "retry_after_ms": 60000,
+    "details": {
+      "limit": 1000,
+      "remaining": 0,
+      "reset_at": "2026-03-12T10:08:00Z",
+      "hint": "Your rate limit window resets at 2026-03-12T10:08:00Z. Please retry after that time."
+    }
+  }
+}

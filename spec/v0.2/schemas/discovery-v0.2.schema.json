@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://apideals.ai/schemas/discovery-v0.2.schema.json",
+  "title": "ADP v0.2.0 Discovery Document",
+  "description": "Provider metadata and capabilities (ADP Discovery v0.2.0)",
+  "type": "object",
+  "properties": {
+    "discovery_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Version of the Discovery document format (semver). Defaults to v0.1.1 if omitted."
+    },
+    "adp_supported": {
+      "type": "boolean",
+      "description": "Whether ADP is supported"
+    },
+    "adp_versions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of supported ADP versions (e.g., [\"0.1.1\", \"0.2.0\"])"
+    },
+    "offer_endpoint": {
+      "type": "string",
+      "format": "uri",
+      "description": "URL to POST /adp/offer endpoint"
+    },
+    "intent_endpoint": {
+      "type": "string",
+      "format": "uri",
+      "description": "URL to POST /adp/intent endpoint"
+    },
+    "models_endpoint": {
+      "type": "string",
+      "format": "uri",
+      "description": "URL to models list (optional, for backwards compatibility with v0.1.1)"
+    },
+    "static_offers_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "URL to static offers JSON (optional, for backwards compatibility with v0.1.1)"
+    },
+    "auth": {
+      "type": "object",
+      "properties": {
+        "methods": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["api_key", "oauth2", "request_signing"]
+          },
+          "description": "Supported authentication methods"
+        },
+        "api_key": {
+          "type": "object",
+          "properties": {
+            "format": {
+              "type": "string",
+              "description": "API Key format (e.g., \"adp_<version>_<key>_<checksum>\")"
+            },
+            "header": {
+              "type": "string",
+              "description": "Header name and format (e.g., \"Authorization: Bearer <token>\")"
+            }
+          }
+        },
+        "oauth2": {
+          "type": "object",
+          "properties": {
+            "token_endpoint": {
+              "type": "string",
+              "format": "uri",
+              "description": "OAuth 2.0 token endpoint"
+            },
+            "authorization_endpoint": {
+              "type": "string",
+              "format": "uri",
+              "description": "OAuth 2.0 authorization endpoint"
+            },
+            "scopes_supported": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "List of supported OAuth scopes"
+            },
+            "grant_types_supported": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "List of supported OAuth grant types"
+            }
+          }
+        },
+        "request_signing": {
+          "type": "object",
+          "properties": {
+            "supported": {
+              "type": "boolean",
+              "description": "Whether request signing (HMAC) is supported"
+            },
+            "algorithm": {
+              "type": "string",
+              "description": "Signing algorithm (e.g., \"hmac-sha256\")"
+            }
+          }
+        }
+      }
+    },
+    "rate_limiting": {
+      "type": "object",
+      "properties": {
+        "requests_per_minute": {
+          "type": "integer",
+          "description": "Rate limit in requests per minute"
+        },
+        "burst_allowance": {
+          "type": "integer",
+          "description": "Burst allowance (extra requests allowed)"
+        }
+      }
+    },
+    "contact": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Contact email"
+        }
+      }
+    },
+    "last_updated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp of last discovery update (ISO 8601 UTC)"
+    }
+  },
+  "required": ["adp_supported", "adp_versions"]
+}

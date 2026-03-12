@@ -1,0 +1,28 @@
+{
+  "adp": {
+    "version": "0.2.0",
+    "type": "DealRequest",
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "timestamp": "2026-03-12T10:00:00Z",
+    "correlation_id": null
+  },
+  "request": {
+    "requester": {
+      "agent_id": "agent:mycompany:document-analyzer",
+      "is_automated": true
+    },
+    "requirements": {
+      "task_classes": ["reasoning", "vision"],
+      "modalities": ["text", "image_input"]
+    },
+    "constraints": {
+      "prefer_cached": false,
+      "allow_tool_use": true
+    },
+    "budget": {
+      "max_cost_per_request": 1.00,
+      "max_cost_per_mtok_input": 5.00,
+      "currency": "USD"
+    }
+  }
+}

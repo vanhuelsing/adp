@@ -1,0 +1,18 @@
+{
+  "adp": {
+    "version": "0.2.0",
+    "type": "DealError",
+    "id": "e5f6a7b8-c9d0-1234-ef01-234567890abc",
+    "timestamp": "2026-03-12T10:06:00Z",
+    "correlation_id": "550e8400-e29b-41d4-a716-446655440000"
+  },
+  "error": {
+    "code": "UNAUTHORIZED",
+    "message": "Invalid or missing authentication token",
+    "retryable": false,
+    "details": {
+      "reason": "The Authorization header contains an invalid API key",
+      "hint": "Verify that your API key is correctly formatted and has not expired"
+    }
+  }
+}

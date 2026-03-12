@@ -1,0 +1,15 @@
+{
+  "adp": {
+    "version": "0.2.0",
+    "type": "DealIntentAck",
+    "id": "d4e5f6a7-b8c9-0123-def0-456789012345",
+    "timestamp": "2026-03-12T10:05:01Z",
+    "correlation_id": "c3d4e5f6-a7b8-9012-cdef-345678901234"
+  },
+  "acknowledgment": {
+    "status": "received",
+    "next_steps": "Please complete signup at https://openai.com/signup?deal=c3d4e5f6-a7b8-9012-cdef-345678901234",
+    "reference_id": "REF-20260312-001",
+    "expires_at": "2026-03-19T10:05:01Z"
+  }
+}

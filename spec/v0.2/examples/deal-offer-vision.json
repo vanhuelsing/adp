@@ -1,0 +1,70 @@
+{
+  "adp": {
+    "version": "0.2.0",
+    "type": "DealOffer",
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "timestamp": "2026-03-12T10:00:01Z",
+    "correlation_id": "550e8400-e29b-41d4-a716-446655440000"
+  },
+  "offer": {
+    "provider": {
+      "name": "OpenAI",
+      "website": "https://openai.com",
+      "support_email": "support@openai.com"
+    },
+    "model": {
+      "id": "gpt-4o",
+      "name": "GPT-4o",
+      "description": "Multimodal model with text and vision capabilities",
+      "capabilities": ["text_generation", "vision", "reasoning"],
+      "modalities": ["text", "image_input"],
+      "context_window_tokens": 128000,
+      "training_data_cutoff": "2023-10-01"
+    },
+    "pricing": {
+      "currency": "USD",
+      "base": {
+        "input_per_mtok": 2.50,
+        "output_per_mtok": 10.00
+      },
+      "modalities": {
+        "text": {
+          "input_per_mtok": 2.50,
+          "output_per_mtok": 10.00,
+          "cached_input_per_mtok": 1.25
+        },
+        "image_input": {
+          "token_equivalent": {
+            "tokens_per_tile": 170,
+            "tile_size": "512x512",
+            "pricing_via_text": true
+          },
+          "notes": "Images are tiled into 512x512 squares. Low detail mode uses a single tile. Typical token counts: 512×512=170, 1024×1024=680, 2048×2048=2720"
+        }
+      },
+      "modifiers": [
+        {
+          "type": "cache_read",
+          "input_per_mtok": 1.25,
+          "conditions": "Cached prompt tokens"
+        }
+      ]
+    },
+    "availability": {
+      "available": true,
+      "tier": "standard",
+      "response_time_seconds": 10
+    },
+    "activation": {
+      "type": "direct_api",
+      "endpoint": "https://api.openai.com/v1/chat/completions",
+      "required_credentials": ["api_key"],
+      "sso_enabled": false
+    },
+    "terms": {
+      "binding": false,
+      "expires_at": "2026-03-13T10:00:01Z",
+      "renewal_period_days": 30
+    }
+  }
+}

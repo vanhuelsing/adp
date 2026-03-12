@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://apideals.ai/schemas/deal-intent-ack.schema.json",
+  "title": "DealIntentAck",
+  "description": "Acknowledgment response for DealIntent (ADP v0.2.0)",
+  "type": "object",
+  "properties": {
+    "adp": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^0\\.2\\.",
+          "description": "ADP Protocol version"
+        },
+        "type": {
+          "type": "string",
+          "const": "DealIntentAck",
+          "description": "Message type identifier"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Unique message ID (UUID v4)"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Creation timestamp (ISO 8601 UTC)"
+        },
+        "correlation_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Reference to the DealIntent being acknowledged (UUID v4)"
+        }
+      },
+      "required": ["version", "type", "id", "timestamp", "correlation_id"]
+    },
+    "acknowledgment": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["received", "processing", "confirmed"],
+          "description": "Acknowledgment status"
+        },
+        "next_steps": {
+          "type": "string",
+          "description": "Human-readable next steps for the requester"
+        },
+        "reference_id": {
+          "type": "string",
+          "description": "Provider-side reference ID for this intent"
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When this acknowledgment expires (optional)"
+        }
+      },
+      "required": ["status"]
+    }
+  },
+  "required": ["adp", "acknowledgment"]
+}

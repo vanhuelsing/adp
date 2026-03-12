@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://apideals.ai/schemas/auth-header.schema.json",
+  "title": "ADP Auth Header",
+  "description": "Authentication header formats for ADP v0.2.0",
+  "type": "object",
+  "properties": {
+    "Authorization": {
+      "type": "string",
+      "pattern": "^Bearer (adp_[a-zA-Z0-9_-]+|eyJ[a-zA-Z0-9_-]*\\.eyJ[a-zA-Z0-9_-]*\\.[a-zA-Z0-9_-]+)$",
+      "description": "Bearer token - either ADP API Key or JWT/OAuth token"
+    },
+    "X-ADP-Version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "ADP Protocol version (e.g., 0.2.0)"
+    },
+    "X-ADP-Idempotency-Key": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Idempotency key for request deduplication (UUID v4)"
+    },
+    "X-ADP-Signature": {
+      "type": "string",
+      "pattern": "^hmac-sha256=[A-Za-z0-9+/=]+$",
+      "description": "HMAC-SHA256 signature (optional, for request signing)"
+    },
+    "X-ADP-Signature-Timestamp": {
+      "type": "string",
+      "pattern": "^\\d{10}$",
+      "description": "Unix timestamp for signature (10 digits)"
+    }
+  },
+  "required": ["Authorization", "X-ADP-Version"]
+}
