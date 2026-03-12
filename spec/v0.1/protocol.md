@@ -32,11 +32,11 @@ ADP (apideals Deal Protocol) is a JSON-based message protocol enabling software 
 - Compliance and capability vocabularies
 - Provider discovery via `/.well-known/adp.json`
 
-**Not in v0.1:**
-- Transport layer (HTTP, WebSocket) — transport-agnostic
-- Authentication/authorization — v0.2
+**Not in v0.1 (addressed in later versions):**
+- Transport layer (HTTP, WebSocket) — transport-agnostic → **[v0.2.0: HTTP Binding](../v0.2/http-binding.md)**
+- Authentication/authorization → **[v0.2.0: Auth & Security](../v0.2/auth.md)**
+- Multimodal pricing (images, audio, video) → **[v0.2.0: Multimodal Pricing](../v0.2/pricing-multimodal.md)**
 - Payment/billing — v0.3
-- Multimodal pricing (images, audio) — v0.2
 
 ### Design Principles
 
@@ -499,6 +499,15 @@ ADP follows [Semantic Versioning 2.0](https://semver.org/):
 | New optional fields, new enum values | MINOR | `0.1` → `0.2` |
 | Clarifications, bug fixes | PATCH | `0.1.0` → `0.1.1` |
 
+### Roadmap
+
+| Version | Content | Status |
+|---------|---------|--------|
+| **v0.1.1** | Core Messages, Pricing, Discovery, Compliance | ✅ Released |
+| **[v0.2.0](../v0.2/README.md)** | Auth, HTTP Binding, Multimodal Pricing, DealIntentAck | 📝 Draft |
+| **v0.3.0** | Counter-Offers, DealConfirm, Usage-Reporting, Pagination | Planned |
+| **v1.0.0** | Payment-Escrow, Community Governance, Formal JSON Schemas | Planned |
+
 ### Pre-1.0 Disclaimer
 
 During `0.x`, breaking changes may occur between minor versions. The protocol is experimental. Post-1.0, semver rules apply strictly.
@@ -526,11 +535,11 @@ All major LLM providers use flat-rate (not marginal) tier pricing. When you exce
 
 ### Why transport-agnostic?
 
-ADP v0.1 defines message formats only. Providers can use HTTP, WebSocket, message queues, or even static files. HTTP binding will be specified in v0.2.
+ADP v0.1 defines message formats only. Providers can use HTTP, WebSocket, message queues, or even static files. **→ HTTP binding is now specified in [v0.2.0](../v0.2/http-binding.md).**
 
 ### Why $/MTok only?
 
-The LLM API market has converged on $/MTok as the standard unit. Using one unit eliminates conversion errors. Non-token pricing will be addressed in v0.2.
+The LLM API market has converged on $/MTok as the standard unit. Using one unit eliminates conversion errors. **→ Non-token pricing (images, audio, video) is now specified in [v0.2.0](../v0.2/pricing-multimodal.md).**
 
 ### Why dual licensing?
 
