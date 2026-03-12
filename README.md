@@ -1,7 +1,7 @@
 # ADP
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/vanhuelsing/adp/main/assets/logo.svg" width="120" height="120" alt="ADP Logo">
+  <img src="https://raw.githubusercontent.com/vanhuelsing/adp/main/assets/logo.png" width="120" height="120" alt="ADP Logo">
 </p>
 
 <h1 align="center">ADP</h1>
