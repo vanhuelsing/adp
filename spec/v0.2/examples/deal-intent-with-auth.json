@@ -1,0 +1,25 @@
+{
+  "http_request_headers": {
+    "Authorization": "Bearer adp_v2_a1b2c3d4e5f6_x7y8z9",
+    "Content-Type": "application/adp+json",
+    "X-ADP-Version": "0.2.0",
+    "X-ADP-Idempotency-Key": "660f9511-f3ac-52e5-c827-557766551111",
+    "X-ADP-Signature": "hmac-sha256=rBjPv/9BDVLMd6R0qV8j7x5K2Y1w3zL9mQ7N4pO6sT8=",
+    "X-ADP-Signature-Timestamp": "1741832400"
+  },
+  "adp": {
+    "version": "0.2.0",
+    "type": "DealIntent",
+    "id": "c3d4e5f6-a7b8-9012-cdef-345678901234",
+    "timestamp": "2026-03-12T10:05:00Z",
+    "correlation_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+  },
+  "intent": {
+    "binding": false,
+    "accepted_offer_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "activation": {
+      "type": "redirect",
+      "redirect_url": "https://openai.com/signup?deal=c3d4e5f6-a7b8-9012-cdef-345678901234&agent=agent:mycompany:doc-analyzer"
+    }
+  }
+}

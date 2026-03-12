@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://apideals.ai/schemas/rate-limit.schema.json",
+  "title": "ADP Rate Limit Headers",
+  "description": "Rate limit response headers for ADP v0.2.0",
+  "type": "object",
+  "properties": {
+    "X-ADP-RateLimit-Limit": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Maximum requests allowed per time window"
+    },
+    "X-ADP-RateLimit-Remaining": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Remaining requests in current time window"
+    },
+    "X-ADP-RateLimit-Reset": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 UTC timestamp when the rate limit resets"
+    }
+  },
+  "required": ["X-ADP-RateLimit-Limit", "X-ADP-RateLimit-Remaining", "X-ADP-RateLimit-Reset"]
+}

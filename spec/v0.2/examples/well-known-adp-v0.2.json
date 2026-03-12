@@ -1,0 +1,34 @@
+{
+  "discovery_version": "0.2.0",
+  "adp_supported": true,
+  "adp_versions": ["0.1.1", "0.2.0"],
+  "offer_endpoint": "https://api.provider.com/adp/offer",
+  "intent_endpoint": "https://api.provider.com/adp/intent",
+  "models_endpoint": "https://api.provider.com/adp/models",
+  "static_offers_url": "https://provider.com/adp/offers.json",
+  "auth": {
+    "methods": ["api_key", "oauth2"],
+    "api_key": {
+      "format": "adp_<version>_<key>_<checksum>",
+      "header": "Authorization: Bearer <token>"
+    },
+    "oauth2": {
+      "token_endpoint": "https://auth.provider.com/oauth/token",
+      "authorization_endpoint": "https://auth.provider.com/oauth/authorize",
+      "scopes_supported": ["adp:read", "adp:request", "adp:intent"],
+      "grant_types_supported": ["client_credentials", "authorization_code"]
+    },
+    "request_signing": {
+      "supported": true,
+      "algorithm": "hmac-sha256"
+    }
+  },
+  "rate_limiting": {
+    "requests_per_minute": 1000,
+    "burst_allowance": 100
+  },
+  "contact": {
+    "email": "api@provider.com"
+  },
+  "last_updated": "2026-03-12T10:00:00Z"
+}

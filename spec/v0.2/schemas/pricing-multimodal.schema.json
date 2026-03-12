@@ -1,0 +1,194 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://apideals.ai/schemas/pricing-multimodal.schema.json",
+  "title": "ADP Multimodal Pricing Schema",
+  "description": "Pricing schema supporting text, image, audio, and video modalities",
+  "type": "object",
+  "properties": {
+    "currency": {
+      "type": "string",
+      "pattern": "^[A-Z]{3}$",
+      "description": "ISO 4217 currency code (e.g., USD, EUR)"
+    },
+    "base": {
+      "$ref": "#/$defs/textPricing",
+      "description": "Fallback pricing for text (for backwards compatibility with v0.1.1)"
+    },
+    "modalities": {
+      "type": "object",
+      "properties": {
+        "text": { "$ref": "#/$defs/textPricing" },
+        "image_input": { "$ref": "#/$defs/imageInputPricing" },
+        "image_output": { "$ref": "#/$defs/imageOutputPricing" },
+        "audio_input": { "$ref": "#/$defs/audioInputPricing" },
+        "audio_output": { "$ref": "#/$defs/audioOutputPricing" },
+        "video_input": { "$ref": "#/$defs/videoInputPricing" }
+      }
+    },
+    "tiers": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/tier" },
+      "description": "Volume-based pricing tiers"
+    },
+    "modifiers": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/modifier" },
+      "description": "Price modifiers (discounts, surcharges)"
+    },
+    "bundles": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/bundle" },
+      "description": "Bundle pricing for combined modalities"
+    },
+    "free_tier": { "$ref": "#/$defs/freeTier" },
+    "notes": {
+      "type": "string",
+      "description": "Additional provider-specific notes"
+    }
+  },
+  "required": ["currency"],
+  "$defs": {
+    "textPricing": {
+      "type": "object",
+      "properties": {
+        "input_per_mtok": { "type": "number", "minimum": 0 },
+        "output_per_mtok": { "type": "number", "minimum": 0 },
+        "cached_input_per_mtok": { "type": "number", "minimum": 0 }
+      }
+    },
+    "imageInputPricing": {
+      "type": "object",
+      "properties": {
+        "per_megapixel": { "type": "number", "minimum": 0 },
+        "minimum_megapixels": { "type": "number", "minimum": 0 },
+        "fixed_per_image": { "type": "number", "minimum": 0 },
+        "token_equivalent": {
+          "type": "object",
+          "properties": {
+            "tokens_per_tile": { "type": "integer" },
+            "tile_size": { "type": "string" },
+            "pricing_via_text": { "type": "boolean" }
+          }
+        },
+        "tiers": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/tier" }
+        }
+      }
+    },
+    "imageOutputPricing": {
+      "type": "object",
+      "properties": {
+        "per_image": { "type": "number", "minimum": 0 },
+        "per_megapixel": { "type": "number", "minimum": 0 },
+        "resolutions": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "per_image": { "type": "number", "minimum": 0 }
+            }
+          }
+        },
+        "quality_tiers": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "multiplier": { "type": "number", "minimum": 0 }
+            }
+          }
+        }
+      }
+    },
+    "audioInputPricing": {
+      "type": "object",
+      "properties": {
+        "per_minute": { "type": "number", "minimum": 0 },
+        "minimum_minutes": { "type": "number", "minimum": 0 },
+        "per_hour": { "type": "number", "minimum": 0 },
+        "tiers": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/tier" }
+        }
+      }
+    },
+    "audioOutputPricing": {
+      "type": "object",
+      "properties": {
+        "per_character": { "type": "number", "minimum": 0 },
+        "per_minute": { "type": "number", "minimum": 0 },
+        "per_million_characters": { "type": "number", "minimum": 0 },
+        "minimum_characters": { "type": "integer", "minimum": 0 },
+        "voices": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "per_character": { "type": "number", "minimum": 0 }
+            }
+          }
+        }
+      }
+    },
+    "videoInputPricing": {
+      "type": "object",
+      "properties": {
+        "per_frame": { "type": "number", "minimum": 0 },
+        "per_second": { "type": "number", "minimum": 0 },
+        "fps_baseline": { "type": "integer", "minimum": 1 },
+        "maximum_duration_seconds": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "tier": {
+      "type": "object",
+      "properties": {
+        "threshold_mtok_monthly": { "type": "number", "minimum": 0 },
+        "threshold_megapixels_monthly": { "type": "number", "minimum": 0 },
+        "threshold_hours_monthly": { "type": "number", "minimum": 0 },
+        "input_per_mtok": { "type": "number", "minimum": 0 },
+        "output_per_mtok": { "type": "number", "minimum": 0 },
+        "per_megapixel": { "type": "number", "minimum": 0 },
+        "per_minute": { "type": "number", "minimum": 0 }
+      }
+    },
+    "modifier": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["batch", "cache_read", "cache_write", "detail_mode", "quality"]
+        },
+        "discount_pct": { "type": "number", "minimum": 0, "maximum": 99 },
+        "input_per_mtok": { "type": "number", "minimum": 0 },
+        "output_per_mtok": { "type": "number", "minimum": 0 },
+        "high_detail_per_megapixel": { "type": "number", "minimum": 0 },
+        "low_detail_per_megapixel": { "type": "number", "minimum": 0 },
+        "conditions": { "type": "string" }
+      }
+    },
+    "bundle": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "includes": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "pricing": { "type": "object" }
+      },
+      "required": ["name", "includes"]
+    },
+    "freeTier": {
+      "type": "object",
+      "properties": {
+        "monthly_input_tokens": { "type": "integer", "minimum": 0 },
+        "monthly_output_tokens": { "type": "integer", "minimum": 0 },
+        "monthly_characters": { "type": "integer", "minimum": 0 },
+        "monthly_images": { "type": "integer", "minimum": 0 },
+        "monthly_minutes": { "type": "number", "minimum": 0 },
+        "rate_limit_rpm": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

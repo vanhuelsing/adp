@@ -1,0 +1,61 @@
+{
+  "adp": {
+    "version": "0.2.0",
+    "type": "DealOffer",
+    "id": "b2c3d4e5-f6a7-8901-bcde-f23456789012",
+    "timestamp": "2026-03-12T10:00:02Z",
+    "correlation_id": "550e8400-e29b-41d4-a716-446655440000"
+  },
+  "offer": {
+    "provider": {
+      "name": "ElevenLabs",
+      "website": "https://elevenlabs.io",
+      "support_email": "support@elevenlabs.io"
+    },
+    "model": {
+      "id": "elevenlabs-tts-v1",
+      "name": "ElevenLabs TTS v1",
+      "description": "High-quality text-to-speech with 32+ voices",
+      "capabilities": ["text_to_speech", "voice_cloning"],
+      "modalities": ["audio_output"],
+      "latency_ms": 500
+    },
+    "pricing": {
+      "currency": "USD",
+      "modalities": {
+        "audio_output": {
+          "per_character": 0.000018,
+          "per_thousand_characters": 0.018,
+          "voices": {
+            "standard": {
+              "per_character": 0.000018
+            },
+            "clone": {
+              "per_character": 0.000030
+            }
+          }
+        }
+      },
+      "free_tier": {
+        "monthly_characters": 10000
+      }
+    },
+    "availability": {
+      "available": true,
+      "tier": "professional",
+      "response_time_seconds": 2
+    },
+    "activation": {
+      "type": "direct_api",
+      "endpoint": "https://api.elevenlabs.io/v1/text-to-speech",
+      "required_credentials": ["api_key"],
+      "sso_enabled": true,
+      "sso_provider": "google"
+    },
+    "terms": {
+      "binding": false,
+      "expires_at": "2026-03-19T10:00:02Z",
+      "renewal_period_days": 30
+    }
+  }
+}
