@@ -1,0 +1,19 @@
+name: Validate ADP Schemas & Examples
+
+on:
+  push:
+    branches: [main]
+    paths: ['spec/**']
+  pull_request:
+    paths: ['spec/**']
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validate JSON, UUIDs, and Timestamps
+        run: python scripts/validate.py
