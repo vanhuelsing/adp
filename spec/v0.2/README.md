@@ -63,6 +63,7 @@ ADP v0.2.0 introduces a complete HTTP binding and authentication layer, along wi
 - `deal-error-unauthorized.json` — 401 Unauthorized error
 - `deal-error-rate-limited.json` — 429 Rate Limited error
 - `well-known-adp-v0.2.json` — Discovery endpoint response (v0.2)
+- `deal-intent-http-example.txt` — Complete HTTP request example with auth headers (non-JSON reference)
 
 ## Migration from v0.1.1 → v0.2.0
 
