@@ -200,12 +200,11 @@
       background: var(--accent-dim);
     }
 
-    /* ─── BETA BADGE (unter Ticker) ─── */
+    /* ─── BETA BADGE (Header) ─── */
     .beta-badge {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      margin-top: 16px;
       padding: 4px 12px;
       background: rgba(0, 212, 255, 0.08);
       border: 1px solid rgba(0, 212, 255, 0.2);
@@ -232,35 +231,81 @@
       border-bottom: 1px solid var(--border);
       background: var(--surface);
       padding: 14px 0;
-      margin-top: 28px;
       margin-bottom: 0;
+      cursor: default;
+    }
+
+    /* Pause on hover */
+    .ticker-wrap:hover .ticker-track {
+      animation-play-state: paused;
     }
 
     .ticker-track {
       display: flex;
-      gap: 48px;
-      animation: ticker 28s linear infinite;
+      gap: 0;
+      animation: ticker 45s linear infinite;
       white-space: nowrap;
+      will-change: transform;
     }
 
     @keyframes ticker {
-      0% { transform: translateX(0); }
+      0%   { transform: translateX(0); }
       100% { transform: translateX(-50%); }
     }
 
+    /* ── Individual item ── */
     .ticker-item {
       display: inline-flex;
       align-items: center;
-      gap: 10px;
-      font-size: 0.82rem;
+      gap: 8px;
+      padding: 0 28px;
+      font-size: 0.80rem;
       font-family: 'JetBrains Mono', monospace;
+      flex-shrink: 0;
     }
 
-    .ticker-model { color: var(--muted); }
-    .ticker-price { color: var(--text); font-weight: 500; }
-    .ticker-change-up { color: var(--green); }
-    .ticker-change-down { color: var(--red); }
-    .ticker-sep { color: var(--border); }
+    .ticker-model {
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    .ticker-price-in {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .ticker-price-out {
+      color: var(--muted);
+      font-size: 0.74rem;
+      font-weight: 400;
+    }
+
+    /* FREE badge */
+    .ticker-free {
+      display: inline-block;
+      padding: 1px 7px;
+      background: rgba(0, 255, 204, 0.12);
+      border: 1px solid rgba(0, 255, 204, 0.35);
+      border-radius: 20px;
+      color: var(--accent2);
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    /* Delta indicators — show price change vs yesterday */
+    .ticker-delta-up   { color: var(--green); font-size: 0.75rem; margin-left: 6px; }
+    .ticker-delta-down { color: var(--red); font-size: 0.75rem; margin-left: 6px; }
+
+    /* Separator between items */
+    .ticker-sep {
+      color: var(--border);
+      flex-shrink: 0;
+      font-size: 0.75rem;
+      padding: 0 4px;
+      opacity: 0.5;
+    }
 
     /* ─── SECTION COMMON ─── */
     section {
@@ -299,7 +344,7 @@
     /* ─── CODE SECTION ─── */
     #code {
       background: var(--bg);
-      padding-top: 24px;
+      padding-top: 30px;
       padding-bottom: 80px;
     }
 
@@ -485,6 +530,10 @@
     <ul class="nav-links">
 
     </ul>
+    <div class="beta-badge">
+      <span class="beta-dot"></span>
+      Beta
+    </div>
   </nav>
 
   <!-- HERO -->
@@ -501,7 +550,7 @@
       </a>
     </div>
 
-    <div class="ticker-wrap">
+    <div class="ticker-wrap" id="ticker-wrap">
       <div class="ticker-track" id="ticker-track">
         <!-- filled by JS -->
       </div>
@@ -549,14 +598,6 @@
     </div>
   </section>
 
-  <!-- BETA BADGE -->
-  <div style="display: flex; justify-content: center; padding: 0 24px 48px;">
-    <div class="beta-badge">
-      <span class="beta-dot"></span>
-      Beta
-    </div>
-  </div>
-
   <!-- FOOTER -->
   <footer>
     <div class="footer-inner">
@@ -572,6 +613,9 @@
   </footer>
 
 </div>
+
+<!-- External Config (not in Git) — loaded before app code -->
+<script src="config.js"></script>
 
 <script>
 // ═══════════════════════════════════════════════
@@ -627,84 +671,244 @@
 })();
 
 // ═══════════════════════════════════════════════
-// TICKER DATA & LOGIC
+// TICKER — v7: Live Supabase data + delta prep
 // ═══════════════════════════════════════════════
 
-// Fallback data in case Supabase is unreachable
+// Config loaded from external config.js (not in Git)
+const SUPABASE_URL     = window.APIDEALS_CONFIG?.SUPABASE_URL     || 'REDACTED_SUPABASE_URL';
+const SUPABASE_ANON_KEY = window.APIDEALS_CONFIG?.SUPABASE_ANON_KEY || 'REDACTED_ANON_KEY';
+
+// Preferred providers for main pool (priority order)
+const PREFERRED_PROVIDERS = ['openai', 'anthropic', 'google', 'mistralai', 'meta-llama'];
+// Preferred providers for free pool
+const FREE_PREFERRED = ['google', 'meta-llama', 'mistralai'];
+
+// Fallback data for when Supabase is unreachable
 const TICKER_FALLBACK = [
-  { label: 'GPT-4o', price: 5.00 },
-  { label: 'Claude 3.5 Sonnet', price: 3.00 },
-  { label: 'Gemini 1.5 Pro', price: 3.50 },
-  { label: 'Mistral Large', price: 2.00 },
-  { label: 'Llama 3.1 405B', price: 1.80 },
-  { label: 'Command R+', price: 2.50 },
-  { label: 'GPT-4o mini', price: 0.15 },
-  { label: 'Claude Haiku', price: 0.25 },
+  { name: 'GPT-4o',            provider_slug: 'openai',     input_price: 5.00,  output_price: 15.00, isFree: false },
+  { name: 'Claude 3.5 Sonnet', provider_slug: 'anthropic',  input_price: 3.00,  output_price: 15.00, isFree: false },
+  { name: 'Gemini 1.5 Pro',    provider_slug: 'google',     input_price: 3.50,  output_price: 10.50, isFree: false },
+  { name: 'Mistral Large',     provider_slug: 'mistralai',  input_price: 2.00,  output_price: 6.00,  isFree: false },
+  { name: 'Llama 3.1 405B',    provider_slug: 'meta-llama', input_price: 1.80,  output_price: 5.40,  isFree: false },
+  { name: 'Command R+',        provider_slug: 'cohere',     input_price: 2.50,  output_price: 10.00, isFree: false },
+  { name: 'GPT-4o mini',       provider_slug: 'openai',     input_price: 0.15,  output_price: 0.60,  isFree: false },
+  { name: 'Claude Haiku 3.5',  provider_slug: 'anthropic',  input_price: 0.25,  output_price: 1.25,  isFree: false },
+  { name: 'Gemma 2 9B',        provider_slug: 'google',     input_price: 0,     output_price: 0,     isFree: true  },
+  { name: 'Llama 3.1 8B',      provider_slug: 'meta-llama', input_price: 0,     output_price: 0,     isFree: true  },
+  { name: 'Mistral 7B',        provider_slug: 'mistralai',  input_price: 0,     output_price: 0,     isFree: true  },
 ];
 
-// Preferred providers to feature in the ticker
-const PREFERRED_PROVIDERS = new Set([
-  'openai', 'anthropic', 'google', 'mistralai', 'meta-llama'
-]);
+// ─── Delta computation (Phase 2)
+// TODO: enable after 2026-03-11 — needs 2 daily snapshots
+// eslint-disable-next-line no-unused-vars
+function computeDeltas(todayRows, yesterdayRows) {
+  const yesterdayMap = new Map();
+  for (const row of yesterdayRows) {
+    yesterdayMap.set(row.openrouter_id, row.input_price);
+  }
 
-const SUPABASE_URL = 'REDACTED_SUPABASE_URL';
-const SUPABASE_ANON_KEY = 'REDACTED_ANON_KEY';
-
-function buildTickerHTML(models) {
-  const track = document.getElementById('ticker-track');
-  // Duplicate for seamless infinite scroll
-  const items = [...models, ...models];
-  track.innerHTML = items.map(m => {
-    return `<span class="ticker-item">
-      <span class="ticker-model">${m.label}</span>
-      <span class="ticker-price">$${m.price.toFixed(2)}/1M</span>
-    </span><span class="ticker-sep">│</span>`;
-  }).join('');
+  return todayRows.map(row => {
+    const prev = yesterdayMap.get(row.openrouter_id);
+    if (prev == null || prev === 0) return { ...row, delta: null };
+    const pct = ((row.input_price - prev) / prev) * 100;
+    return { ...row, delta: pct };
+  });
 }
 
-async function fetchTickerFromSupabase() {
-  const endpoint = `${SUPABASE_URL}/rest/v1/price_snapshots_raw`
-    + `?select=openrouter_id,name,input_price,output_price,provider_slug`
-    + `&order=input_price.asc`
-    + `&limit=50`;
+// ─── Fetch helpers
 
-  const res = await fetch(endpoint, {
+async function sbFetch(path) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
     headers: {
       'apikey': SUPABASE_ANON_KEY,
       'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
     }
   });
-
-  if (!res.ok) throw new Error(`Supabase responded with ${res.status}`);
-
-  const data = await res.json();
-  if (!Array.isArray(data) || data.length === 0) throw new Error('Empty response from Supabase');
-
-  // Prefer rows from known top providers; fall back to all rows
-  const preferred = data.filter(row =>
-    row.provider_slug && PREFERRED_PROVIDERS.has(row.provider_slug.toLowerCase())
-  );
-  const pool = preferred.length >= 5 ? preferred : data;
-
-  // Take the 20 cheapest (already ordered asc from API), skip rows without a price or name
-  const models = pool
-    .filter(row => row.name && typeof row.input_price === 'number')
-    .slice(0, 20)
-    .map(row => ({
-      label: row.name,
-      price: row.input_price,
-    }));
-
-  if (models.length === 0) throw new Error('No usable models in Supabase response');
-  return models;
+  if (!res.ok) throw new Error(`Supabase ${res.status} on ${path}`);
+  return res.json();
 }
+
+/**
+ * Fetches all distinct captured_at dates to identify today/yesterday snapshots.
+ * Returns { todayRows, yesterdayRows } — yesterdayRows may be empty (only 1 snapshot day).
+ */
+async function fetchSnapshots() {
+  // Query 1: get the two most-recent distinct dates
+  const datesRaw = await sbFetch(
+    'price_snapshots_raw?select=captured_at&order=captured_at.desc&limit=500'
+  );
+
+  // Extract unique date strings (YYYY-MM-DD) from captured_at timestamps
+  const seen = new Set();
+  const distinctDates = [];
+  for (const row of datesRaw) {
+    const day = row.captured_at.slice(0, 10); // "2026-03-10"
+    if (!seen.has(day)) {
+      seen.add(day);
+      distinctDates.push(day);
+    }
+    if (distinctDates.length === 2) break;
+  }
+
+  if (distinctDates.length === 0) throw new Error('No captured_at dates found');
+
+  const todayDate     = distinctDates[0];
+  const yesterdayDate = distinctDates[1] ?? null;
+
+  // Query 2: today's full snapshot
+  const todayRows = await sbFetch(
+    `price_snapshots_raw?select=id,openrouter_id,name,provider_slug,input_price,output_price,captured_at` +
+    `&captured_at=gte.${todayDate}T00:00:00Z` +
+    `&captured_at=lt.${todayDate}T23:59:59Z` +
+    `&order=input_price.asc` +
+    `&limit=500`
+  );
+
+  // Query 3 (optional): yesterday's snapshot — for delta (prepared, not yet used in UI)
+  let yesterdayRows = [];
+  if (yesterdayDate) {
+    try {
+      yesterdayRows = await sbFetch(
+        `price_snapshots_raw?select=id,openrouter_id,name,provider_slug,input_price,output_price,captured_at` +
+        `&captured_at=gte.${yesterdayDate}T00:00:00Z` +
+        `&captured_at=lt.${yesterdayDate}T23:59:59Z` +
+        `&order=input_price.asc` +
+        `&limit=500`
+      );
+    } catch(e) {
+      console.warn('[Ticker] Could not fetch yesterday snapshot for delta prep:', e);
+    }
+  }
+
+  return { todayRows, yesterdayRows };
+}
+
+/**
+ * Filters and sorts rows into the two pools:
+ *   - mainPool: up to 20 paid models (input_price > 0), cheapest first, preferred providers first if ≥10
+ *   - freePool: up to 5 free models (input_price === 0), preferred providers first
+ */
+function buildPools(rows) {
+  // Remove invalid rows
+  const valid = rows.filter(r =>
+    r.name &&
+    typeof r.input_price === 'number' &&
+    r.input_price >= 0  // keeps free (0) and paid (>0), drops negatives
+  );
+
+  // ── Free pool ──
+  const freeRows = valid.filter(r => r.input_price === 0);
+
+  // Sort: preferred first, then alphabetically
+  freeRows.sort((a, b) => {
+    const aIdx = FREE_PREFERRED.indexOf((a.provider_slug || '').toLowerCase());
+    const bIdx = FREE_PREFERRED.indexOf((b.provider_slug || '').toLowerCase());
+    const aPref = aIdx === -1 ? 999 : aIdx;
+    const bPref = bIdx === -1 ? 999 : bIdx;
+    if (aPref !== bPref) return aPref - bPref;
+    return a.name.localeCompare(b.name);
+  });
+
+  const freePool = freeRows.slice(0, 5).map(r => ({ ...r, isFree: true }));
+
+  // ── Main pool ──
+  const paidRows = valid.filter(r => r.input_price > 0);
+
+  // Check if there are enough preferred-provider rows to filter by them
+  const preferredPaid = paidRows.filter(r =>
+    PREFERRED_PROVIDERS.includes((r.provider_slug || '').toLowerCase())
+  );
+  const usePreferred = preferredPaid.length >= 10;
+  const mainSource = usePreferred ? preferredPaid : paidRows;
+
+  // Sort: cheapest first
+  mainSource.sort((a, b) => a.input_price - b.input_price);
+
+  const mainPool = mainSource.slice(0, 20).map(r => ({ ...r, isFree: false }));
+
+  return { mainPool, freePool };
+}
+
+// ─── Render
+
+function fmtPrice(price) {
+  // Show up to 4 significant decimals without trailing zeros
+  if (price >= 10)   return price.toFixed(2);
+  if (price >= 1)    return price.toFixed(2);
+  if (price >= 0.01) return price.toFixed(3);
+  return price.toFixed(4);
+}
+
+function renderTickerItem(model) {
+  const name = model.name || model.label || 'Unknown';
+
+  // Delta indicator (shows only when delta data is available)
+  const deltaHtml = model.delta != null
+    ? `<span class="${model.delta >= 0 ? 'ticker-delta-up' : 'ticker-delta-down'}">` +
+      `${model.delta >= 0 ? '▲' : '▼'} ${Math.abs(model.delta).toFixed(1)}%</span>`
+    : '';
+
+  if (model.isFree) {
+    return `<span class="ticker-item">` +
+      `<span class="ticker-model">${escHtml(name)}</span>` +
+      `<span class="ticker-free">FREE</span>` +
+      deltaHtml +
+      `</span>`;
+  }
+
+  const inPrice  = fmtPrice(model.input_price);
+  const outPrice = typeof model.output_price === 'number' ? fmtPrice(model.output_price) : null;
+
+  return `<span class="ticker-item">` +
+    `<span class="ticker-model">${escHtml(name)}</span>` +
+    `<span class="ticker-price-in">$${inPrice}/1M</span>` +
+    (outPrice ? `<span class="ticker-price-out">${outPrice} out</span>` : '') +
+    deltaHtml +
+    `</span>`;
+}
+
+function escHtml(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function buildTickerHTML(allModels) {
+  const track = document.getElementById('ticker-track');
+  const sep   = `<span class="ticker-sep" aria-hidden="true">│</span>`;
+
+  // Duplicate the entire list once for seamless infinite scroll
+  const items = [...allModels, ...allModels];
+  track.innerHTML = items
+    .map((m, i) => renderTickerItem(m) + sep)
+    .join('');
+}
+
+// ─── Init
 
 async function initTicker() {
   try {
-    const models = await fetchTickerFromSupabase();
-    buildTickerHTML(models);
+    const { todayRows, yesterdayRows } = await fetchSnapshots();
+
+    // Compute deltas if yesterday data is available (automatically shows deltas after 2nd snapshot)
+    const rowsWithDelta = yesterdayRows.length > 0
+      ? computeDeltas(todayRows, yesterdayRows)
+      : todayRows;
+
+    const { mainPool, freePool } = buildPools(rowsWithDelta);
+    const allModels = [...mainPool, ...freePool];
+
+    if (allModels.length === 0) throw new Error('Empty pools after filtering');
+
+    buildTickerHTML(allModels);
+    console.info(
+      `[Ticker v7] ${mainPool.length} paid + ${freePool.length} free models loaded.` +
+      (yesterdayRows.length > 0 ? ' Yesterday snapshot available (delta ready).' : ' Single snapshot day.')
+    );
   } catch (err) {
-    console.warn('[Ticker] Supabase fetch failed, using fallback data.', err);
+    console.warn('[Ticker v7] Supabase fetch failed — using fallback data.', err);
     buildTickerHTML(TICKER_FALLBACK);
   }
 }
@@ -747,10 +951,6 @@ function renderCodeLine(line) {
     });
   }
   return html;
-}
-
-function escHtml(s) {
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
 let codeIdx = 0;
