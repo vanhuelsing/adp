@@ -2,24 +2,30 @@
   "adp": {
     "version": "0.2.0",
     "type": "DealOffer",
-    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "id": "6e14ea4e-4af0-4c38-8c1e-9ea63c422a6b",
     "timestamp": "2026-03-12T10:00:01Z",
-    "correlation_id": "550e8400-e29b-41d4-a716-446655440000"
+    "correlation_id": "c768627a-3d18-49a4-9c75-5017d45fa0de"
   },
   "offer": {
     "provider": {
+      "provider_id": "openai",
       "name": "OpenAI",
-      "website": "https://openai.com",
-      "support_email": "support@openai.com"
+      "url": "https://openai.com",
+      "contact": {
+        "email": "api@openai.com",
+        "support_url": "https://help.openai.com"
+      }
     },
     "model": {
-      "id": "gpt-4o",
+      "model_id": "gpt-4o",
       "name": "GPT-4o",
-      "description": "Multimodal model with text and vision capabilities",
-      "capabilities": ["text_generation", "vision", "reasoning"],
+      "version": "2026-03",
+      "task_classes": ["general", "reasoning", "coding", "multimodal"],
+      "context_window": 128000,
+      "max_output_tokens": 65536,
       "modalities": ["text", "image_input"],
-      "context_window_tokens": 128000,
-      "training_data_cutoff": "2023-10-01"
+      "capabilities": ["tool_use", "structured_output", "function_calling", "streaming", "prompt_caching"],
+      "knowledge_cutoff": "2023-10-01"
     },
     "pricing": {
       "currency": "USD",
@@ -39,7 +45,7 @@
             "tile_size": "512x512",
             "pricing_via_text": true
           },
-          "notes": "Images are tiled into 512x512 squares. Low detail mode uses a single tile. Typical token counts: 512×512=170, 1024×1024=680, 2048×2048=2720"
+          "notes": "Images are tiled into 512x512 squares. Low detail mode uses a single tile. Typical token counts: 512×512=170 tokens, 1024×1024=680 tokens, 2048×2048=2720 tokens"
         }
       },
       "modifiers": [
@@ -50,21 +56,23 @@
         }
       ]
     },
-    "availability": {
-      "available": true,
-      "tier": "standard",
-      "response_time_seconds": 10
+    "compliance": {
+      "compliance_verified_by": "self-declared",
+      "certifications": ["soc2"],
+      "data_regions": ["US"],
+      "gdpr_compliant": false,
+      "dpa_available": false,
+      "training_on_data": true,
+      "privacy_policy_url": "https://openai.com/privacy"
     },
-    "activation": {
-      "type": "direct_api",
-      "endpoint": "https://api.openai.com/v1/chat/completions",
-      "required_credentials": ["api_key"],
-      "sso_enabled": false
+    "sla": {
+      "uptime_pct": 99.9,
+      "ttft_p50_ms": 500,
+      "ttft_p99_ms": 2000,
+      "tps_median": 100
     },
-    "terms": {
-      "binding": false,
-      "expires_at": "2026-03-13T10:00:01Z",
-      "renewal_period_days": 30
-    }
+    "valid_from": "2026-03-12T00:00:00Z",
+    "valid_until": "2026-04-12T00:00:00Z",
+    "terms_url": "https://openai.com/terms/service"
   }
 }

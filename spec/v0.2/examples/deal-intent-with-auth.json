@@ -1,25 +1,39 @@
 {
-  "http_request_headers": {
-    "Authorization": "Bearer adp_v2_a1b2c3d4e5f6_x7y8z9",
-    "Content-Type": "application/adp+json",
-    "X-ADP-Version": "0.2.0",
-    "X-ADP-Idempotency-Key": "660f9511-f3ac-52e5-c827-557766551111",
-    "X-ADP-Signature": "hmac-sha256=rBjPv/9BDVLMd6R0qV8j7x5K2Y1w3zL9mQ7N4pO6sT8=",
-    "X-ADP-Signature-Timestamp": "1741832400"
-  },
   "adp": {
     "version": "0.2.0",
     "type": "DealIntent",
-    "id": "c3d4e5f6-a7b8-9012-cdef-345678901234",
+    "id": "7f52524e-744e-4d86-822f-535040047566",
     "timestamp": "2026-03-12T10:05:00Z",
-    "correlation_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+    "correlation_id": "6e14ea4e-4af0-4c38-8c1e-9ea63c422a6b"
   },
   "intent": {
     "binding": false,
-    "accepted_offer_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "requires_human_confirmation": true,
+    "party_type": "business",
+    "requester": {
+      "agent_id": "agent:mycompany:document-analyzer",
+      "is_automated": true,
+      "name": "MyCompany Document Analyzer",
+      "contact": {
+        "email": "deals@mycompany.com"
+      }
+    },
+    "accepted_offer_id": "6e14ea4e-4af0-4c38-8c1e-9ea63c422a6b",
+    "accepted_pricing_snapshot": {
+      "input_per_mtok": 2.50,
+      "output_per_mtok": 10.00,
+      "modifiers_applied": []
+    },
+    "volume_commitment": {
+      "estimated_monthly_input_tokens": 50000000,
+      "estimated_monthly_output_tokens": 10000000,
+      "commitment_type": "none",
+      "commitment_duration_months": null
+    },
     "activation": {
       "type": "redirect",
-      "redirect_url": "https://openai.com/signup?deal=c3d4e5f6-a7b8-9012-cdef-345678901234&agent=agent:mycompany:doc-analyzer"
-    }
+      "redirect_url": "https://platform.openai.com/signup?ref=apideals&deal=6e14ea4e-4af0-4c38-8c1e-9ea63c422a6b"
+    },
+    "notes": null
   }
 }

@@ -2,27 +2,42 @@
   "adp": {
     "version": "0.2.0",
     "type": "DealRequest",
-    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "id": "c768627a-3d18-49a4-9c75-5017d45fa0de",
     "timestamp": "2026-03-12T10:00:00Z",
     "correlation_id": null
   },
   "request": {
     "requester": {
       "agent_id": "agent:mycompany:document-analyzer",
-      "is_automated": true
+      "is_automated": true,
+      "name": "MyCompany Document Analyzer",
+      "contact": {
+        "email": "deals@mycompany.com"
+      }
     },
     "requirements": {
-      "task_classes": ["reasoning", "vision"],
+      "task_classes": ["reasoning", "multimodal"],
       "modalities": ["text", "image_input"]
     },
-    "constraints": {
-      "prefer_cached": false,
-      "allow_tool_use": true
+    "volume": {
+      "estimated_monthly_input_tokens": 50000000,
+      "estimated_monthly_output_tokens": 10000000,
+      "pattern": "steady",
+      "batch_eligible": true
     },
     "budget": {
-      "max_cost_per_request": 1.00,
       "max_cost_per_mtok_input": 5.00,
-      "currency": "USD"
-    }
+      "max_cost_per_mtok_output": 15.00,
+      "currency": "USD",
+      "max_monthly_spend": 300.00
+    },
+    "preferences": {
+      "commitment": "none",
+      "preferred_providers": ["openai", "anthropic"],
+      "excluded_providers": [],
+      "deal_type": "pay_as_you_go"
+    },
+    "valid_until": "2026-03-19T10:00:00Z",
+    "request_ttl_hours": 168
   }
 }
