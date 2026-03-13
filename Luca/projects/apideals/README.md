@@ -1,34 +1,51 @@
-# apideals.ai — Projekt-Hub
+# apideals Deal Protocol (ADP) v0.2.0-draft
 
-## Idee
-Plattform für die günstigsten LLM/API-Deals. Entwickler und AI-Agenten finden hier die besten Konditionen für API-Zugang — automatisiert, vergleichbar, langfristig agentic.
+Standardized JSON protocol for LLM API pricing discovery & agent negotiation.
 
-**Domain:** apideals.ai (Cloudflare)
-**Status:** Konzeptphase
-**Gestartet:** 2026-03-09
-**Schwesterprojekt:** agentdeals.ai
+📍 **Current Release:** v0.2.0-draft (Multimodal Pricing)  
+🔗 **GitHub:** [vanhuelsing/adp](https://github.com/vanhuelsing/adp)  
+📖 **Docs:** See [START HERE](./concepts/adp-v0.2.0-START-HERE.md)
 
-## Vision
-Kurzfristig: Bester Preisvergleich für LLM-APIs (50+ Modelle, global).
-Mittelfristig: Agenten buchen APIs autonom über ein standardisiertes Deal Protocol.
-Langfristig: apideals.ai definiert den Standard für Agent-to-Agent-Procurement.
+## Quick Links
 
-## Struktur
-```
-apideals/
-├── README.md          — dieser Hub
-├── research/          — Analysen, Strategie, Markt
-│   └── strategy-v1.md — Initiale Consultant-Strategie
-├── roles/             — Spezialisierte Rollen für dieses Projekt
-├── files/
-│   ├── docs/          — Dokumente, Specs, PDFs
-│   └── images/        — Logos, Mockups, Assets
-├── wireframes/        — UI Wireframes
-└── temp/              — Zwischenergebnisse
-```
+- [Specification](./concepts/spec-v0.2/) — 4 core specs
+- [QA Report](./qa-results/) — Complete validation
+- [Examples](./concepts/spec-v0.2/pricing-examples.md) — Real provider pricing
+- [Roadmap](./concepts/adp-v0.2.0-roadmap.md) — Vision to v1.0
 
-## Aktive Rollen
-→ siehe `roles/README.md`
+## Implemented Providers
 
-## Wichtige Dokumente
-- `research/strategy-v1.md` — Geschäftsmodell, GTM, 30-Tage-Plan
+- Anthropic (Claude)
+- OpenAI (GPT-4o)
+- Google (Gemini)
+- Mistral
+- Cohere
+
+## What's in v0.2.0-draft
+
+- ✅ **Multimodal Pricing Spec** — Text, Image, Audio, Video pricing
+- ✅ **Auth Specification** — OAuth 2.0 + API Key schemes
+- ✅ **HTTP Binding** — REST endpoints + error handling
+- ✅ **5 Provider Examples** — Real pricing (March 2026)
+- ✅ **JSON Schemas** — Draft 2020-12 valid, SDK-ready
+- ✅ **Complete QA** — 0 blockers, all tests passed
+
+## Getting Started
+
+1. **Read the overview:** [START HERE](./concepts/adp-v0.2.0-START-HERE.md) (5 min)
+2. **Review the spec:** [Multimodal Pricing](./concepts/spec-v0.2/pricing-multimodal.md)
+3. **See examples:** [Provider Examples](./concepts/spec-v0.2/pricing-examples.md)
+4. **Run QA tests:** [QA Reports](./qa-results/)
+
+## License
+
+- **Specification:** CC-BY 4.0
+- **SDKs/Code:** Apache 2.0
+
+## Contributing
+
+See [CONTRIBUTING.md](./.github/CONTRIBUTING.md) for guidelines.
+
+---
+
+**Next:** Python SDK (v0.2.1-rc1)
