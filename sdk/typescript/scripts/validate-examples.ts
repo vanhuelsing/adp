@@ -1,9 +1,9 @@
 import { readFileSync, readdirSync } from 'fs';
 import { join } from 'path';
-import Ajv from 'ajv';
+import Ajv2020 from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
 
-const ajv = new Ajv({ strict: false });
+const ajv = new Ajv2020({ strict: false });
 addFormats(ajv);
 
 const examplesDir = join(__dirname, '../../../spec/v0.1/examples');
