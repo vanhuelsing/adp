@@ -1,0 +1,27 @@
+# macOS
+.DS_Store
+*.swp
+*.swo
+*~
+
+# Node.js
+node_modules/
+package-lock.json
+yarn.lock
+
+# IDEs
+.vscode/
+.idea/
+*.sublime-workspace
+
+# Temporary files
+*.tmp
+*.log
+.env.local
+
+# Research/temp
+research/
+temp/
+
+# Private
+private/
