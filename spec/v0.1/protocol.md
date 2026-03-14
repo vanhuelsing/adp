@@ -74,7 +74,7 @@ Every ADP message starts with this header:
 | `type` | `enum` | ✅ | Message type |
 | `id` | `string` (UUID v4) | ✅ | Unique message ID |
 | `timestamp` | `string` (ISO 8601 UTC) | ✅ | Creation time, always UTC |
-| `correlation_id` | `string` (UUID v4) | ❌ | References triggering message |
+| `correlation_id` | `string` (UUID v4) | ⚠️ | References triggering message. **Required** for `DealOffer`, `DealIntent`, `DealError`. Optional (null) for `DealRequest` only. |
 
 ### 2.2 DealRequest
 
@@ -372,29 +372,39 @@ All prices in **$/MTok** (dollars per 1 million tokens).
 ### 3.3 Price Calculation
 
 ```python
+# Modifier types that affect only input price (not output)
+INPUT_ONLY_MODIFIERS = {"cache_read", "cache_write"}
+
 def calculate_cost(input_mtok, output_mtok, pricing):
-    # Step 1: Determine tier (flat-rate)
+    # Step 1: Determine tier (flat-rate).
+    # When total volume exceeds a threshold, the tier price applies to ALL tokens.
+    # Iterate sorted tiers — last matching tier wins (highest threshold exceeded).
     input_price = pricing["base"]["input_per_mtok"]
     output_price = pricing["base"]["output_per_mtok"]
-    
+
     total_mtok = input_mtok + output_mtok
-    for tier in sorted(pricing.get("tiers", []), 
+    for tier in sorted(pricing.get("tiers", []),
                        key=lambda t: t["threshold_mtok_monthly"]):
         if total_mtok > tier["threshold_mtok_monthly"]:
             input_price = tier["input_per_mtok"]
-            output_price = tier["output_per_mtok"]
-    
-    # Step 2: Apply modifiers in order
+            output_price = tier.get("output_per_mtok", output_price)
+
+    # Step 2: Apply modifiers in declaration order.
+    # Modifiers of type cache_read / cache_write affect input_price only.
     for modifier in pricing.get("modifiers", []):
+        modifier_type = modifier.get("type", "")
+        input_only = modifier_type in INPUT_ONLY_MODIFIERS
+
         if "discount_pct" in modifier:
             factor = 1 - modifier["discount_pct"] / 100
             input_price *= factor
-            output_price *= factor
+            if not input_only:
+                output_price *= factor
         elif "input_per_mtok" in modifier:
             input_price = modifier["input_per_mtok"]
-            if "output_per_mtok" in modifier:
+            if not input_only and "output_per_mtok" in modifier:
                 output_price = modifier["output_per_mtok"]
-    
+
     return (input_mtok * input_price) + (output_mtok * output_price)
 ```
 
@@ -483,9 +493,11 @@ https://<provider-domain>/.well-known/adp.json
 |-------|----------|-------------|
 | `adp_supported` | ✅ | Always `true` |
 | `adp_versions` | ✅ | Supported ADP versions |
-| `offer_endpoint` | ❌ | POST endpoint for DealRequests |
+| `offer_endpoint` | ⚠️ | POST endpoint for DealRequests. **Required** unless `static_offers_url` is provided. |
 | `models_endpoint` | ❌ | GET endpoint for all offers |
-| `static_offers_url` | ❌ | Static JSON with all offers |
+| `static_offers_url` | ⚠️ | Static JSON with all offers. May substitute `offer_endpoint` for read-only/price-list providers. |
+
+> **Discovery Rule:** A valid ADP provider MUST expose at least one of `offer_endpoint` (for live requests) or `static_offers_url` (for static price lists). Providers that expose neither are non-conforming.
 
 ---
 
