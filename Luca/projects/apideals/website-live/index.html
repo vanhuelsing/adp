@@ -675,8 +675,8 @@
 // ═══════════════════════════════════════════════
 
 // Config loaded from external config.js (not in Git)
-const SUPABASE_URL     = window.APIDEALS_CONFIG?.SUPABASE_URL     || 'REDACTED_SUPABASE_URL';
-const SUPABASE_ANON_KEY = window.APIDEALS_CONFIG?.SUPABASE_ANON_KEY || 'REDACTED_ANON_KEY';
+const SUPABASE_URL      = window.APIDEALS_CONFIG?.SUPABASE_URL      || null;
+const SUPABASE_ANON_KEY = window.APIDEALS_CONFIG?.SUPABASE_ANON_KEY || null;
 
 // Preferred providers for main pool (priority order)
 const PREFERRED_PROVIDERS = ['openai', 'anthropic', 'google', 'mistralai', 'meta-llama'];
