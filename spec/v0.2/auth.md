@@ -1,37 +1,37 @@
 # ADP v0.2.0 — Authentication & Security Specification
 
 **Version:** 0.2.0-draft  
-**Spezifikation:** Auth & Security Layer für ADP  
-**Basierend auf:** ADP v0.1.1  
+**Specification:** Auth & Security Layer for ADP  
+**Based on:** ADP v0.1.1  
 **Status:** Draft  
-**Autor:** Protocol Architect
+**Author:** Protocol Architect
 
 ---
 
-## 1. Überblick
+## 1. Overview
 
-Dieses Dokument definiert Authentifizierungs- und Sicherheitsmechanismen für ADP v0.2.0. Es standardisiert, wie Agents sich gegenüber Providern authentifizieren und wie Provider ihre Identität nachweisen.
+This document defines authentication and security mechanisms for ADP v0.2.0. It standardizes how agents authenticate against providers and how providers prove their identity.
 
-### Design-Prinzipien
+### Design Principles
 
-| Prinzip | Umsetzung |
-|---------|-----------|
-| **Einfachheit zuerst** | API Keys für 80% der Use-Cases |
-| **Standards nutzen** | OAuth 2.0 (RFC 6749), keine Eigenentwicklung |
-| **Sicherheit** | Keys niemals im URL, immer im Header |
-| **Erwartbarkeit** | Standard-HTTP-Status-Codes, Standard-Header |
+| Principle | Implementation |
+|-----------|---------------|
+| **Simplicity first** | API Keys for 80% of use cases |
+| **Use standards** | OAuth 2.0 (RFC 6749), no custom solutions |
+| **Security** | Keys never in the URL, always in the header |
+| **Predictability** | Standard HTTP status codes, standard headers |
 
 ---
 
-## 2. Authentifizierungsmethoden
+## 2. Authentication Methods
 
-ADP v0.2.0 unterstützt drei Authentifizierungsmethoden:
+ADP v0.2.0 supports three authentication methods:
 
-| Methode | Priorität | Use-Case |
-|---------|-----------|----------|
-| API Key | P0 | Standard, alle Anbieter müssen unterstützen |
-| OAuth 2.0 | P1 | Enterprise, SSO-Szenarien |
-| Request Signing | P2 | Hohe Sicherheitsanforderungen (optional) |
+| Method | Priority | Use Case |
+|--------|----------|----------|
+| API Key | P0 | Standard, all providers must support |
+| OAuth 2.0 | P1 | Enterprise, SSO scenarios |
+| Request Signing | P2 | High security requirements (optional) |
 
 ### 2.1 API Key Authentication (P0)
 
@@ -40,15 +40,15 @@ ADP v0.2.0 unterstützt drei Authentifizierungsmethoden:
 Authorization: Bearer adp_<base64url-encoded-key>
 ```
 
-**Key-Struktur:**
+**Key Structure:**
 ```
 adp_<version>_<random>_<checksum>
 
-Beispiel:
+Example:
 adp_v2_a1b2c3d4e5f6_x7y8z9
 ```
 
-**Header-Beispiel:**
+**Header Example:**
 ```http
 POST /adp/offer HTTP/1.1
 Host: api.provider.com
@@ -57,15 +57,15 @@ Content-Type: application/adp+json
 X-ADP-Version: 0.2.0
 ```
 
-**Regeln:**
-- API Keys werden **immer** im `Authorization` Header übertragen
-- **Niemals** im URL (Query-Parameter) oder Body
-- Keys sollten mindestens 32 Byte Entropie haben
-- Provider können ihre eigenen Key-Formate nutzen (mit `adp_` Präfix empfohlen)
+**Rules:**
+- API Keys are **always** transmitted in the `Authorization` header
+- **Never** in the URL (query parameters) or body
+- Keys should have at least 32 bytes of entropy
+- Providers may use their own key formats (the `adp_` prefix is recommended)
 
 ### 2.2 OAuth 2.0 Client Credentials (P1)
 
-**Ablauf:**
+**Flow:**
 ```
 ┌─────────┐                                    ┌──────────┐
 │  Agent  │ ──(1) Token Request─────────────▶ │ Provider │
@@ -93,31 +93,31 @@ scope=adp:request adp:intent
 ```
 
 **Scopes:**
-| Scope | Berechtigung |
-|-------|--------------|
-| `adp:read` | DealOffers abrufen |
-| `adp:request` | DealRequests senden |
-| `adp:intent` | DealIntents senden |
-| `adp:admin` | Verwaltungsoperationen |
+| Scope | Permission |
+|-------|-----------|
+| `adp:read` | Retrieve DealOffers |
+| `adp:request` | Send DealRequests |
+| `adp:intent` | Send DealIntents |
+| `adp:admin` | Administrative operations |
 
-### Scope-Endpoint-Matrix
+### Scope-Endpoint Matrix
 
-Die folgende Matrix zeigt, welche Scopes für den Zugriff auf einzelne ADP-Endpoints erforderlich sind:
+The following matrix shows which scopes are required to access individual ADP endpoints:
 
-| Scope | GET /.well-known/adp.json | GET /adp/health | POST /adp/offer | POST /adp/intent | Admin-Operationen |
-|-------|---------------------------|-----------------|-----------------|-------------------|-------------------|
+| Scope | GET /.well-known/adp.json | GET /adp/health | POST /adp/offer | POST /adp/intent | Admin Operations |
+|-------|---------------------------|-----------------|-----------------|-------------------|-----------------|
 | `adp:read` | ✅ | ✅ | ❌ | ❌ | ❌ |
 | `adp:request` | ✅ | ✅ | ✅ | ❌ | ❌ |
 | `adp:intent` | ✅ | ✅ | ❌ | ✅ | ❌ |
 | `adp:admin` | ✅ | ✅ | ✅ | ✅ | ✅ |
 
-**Hinweise:**
-- **Discovery und Health:** Diese sind öffentliche Endpoints — Scopes gelten dort nur wenn Auth optional aktiviert ist. Unauthentifizierte Requests sind auf diesen Endpoints immer erlaubt.
-- **Scope-Hierarchie:** `adp:admin` ist ein Superset aller anderen Scopes. Ein Token mit `adp:admin` kann alle Operationen durchführen.
-- **Future Scopes:** Admin-Operationen werden in zukünftigen Versionen definiert (Provider-Dashboard, API-Key-Management, Quota-Management, etc.).
+**Notes:**
+- **Discovery and Health:** These are public endpoints — scopes only apply when auth is optionally enabled. Unauthenticated requests are always permitted on these endpoints.
+- **Scope Hierarchy:** `adp:admin` is a superset of all other scopes. A token with `adp:admin` may perform all operations.
+- **Future Scopes:** Admin operations will be defined in future versions (provider dashboard, API key management, quota management, etc.).
 
 **Discovery:**
-Provider, die OAuth 2.0 unterstützen, müssen dies in `.well-known/adp.json` ankündigen:
+Providers supporting OAuth 2.0 must announce this in `.well-known/adp.json`:
 
 ```json
 {
@@ -132,26 +132,26 @@ Provider, die OAuth 2.0 unterstützen, müssen dies in `.well-known/adp.json` an
 
 ### 2.3 Request Signing (P2, Optional)
 
-Für Szenarien, die zusätzliche Integritätssicherheit benötigen.
+For scenarios that require additional integrity assurance.
 
-**Mechanismus:** HMAC-SHA256 über Request-Body und kritische Header
+**Mechanism:** HMAC-SHA256 over the request body and critical headers
 
-**Header:**
+**Headers:**
 ```http
 X-ADP-Signature: hmac-sha256=<base64-signature>
 X-ADP-Signature-Timestamp: 1712345678
 ```
 
-**Signatur-Input:**
+**Signature Input:**
 ```
 <timestamp>.<method>.<path>.<content-hash>
 
-Beispiel:
+Example:
 1712345678.POST./adp/offer.sha256=<body-hash>
 ```
 
-**Implementierungs-Hinweis:**
-Request Signing ist optional. Wenn ein Provider es unterstützt, muss dies in `.well-known/adp.json` angekündigt werden.
+**Implementation Note:**
+Request Signing is optional. If a provider supports it, this must be announced in `.well-known/adp.json`.
 
 ---
 
@@ -159,17 +159,17 @@ Request Signing ist optional. Wenn ein Provider es unterstützt, muss dies in `.
 
 ### 3.1 Rate Limit Headers
 
-**Scope:** Rate Limit Headers sind **required on authenticated endpoints only** (POST /adp/offer, POST /adp/intent). They are **optional on unauthenticated endpoints** (GET /.well-known/adp.json, GET /adp/health).
+**Scope:** Rate Limit Headers are **required on authenticated endpoints only** (POST /adp/offer, POST /adp/intent). They are **optional on unauthenticated endpoints** (GET /.well-known/adp.json, GET /adp/health).
 
-Provider müssen diese Standard-Header auf authentifizierten Endpoints zurückgeben:
+Providers must return these standard headers on authenticated endpoints:
 
-| Header | Beschreibung | Beispiel |
-|--------|--------------|----------|
-| `X-ADP-RateLimit-Limit` | Maximale Requests pro Zeitfenster | `1000` |
-| `X-ADP-RateLimit-Remaining` | Verbleibende Requests | `999` |
-| `X-ADP-RateLimit-Reset` | ISO 8601 UTC Zeitpunkt, wann das Rate Limit zurückgesetzt wird | `2026-03-12T10:00:00Z` |
+| Header | Description | Example |
+|--------|-------------|---------|
+| `X-ADP-RateLimit-Limit` | Maximum requests per time window | `1000` |
+| `X-ADP-RateLimit-Remaining` | Remaining requests | `999` |
+| `X-ADP-RateLimit-Reset` | ISO 8601 UTC timestamp when the rate limit resets | `2026-03-12T10:00:00Z` |
 
-**Beispiel-Response:**
+**Example Response:**
 ```http
 HTTP/1.1 200 OK
 Content-Type: application/adp+json
@@ -180,9 +180,9 @@ X-ADP-RateLimit-Reset: 2026-03-12T10:00:00Z
 { "adp": { "type": "DealOffer", ... } }
 ```
 
-### 3.2 Rate Limit überschritten (429)
+### 3.2 Rate Limit Exceeded (429)
 
-Wenn das Rate Limit überschritten wird:
+When the rate limit is exceeded:
 
 ```http
 HTTP/1.1 429 Too Many Requests
@@ -211,9 +211,9 @@ X-ADP-RateLimit-Reset: 2026-03-12T10:01:00Z
 
 ---
 
-## 4. Idempotenz
+## 4. Idempotency
 
-Für wiederholbare Requests ohne Nebeneffekte.
+For repeatable requests without side effects.
 
 ### 4.1 Idempotency Key Header
 
@@ -221,24 +221,24 @@ Für wiederholbare Requests ohne Nebeneffekte.
 X-ADP-Idempotency-Key: <uuid-v4>
 ```
 
-**Semantik:**
-- Der erste Request mit einem Key wird normal verarbeitet
-- Wiederholte Requests mit demselben Key (innerhalb von 24h) liefern dieselbe Response
-- Provider müssen Idempotency-Keys für 24h speichern
+**Semantics:**
+- The first request with a key is processed normally
+- Repeated requests with the same key (within 24 hours) return the same response
+- Providers must store idempotency keys for 24 hours
 
 **Scope (UPDATED - v0.2.0 Clarification):**
-Ein Idempotency Key ist **unique innerhalb des Tupels `(API Key, HTTP Method, Endpoint Path)`**. Derselbe UUID von verschiedenen API Keys wird als unabhängig behandelt. Provider MÜSSEN den Scope bei der Deduplizierung berücksichtigen.
+An idempotency key is **unique within the tuple `(API Key, HTTP Method, Endpoint Path)`**. The same UUID from different API keys is treated as independent. Providers MUST consider the scope when deduplicating.
 
-**Beispiel:**
+**Example:**
 ```
-- Request 1: API-Key=key_abc, Method=POST, Path=/adp/intent, Idempotency-Key=uuid-123 → verarbeitet
+- Request 1: API-Key=key_abc, Method=POST, Path=/adp/intent, Idempotency-Key=uuid-123 → processed
 - Request 2: API-Key=key_abc, Method=POST, Path=/adp/intent, Idempotency-Key=uuid-123 → Duplicate (cached response)
-- Request 3: API-Key=key_xyz, Method=POST, Path=/adp/intent, Idempotency-Key=uuid-123 → Neu verarbeitet (anderer Key)
+- Request 3: API-Key=key_xyz, Method=POST, Path=/adp/intent, Idempotency-Key=uuid-123 → Newly processed (different key)
 ```
 
-Dies verhindert Sicherheitsprobleme, bei denen ein Angreifer mit anderer Authentifizierung die Deduplizierung nutzen könnte.
+This prevents security issues where an attacker with different authentication could exploit deduplication.
 
-**Beispiel:**
+**Example:**
 ```http
 POST /adp/intent HTTP/1.1
 Host: api.provider.com
@@ -251,11 +251,11 @@ X-ADP-Idempotency-Key: 550e8400-e29b-41d4-a716-446655440000
 
 ---
 
-## 5. Fehler-Responses
+## 5. Error Responses
 
-### 5.1 Auth-Fehler
+### 5.1 Auth Errors
 
-**401 Unauthorized - Kein/ungültiger Token:**
+**401 Unauthorized — Missing/invalid token:**
 ```json
 {
   "adp": {
@@ -273,7 +273,7 @@ X-ADP-Idempotency-Key: 550e8400-e29b-41d4-a716-446655440000
 }
 ```
 
-**403 Forbidden - Unzureichende Berechtigungen:**
+**403 Forbidden — Insufficient permissions:**
 ```json
 {
   "error": {
@@ -284,21 +284,21 @@ X-ADP-Idempotency-Key: 550e8400-e29b-41d4-a716-446655440000
 }
 ```
 
-### 5.2 Fehler-Codes
+### 5.2 Error Codes
 
 For a complete and authoritative list of all error codes used in ADP v0.2.0, including error codes defined in this Auth spec and in other specs (Core v0.1.1, HTTP Binding), refer to the **central Error Code Registry** in the HTTP Binding Specification (Section 3: Error Code Registry).
 
 The following error codes are specific to authentication and authorization scenarios, but are documented in the central registry:
 
-| Code | HTTP Status | Bedeutung |
-|------|-------------|-----------|
-| `UNAUTHORIZED` | 401 | Kein/ungültiger Token |
-| `FORBIDDEN` | 403 | Unzureichende Berechtigungen |
-| `INVALID_SIGNATURE` | 401 | HMAC-Signatur ungültig (bei Request Signing) |
-| `TOKEN_EXPIRED` | 401 | OAuth Token abgelaufen |
+| Code | HTTP Status | Description |
+|------|-------------|-------------|
+| `UNAUTHORIZED` | 401 | Missing/invalid token |
+| `FORBIDDEN` | 403 | Insufficient permissions |
+| `INVALID_SIGNATURE` | 401 | HMAC signature invalid (with Request Signing) |
+| `TOKEN_EXPIRED` | 401 | OAuth token expired |
 
 Additional error codes applicable to authentication (inherited from Core v0.1.1):
-- `RATE_LIMITED` (429) — Rate Limit überschritten
+- `RATE_LIMITED` (429) — Rate limit exceeded
 - `VERSION_MISMATCH` (400) — Unsupported ADP version
 
 **Reference:** See http-binding.md Section 3 for the complete registry.
@@ -378,9 +378,9 @@ Additional error codes applicable to authentication (inherited from Core v0.1.1)
 
 ---
 
-## 7. Provider Discovery Erweiterung
+## 7. Provider Discovery Extension
 
-Erweiterung von `.well-known/adp.json` um Auth-Informationen:
+Extension of `.well-known/adp.json` with authentication information:
 
 ```json
 {
@@ -415,7 +415,7 @@ Erweiterung von `.well-known/adp.json` um Auth-Informationen:
 
 ---
 
-## 8. Beispiele
+## 8. Examples
 
 ### 8.1 API Key (cURL)
 
@@ -498,43 +498,43 @@ func signRequest(method, path, bodyHash string, secret []byte) (string, string) 
 
 ---
 
-## 9. Sicherheits-Empfehlungen
+## 9. Security Recommendations
 
-### 9.1 Für Provider
+### 9.1 For Providers
 
-1. **HTTPS enforced** — ADP Requests nur über TLS 1.2+
-2. **Key Rotation** — Unterstützung für mehrere aktive Keys
-3. **Audit Logging** — Alle Auth-Events loggen
-4. **Rate Limiting pro Key** — Nicht nur global
-5. **Key-Scopes** — Minimale Berechtigungen (Principle of Least Privilege)
+1. **HTTPS enforced** — ADP requests over TLS 1.2+ only
+2. **Key Rotation** — Support for multiple active keys
+3. **Audit Logging** — Log all auth events
+4. **Rate Limiting per Key** — Not only globally
+5. **Key Scopes** — Minimum permissions (Principle of Least Privilege)
 
-### 9.2 Für Agents
+### 9.2 For Agents
 
-1. **Keys sicher speichern** — Environment Variables, nie im Code
-2. **Keine Wiederholung bei 401** — Key ist ungültig, Retry nicht sinnvoll
-3. **Exponential Backoff bei 429** — Respektiere Rate Limits
-4. **Token Refresh** — Bei OAuth vor Ablauf aktualisieren
+1. **Store keys securely** — Environment variables, never in code
+2. **No retry on 401** — Key is invalid; retrying is not useful
+3. **Exponential backoff on 429** — Respect rate limits
+4. **Token Refresh** — Renew OAuth tokens before expiry
 
 ---
 
-## 10. Migration von v0.1.1
+## 10. Migration from v0.1.1
 
-v0.1.1 hatte keinen definierten Auth-Layer. Migration:
+v0.1.1 had no defined auth layer. Migration:
 
 | v0.1.1 | v0.2.0 |
 |--------|--------|
-| Kein Auth definiert | API Key oder OAuth 2.0 required |
-| Keine Rate Limits | Standardisierte Rate Limit Header |
-| Keine Idempotenz | Optional via Idempotency Key |
+| No auth defined | API Key or OAuth 2.0 required |
+| No rate limits | Standardized rate limit headers |
+| No idempotency | Optional via idempotency key |
 
-**Breaking Change:** Ja — Provider müssen Auth implementieren, die zuvor anonyme Requests akzeptiert haben.
+**Breaking Change:** Yes — providers that previously accepted anonymous requests must implement auth.
 
 ---
 
-## Appendix: Zusammenfassung
+## Appendix: Summary
 
-| Feature | Status | Implementierung |
-|---------|--------|-----------------|
+| Feature | Status | Implementation |
+|---------|--------|----------------|
 | API Key Auth | Required | `Authorization: Bearer adp_...` |
 | OAuth 2.0 | Optional | Client Credentials Flow |
 | Request Signing | Optional | HMAC-SHA256 |
@@ -554,27 +554,27 @@ v0.1.1 hatte keinen definierten Auth-Layer. Migration:
 
 **Fix 4: Rate Limit Headers Scope Clarification**
 - Added scope note to Section 3.1: Rate Limit headers are required on authenticated endpoints only
-- Clarified in description: "Provider müssen diese Standard-Header auf authentifizierten Endpoints zurückgeben"
+- Clarified in description: "Providers must return these standard headers on authenticated endpoints"
 - Added reference to Section 3.1 scope note for clarity
 
-**Fix 7: OAuth Scopes unvollständig — Scope-Endpoint-Matrix hinzugefügt**
-- Added formal Scope-Endpoint-Matrix in Section 2.2 (nach OAuth 2.0 Scopes-Tabelle)
-- Matrix zeigt genau welche Scopes auf welche Endpoints wirken
-- Added explanatory notes zu öffentlichen Endpoints, Scope-Hierarchie und zukünftigen Admin-Operationen
-- Beseitigt Ambiguität zwischen adp:read und adp:admin
+**Fix 7: OAuth Scopes incomplete — Scope-Endpoint Matrix added**
+- Added formal Scope-Endpoint Matrix in Section 2.2 (after OAuth 2.0 Scopes table)
+- Matrix shows exactly which scopes apply to which endpoints
+- Added explanatory notes on public endpoints, scope hierarchy, and future admin operations
+- Eliminates ambiguity between adp:read and adp:admin
 
-**Fix 9: Idempotency Key Scope unklar — Klarstellung hinzugefügt**
-- Updated Section 4.1 mit expliziter Scope-Definition: `(API Key, HTTP Method, Endpoint Path)`
-- Added security rationale für unterschiedliche Scopes pro API-Key
-- Added practical example mit drei Request-Szenarien
-- Verhindert Deduplizierungs-Sicherheitsprobleme
+**Fix 9: Idempotency Key scope unclear — clarification added**
+- Updated Section 4.1 with explicit scope definition: `(API Key, HTTP Method, Endpoint Path)`
+- Added security rationale for different scopes per API key
+- Added practical example with three request scenarios
+- Prevents deduplication security issues
 
-**Fix 14: Zeitangaben auf ISO 8601 vereinheitlichen**
+**Fix 14: Unify timestamps to ISO 8601**
 - Changed `X-ADP-RateLimit-Reset` from Unix Timestamp (integer) to ISO 8601 UTC (string) in Section 3.1
 - Updated all examples in Section 3.1 and 3.2 with new timestamp format
 - Updated JSON Schema (Section 6.2): Type changed from `integer` to `string` with `format: date-time`
 - Migration note: Rate Limit Reset is now consistent with other ADP timestamp fields (ISO 8601 UTC)
 
-**Consistency fixes:** Added Scope-Endpoint-Matrix, Idempotency-Scope-Klarstellung, Zeitformat-Vereinheitlichung
+**Consistency fixes:** Added Scope-Endpoint Matrix, Idempotency-Scope clarification, timestamp format unification
 
-*Ende der Auth-Spezifikation v0.2.0*
+*End of Auth Specification v0.2.0*

@@ -1,42 +1,42 @@
 # ADP v0.2.0 — HTTP Binding Specification
 
 **Version:** 0.2.0-draft  
-**Spezifikation:** Transport-Layer für ADP über HTTP/HTTPS  
-**Basierend auf:** ADP v0.1.1  
+**Specification:** Transport Layer for ADP over HTTP/HTTPS  
+**Based on:** ADP v0.1.1  
 **Status:** Draft  
-**Autor:** Protocol Architect
+**Author:** Protocol Architect
 
 ---
 
-## 1. Überblick
+## 1. Overview
 
-Dieses Dokument definiert, wie ADP-Nachrichten über HTTP/HTTPS transportiert werden. Es standardisiert Endpoints, Methoden, Header, Status-Codes und Error-Handling.
+This document defines how ADP messages are transported over HTTP/HTTPS. It standardizes endpoints, methods, headers, status codes, and error handling.
 
-### Design-Prinzipien
+### Design Principles
 
-| Prinzip | Umsetzung |
-|---------|-----------|
-| **RESTful** | Standard-HTTP-Methoden (POST, GET) |
+| Principle | Implementation |
+|-----------|---------------|
+| **RESTful** | Standard HTTP methods (POST, GET) |
 | **JSON-native** | Content-Type: application/adp+json |
-| **Versioniert** | X-ADP-Version Header |
-| **Idempotent** | X-ADP-Idempotency-Key für wiederholbare Requests |
+| **Versioned** | X-ADP-Version header |
+| **Idempotent** | X-ADP-Idempotency-Key for repeatable requests |
 
 ---
 
 ## 2. Endpoints
 
-### 2.1 Übersicht
+### 2.1 Overview
 
-| Endpoint | Methode | Zweck | Auth Required |
-|----------|---------|-------|---------------|
-| `/.well-known/adp.json` | GET | Discovery | Nein |
-| `/adp/offer` | POST | DealRequest senden, DealOffers empfangen | Ja |
-| `/adp/intent` | POST | DealIntent senden | Ja |
-| `/adp/health` | GET | Provider Health-Check | Nein |
+| Endpoint | Method | Purpose | Auth Required |
+|----------|--------|---------|---------------|
+| `/.well-known/adp.json` | GET | Discovery | No |
+| `/adp/offer` | POST | Send DealRequest, receive DealOffers | Yes |
+| `/adp/intent` | POST | Send DealIntent | Yes |
+| `/adp/health` | GET | Provider health check | No |
 
 ### 2.2 Discovery (GET /.well-known/adp.json)
 
-**Beschreibung:** Maschinell lesbare Provider-Informationen
+**Description:** Machine-readable provider information
 
 **Request:**
 ```http
@@ -72,7 +72,7 @@ Accept: application/json
 
 ### 2.3 DealRequest → DealOffer(s) (POST /adp/offer)
 
-**Beschreibung:** Ein Agent sendet einen DealRequest und erhält DealOffers zurück.
+**Description:** An agent sends a DealRequest and receives DealOffers in return.
 
 **Request:**
 ```http
@@ -134,14 +134,14 @@ X-ADP-RateLimit-Reset: 2026-03-12T10:00:00Z
 ```
 
 **Notes:**
-- Response kann ein einzelnes DealOffer oder ein Array von DealOffers sein
-- Bei leerem Ergebnis: `200 OK` mit leerem Array `[]` oder einzelnes `DealError`
+- The response may be a single DealOffer or an array of DealOffers
+- When the result is empty: `200 OK` with an empty array `[]` or a single `DealError`
 
 ### 2.4 DealIntent (POST /adp/intent) & DealIntentAck Response
 
 #### DealIntent Request
 
-**Beschreibung:** Ein Agent signalisiert Interesse an einem DealOffer.
+**Description:** An agent signals interest in a DealOffer.
 
 **Request:**
 ```http
@@ -194,26 +194,26 @@ X-ADP-Version: 0.2.0
 ```
 
 **Notes:**
-- `202 Accepted` — Die Intent wurde empfangen, aber die Verarbeitung ist asynchron
-- Provider MÜSSEN `DealIntentAck` als Bestätigung zurückgeben
+- `202 Accepted` — The intent was received, but processing is asynchronous
+- Providers MUST return a `DealIntentAck` as confirmation
 
 ### 2.5 DealIntentAck — Formal Specification
 
-**Semantik:** Der Provider bestätigt den Empfang eines DealIntent. Dies ist eine neue, formale Nachrichtentype in v0.2.0 und war in v0.1.1 nicht vorhanden.
+**Semantics:** The provider confirms receipt of a DealIntent. This is a new, formal message type in v0.2.0 and was not present in v0.1.1.
 
 **Field Reference Table:**
 
-| Feld | Typ | Pflicht | Beschreibung |
-|------|-----|---------|--------------|
-| `adp.version` | `string` | ✅ | Protocol-Version (immer `"0.2.0"` oder höher) |
-| `adp.type` | `enum` | ✅ | Nachrichtentyp: `"DealIntentAck"` |
-| `adp.id` | `string` (UUID v4) | ✅ | Eindeutige Nachrichten-ID |
-| `adp.timestamp` | `string` (ISO 8601 UTC) | ✅ | Erstellungszeitpunkt |
-| `adp.correlation_id` | `string` (UUID v4) | ✅ | Referenz auf den akzeptierten `DealIntent` |
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `adp.version` | `string` | ✅ | Protocol version (always `"0.2.0"` or higher) |
+| `adp.type` | `enum` | ✅ | Message type: `"DealIntentAck"` |
+| `adp.id` | `string` (UUID v4) | ✅ | Unique message ID |
+| `adp.timestamp` | `string` (ISO 8601 UTC) | ✅ | Creation timestamp |
+| `adp.correlation_id` | `string` (UUID v4) | ✅ | Reference to the acknowledged `DealIntent` |
 | `acknowledgment.status` | `enum` | ✅ | `"received"`, `"processing"`, `"confirmed"` |
-| `acknowledgment.next_steps` | `string` | ❌ | Menschenlesbarer nächster Schritt |
-| `acknowledgment.reference_id` | `string` | ❌ | Anbieter-seitige Referenz-ID |
-| `acknowledgment.expires_at` | `string` (ISO 8601 UTC) | ❌ | Wann läuft die Bestätigung ab? |
+| `acknowledgment.next_steps` | `string` | ❌ | Human-readable next step |
+| `acknowledgment.reference_id` | `string` | ❌ | Provider-side reference ID |
+| `acknowledgment.expires_at` | `string` (ISO 8601 UTC) | ❌ | When does the acknowledgment expire? |
 
 **JSON Schema Example:**
 ```json
@@ -278,16 +278,16 @@ X-ADP-Version: 0.2.0
 
 > **Status:** Deferred to v0.3
 
-Pagination für große Result-Sets (z.B. Provider mit 500+ Modellen) ist für v0.3 geplant. Der vorgesehene Ansatz:
+Pagination for large result sets (e.g., providers with 500+ models) is planned for v0.3. The intended approach:
 
-- `Link` Header mit `rel="next"` und `rel="prev"` (RFC 8288)
-- Optional: `X-ADP-Total-Count` Header für Gesamtanzahl
-- Optional: `limit` und `offset` Query-Parameter auf POST /adp/offer
+- `Link` header with `rel="next"` and `rel="prev"` (RFC 8288)
+- Optional: `X-ADP-Total-Count` header for the total count
+- Optional: `limit` and `offset` query parameters on POST /adp/offer
 
-**Workaround für v0.2.0:**
-Provider mit großen Katalogen SOLLEN die Antwort auf die Requirements des DealRequest filtern und nur passende Offers zurückgeben. Dies reduziert die Response-Größe natürlich. Zusätzlich SOLLEN Provider maximal **100 Offers pro Response** liefern.
+**Workaround for v0.2.0:**
+Providers with large catalogs SHOULD filter the response based on the DealRequest requirements and only return matching offers. This naturally reduces response size. Additionally, providers SHOULD deliver a maximum of **100 offers per response**.
 
-**Example für zukünftige v0.3-Implementierung (informativ):**
+**Example for future v0.3 implementation (informative):**
 ```http
 POST /adp/offer HTTP/1.1
 Host: api.provider.com
@@ -310,7 +310,7 @@ X-ADP-Total-Count: 247
 
 ### 2.7 Health Check (GET /adp/health)
 
-**Beschreibung:** Prüft ob der Provider erreichbar und operational ist.
+**Description:** Checks whether the provider is reachable and operational.
 
 **Request:**
 ```http
@@ -358,18 +358,18 @@ ADP v0.2.0 defines a centralized registry of all error codes used across the pro
 
 ### 3.1 Complete Error Code Table
 
-| Error Code | HTTP Status | Spec Origin | Beschreibung | Retryable | Retry-After |
-|-----------|-------------|-------------|-----------|-----------|-------------|
-| `INVALID_REQUEST` | 400 Bad Request | Core v0.1.1 | Request format or schema invalid | Nein | — |
-| `PROVIDER_UNAVAILABLE` | 500/502/503 | Core v0.1.1 | Provider-side server error | Ja | 60s (default) |
-| `EXPIRED` | 400 Bad Request | Core v0.1.1 | DealRequest or DealOffer has expired | Nein | — |
-| `VERSION_MISMATCH` | 400 Bad Request | Core v0.1.1 | Unsupported ADP protocol version | Nein | — |
-| `RATE_LIMITED` | 429 Too Many Requests | Core v0.1.1 | Rate limit exceeded | Ja | Header: `Retry-After` |
-| `NOT_FOUND` | 404 Not Found | Core v0.1.1 | Endpoint or resource not found | Nein | — |
-| `UNAUTHORIZED` | 401 Unauthorized | Auth v0.2.0 | Missing or invalid authentication token | Nein | — |
-| `FORBIDDEN` | 403 Forbidden | Auth v0.2.0 | Insufficient permissions/scope | Nein | — |
-| `INVALID_SIGNATURE` | 401 Unauthorized | Auth v0.2.0 | HMAC signature validation failed (Request Signing) | Nein | — |
-| `TOKEN_EXPIRED` | 401 Unauthorized | Auth v0.2.0 | OAuth access token has expired | Ja | Refresh token |
+| Error Code | HTTP Status | Spec Origin | Description | Retryable | Retry-After |
+|-----------|-------------|-------------|-------------|-----------|-------------|
+| `INVALID_REQUEST` | 400 Bad Request | Core v0.1.1 | Request format or schema invalid | No | — |
+| `PROVIDER_UNAVAILABLE` | 500/502/503 | Core v0.1.1 | Provider-side server error | Yes | 60s (default) |
+| `EXPIRED` | 400 Bad Request | Core v0.1.1 | DealRequest or DealOffer has expired | No | — |
+| `VERSION_MISMATCH` | 400 Bad Request | Core v0.1.1 | Unsupported ADP protocol version | No | — |
+| `RATE_LIMITED` | 429 Too Many Requests | Core v0.1.1 | Rate limit exceeded | Yes | Header: `Retry-After` |
+| `NOT_FOUND` | 404 Not Found | Core v0.1.1 | Endpoint or resource not found | No | — |
+| `UNAUTHORIZED` | 401 Unauthorized | Auth v0.2.0 | Missing or invalid authentication token | No | — |
+| `FORBIDDEN` | 403 Forbidden | Auth v0.2.0 | Insufficient permissions/scope | No | — |
+| `INVALID_SIGNATURE` | 401 Unauthorized | Auth v0.2.0 | HMAC signature validation failed (Request Signing) | No | — |
+| `TOKEN_EXPIRED` | 401 Unauthorized | Auth v0.2.0 | OAuth access token has expired | Yes | Refresh token |
 
 ### 3.2 Reference in Other Specs
 
@@ -390,28 +390,28 @@ ADP v0.2.0 defines a centralized registry of all error codes used across the pro
 
 ---
 
-## 4. Standard-Header
+## 4. Standard Headers
 
-### 4.1 Request Header
+### 4.1 Request Headers
 
-| Header | Pflicht | Format | Beschreibung |
-|--------|---------|--------|--------------|
-| `Authorization` | Ja (außer Discovery/Health) | `Bearer <token>` | Auth-Token |
-| `Content-Type` | Ja | `application/adp+json` | Content-Type |
-| `X-ADP-Version` | Ja | `major.minor.patch` | ADP Version |
-| `X-ADP-Idempotency-Key` | Optional | UUID v4 | Idempotenz-Key |
-| `Accept` | Empfohlen | `application/adp+json` | Akzeptierter Content-Type |
+| Header | Required | Format | Description |
+|--------|----------|--------|-------------|
+| `Authorization` | Yes (except Discovery/Health) | `Bearer <token>` | Auth token |
+| `Content-Type` | Yes | `application/adp+json` | Content type |
+| `X-ADP-Version` | Yes | `major.minor.patch` | ADP version |
+| `X-ADP-Idempotency-Key` | Optional | UUID v4 | Idempotency key |
+| `Accept` | Recommended | `application/adp+json` | Accepted content type |
 
-### 4.2 Response Header
+### 4.2 Response Headers
 
-| Header | Pflicht | Beschreibung |
-|--------|---------|--------------|
-| `Content-Type` | Ja | `application/adp+json` |
-| `X-ADP-Version` | Ja | ADP Version der Response |
-| `X-ADP-RateLimit-Limit` | Ja (nur auth. Endpoints) | Rate Limit Maximum |
-| `X-ADP-RateLimit-Remaining` | Ja (nur auth. Endpoints) | Verbleibende Requests |
-| `X-ADP-RateLimit-Reset` | Ja (nur auth. Endpoints) | Reset Timestamp |
-| `Retry-After` | Bei 429/503 | Sekunden bis Retry |
+| Header | Required | Description |
+|--------|----------|-------------|
+| `Content-Type` | Yes | `application/adp+json` |
+| `X-ADP-Version` | Yes | ADP version of the response |
+| `X-ADP-RateLimit-Limit` | Yes (authenticated endpoints only) | Rate limit maximum |
+| `X-ADP-RateLimit-Remaining` | Yes (authenticated endpoints only) | Remaining requests |
+| `X-ADP-RateLimit-Reset` | Yes (authenticated endpoints only) | Reset timestamp |
+| `Retry-After` | On 429/503 | Seconds until retry |
 
 **Note on Rate Limit Headers:**
 Rate Limit headers (`X-ADP-RateLimit-*`) are **required on authenticated endpoints** (POST /adp/offer, POST /adp/intent, any endpoint requiring Authorization header). They are **optional on unauthenticated endpoints** (GET /.well-known/adp.json, GET /adp/health).
@@ -420,31 +420,31 @@ Rate Limit headers (`X-ADP-RateLimit-*`) are **required on authenticated endpoin
 
 ## 5. Status Codes
 
-### 5.1 Erfolg
+### 5.1 Success
 
-| Code | Bedeutung | Wann verwenden |
-|------|-----------|----------------|
-| `200 OK` | Request erfolgreich | DealOffer(s) zurückgegeben |
-| `202 Accepted` | Request akzeptiert, asynchrone Verarbeitung | DealIntent empfangen |
+| Code | Meaning | When to Use |
+|------|---------|-------------|
+| `200 OK` | Request successful | DealOffer(s) returned |
+| `202 Accepted` | Request accepted, asynchronous processing | DealIntent received |
 
-### 5.2 Client-Fehler
+### 5.2 Client Errors
 
-| Code | Bedeutung | DealError Code |
-|------|-----------|----------------|
-| `400 Bad Request` | JSON ungültig oder Schema-Fehler | `INVALID_REQUEST` |
-| `401 Unauthorized` | Kein/ungültiger Auth-Token | `UNAUTHORIZED` |
-| `403 Forbidden` | Unzureichende Berechtigungen | `FORBIDDEN` |
-| `404 Not Found` | Endpoint existiert nicht | `NOT_FOUND` |
-| `422 Unprocessable Entity` | Schema valid, aber semantischer Fehler | `INVALID_REQUEST` |
-| `429 Too Many Requests` | Rate Limit überschritten | `RATE_LIMITED` |
+| Code | Meaning | DealError Code |
+|------|---------|----------------|
+| `400 Bad Request` | Invalid JSON or schema error | `INVALID_REQUEST` |
+| `401 Unauthorized` | Missing/invalid auth token | `UNAUTHORIZED` |
+| `403 Forbidden` | Insufficient permissions | `FORBIDDEN` |
+| `404 Not Found` | Endpoint does not exist | `NOT_FOUND` |
+| `422 Unprocessable Entity` | Schema valid, but semantic error | `INVALID_REQUEST` |
+| `429 Too Many Requests` | Rate limit exceeded | `RATE_LIMITED` |
 
-### 5.3 Server-Fehler
+### 5.3 Server Errors
 
-| Code | Bedeutung | DealError Code |
-|------|-----------|----------------|
-| `500 Internal Server Error` | Unbekannter Server-Fehler | `PROVIDER_UNAVAILABLE` |
-| `502 Bad Gateway` | Upstream-Fehler | `PROVIDER_UNAVAILABLE` |
-| `503 Service Unavailable` | Wartung/Überlastung | `PROVIDER_UNAVAILABLE` |
+| Code | Meaning | DealError Code |
+|------|---------|----------------|
+| `500 Internal Server Error` | Unknown server error | `PROVIDER_UNAVAILABLE` |
+| `502 Bad Gateway` | Upstream error | `PROVIDER_UNAVAILABLE` |
+| `503 Service Unavailable` | Maintenance/overload | `PROVIDER_UNAVAILABLE` |
 
 ### 5.4 Error Response Format
 
@@ -502,18 +502,18 @@ Content-Type: application/adp+json
 
 **Media Type:** `application/adp+json`
 
-**Beschreibung:** JSON-Dokumente, die dem ADP-Schema folgen.
+**Description:** JSON documents conforming to the ADP schema.
 
-**Charset:** UTF-8 (implizit bei JSON)
+**Charset:** UTF-8 (implicit for JSON)
 
-**Beispiel:**
+**Example:**
 ```http
 Content-Type: application/adp+json; version=0.2.0
 ```
 
-**Hinweis (UPDATED - v0.2.0 Draft Status):** Der Media Type `application/adp+json` ist derzeit **nicht bei IANA registriert**. Eine formale Registration als `application/vnd.apideals.adp+json` ist für die RFC-Submission-Phase geplant. Bis dahin wird `application/adp+json` als De-facto-Standard verwendet.
+**Note (UPDATED - v0.2.0 Draft Status):** The media type `application/adp+json` is currently **not registered with IANA**. A formal registration as `application/vnd.apideals.adp+json` is planned for the RFC submission phase. Until then, `application/adp+json` is used as the de-facto standard.
 
-**Fallback:** Provider SOLLEN zusätzlich `application/json` als Fallback akzeptieren. Dies erhöht die Kompatibilität mit Clients, die Custom Media Types nicht unterstützen.
+**Fallback:** Providers SHOULD additionally accept `application/json` as a fallback. This improves compatibility with clients that do not support custom media types.
 
 ---
 
@@ -521,7 +521,7 @@ Content-Type: application/adp+json; version=0.2.0
 
 ### 7.1 Version Header
 
-Der `X-ADP-Version` Header gibt die verwendete ADP-Version an:
+The `X-ADP-Version` header indicates the ADP version in use:
 
 **Request:**
 ```http
@@ -535,7 +535,7 @@ X-ADP-Version: 0.2.0
 
 ### 7.2 Version Mismatch
 
-Wenn ein Provider die angeforderte Major-Version nicht unterstützt:
+When a provider does not support the requested major version:
 
 ```http
 HTTP/1.1 400 Bad Request
@@ -558,15 +558,15 @@ Content-Type: application/adp+json
 
 ### 7.3 Backwards Compatibility
 
-| Request Version | Provider Support | Verhalten |
-|-----------------|------------------|-----------|
-| v0.1.1 | Nur v0.2.0 | VERSION_MISMATCH oder v0.1.1 Emulation |
-| v0.2.0 | v0.1.1 + v0.2.0 | v0.2.0 Response |
-| v0.2.0 | Nur v0.1.1 | VERSION_MISMATCH |
+| Request Version | Provider Support | Behavior |
+|-----------------|-----------------|---------|
+| v0.1.1 | v0.2.0 only | VERSION_MISMATCH or v0.1.1 emulation |
+| v0.2.0 | v0.1.1 + v0.2.0 | v0.2.0 response |
+| v0.2.0 | v0.1.1 only | VERSION_MISMATCH |
 
 ---
 
-## 8. OpenAPI 3.1 Spezifikation
+## 8. OpenAPI 3.1 Specification
 
 ```yaml
 openapi: 3.1.0
@@ -574,7 +574,7 @@ info:
   title: ADP HTTP API
   version: 0.2.0
   description: |
-    HTTP Binding für das apideals Deal Protocol (ADP) v0.2.0
+    HTTP Binding for the apideals Deal Protocol (ADP) v0.2.0
 
 servers:
   - url: https://api.provider.com
@@ -697,15 +697,15 @@ components:
 
     DealRequest:
       type: object
-      # Siehe ADP Core Spec
+      # See ADP Core Spec
 
     DealOffer:
       type: object
-      # Siehe ADP Core Spec
+      # See ADP Core Spec
 
     DealIntent:
       type: object
-      # Siehe ADP Core Spec
+      # See ADP Core Spec
 
     DealIntentAck:
       type: object
@@ -803,7 +803,7 @@ components:
 
 ---
 
-## 9. Beispiele
+## 9. Examples
 
 ### 9.1 cURL
 
@@ -931,41 +931,41 @@ func requestDeal(apiKey, providerURL string, req DealRequest) (*http.Response, e
 
 ---
 
-## 10. Migration von v0.1.1
+## 10. Migration from v0.1.1
 
 ### 10.1 Breaking Changes
 
 | v0.1.1 | v0.2.0 | Migration |
 |--------|--------|-----------|
-| Keine HTTP-Spec definiert | Vollständige HTTP Binding Spec | Neue Implementierung |
-| Kein Auth-Layer | Auth required | Auth implementieren (siehe auth.md) |
-| Discovery nur über `.well-known/adp.json` | Erweitert um Auth-Info | Discovery-Response erweitern |
-| Rate Limit Reset: Unix Timestamp | Rate Limit Reset: ISO 8601 UTC | Alle `X-ADP-RateLimit-Reset` auf ISO 8601 konvertieren |
+| No HTTP spec defined | Complete HTTP Binding Spec | New implementation |
+| No auth layer | Auth required | Implement auth (see auth.md) |
+| Discovery only via `.well-known/adp.json` | Extended with auth info | Extend discovery response |
+| Rate Limit Reset: Unix Timestamp | Rate Limit Reset: ISO 8601 UTC | Convert all `X-ADP-RateLimit-Reset` to ISO 8601 |
 
 ### 10.2 Backwards Compatibility
 
-Provider können v0.1.1 und v0.2.0 parallel unterstützen:
+Providers may support v0.1.1 and v0.2.0 in parallel:
 
-- Anhand des `X-ADP-Version` Headers entscheiden
-- Oder: Separate Endpoints (`/v0.1/adp/offer`, `/v0.2/adp/offer`)
+- Decide based on the `X-ADP-Version` header
+- Or: separate endpoints (`/v0.1/adp/offer`, `/v0.2/adp/offer`)
 
-### 10.3 Zeitformat-Vereinheitlichung
+### 10.3 Timestamp Format Unification
 
-**v0.2.0 vereinheitlicht alle Zeitangaben auf ISO 8601 UTC.** 
+**v0.2.0 unifies all timestamps to ISO 8601 UTC.**
 
-- `X-ADP-RateLimit-Reset` war in früheren Entwürfen ein Unix Timestamp (integer)
-- Ab v0.2.0 ist es ein ISO 8601 String mit dem Format `YYYY-MM-DDTHH:MM:SSZ`
-- Clients müssen entsprechend angepasst werden (String-Parsing statt Integer-Konversion)
+- `X-ADP-RateLimit-Reset` was a Unix timestamp (integer) in earlier drafts
+- As of v0.2.0, it is an ISO 8601 string with the format `YYYY-MM-DDTHH:MM:SSZ`
+- Clients must be updated accordingly (string parsing instead of integer conversion)
 
-**Beispiel Migration:**
+**Migration Example:**
 ```
-v0.1.1 (alt):  X-ADP-RateLimit-Reset: 1712346000
-v0.2.0 (neu):  X-ADP-RateLimit-Reset: 2026-03-12T10:00:00Z
+v0.1.1 (old):  X-ADP-RateLimit-Reset: 1712346000
+v0.2.0 (new):  X-ADP-RateLimit-Reset: 2026-03-12T10:00:00Z
 ```
 
 ---
 
-## Appendix: Zusammenfassung
+## Appendix: Summary
 
 | Feature | Status |
 |---------|--------|
@@ -1007,31 +1007,31 @@ v0.2.0 (neu):  X-ADP-RateLimit-Reset: 2026-03-12T10:00:00Z
 - Updated Response Header table (Section 4.2) with conditional requirement note
 - Added explicit notes to Discovery (2.2) and Health Check (2.7) sections
 
-**Fix 6: `application/adp+json` Media Type — IANA-Status und Fallback klargestellt**
-- Updated Section 6.1 mit Hinweis auf fehlende IANA-Registrierung
-- Added note: Formale Registration als `application/vnd.apideals.adp+json` geplant für RFC-Phase
-- Added Fallback-Empfehlung: Provider SOLLEN `application/json` zusätzlich akzeptieren
-- Erhöht Kompatibilität mit älteren Clients
+**Fix 6: `application/adp+json` Media Type — IANA status and fallback clarified**
+- Updated Section 6.1 with note on missing IANA registration
+- Added note: Formal registration as `application/vnd.apideals.adp+json` planned for RFC phase
+- Added fallback recommendation: Providers SHOULD additionally accept `application/json`
+- Improves compatibility with older clients
 
-**Fix 11: Discovery nicht versioniert**
+**Fix 11: Discovery not versioned**
 - Added `discovery_version` field (string, semver, OPTIONAL) to Discovery response (Section 2.2)
 - Defaults to v0.1.1 format if omitted (backwards compatibility)
 - Updated OpenAPI Schema (Section 8) with new `discovery_version` property
 - Agents can now determine correct parsing logic based on `discovery_version`
 
-**Fix 12: Pagination ungelöst**
+**Fix 12: Pagination unresolved**
 - Added new Section 2.6: "Pagination" with Status: Deferred to v0.3
 - Documented future v0.3 approach: Link headers (RFC 8288), X-ADP-Total-Count, limit/offset parameters
-- v0.2.0 workaround: Provider SHOULD filter responses based on DealRequest requirements and limit to 100 Offers per response
+- v0.2.0 workaround: Provider SHOULD filter responses based on DealRequest requirements and limit to 100 offers per response
 - Prevents huge response payloads for providers with 500+ models
 
-**Fix 14: Zeitangaben auf ISO 8601 vereinheitlichen**
+**Fix 14: Unify timestamps to ISO 8601**
 - Changed `X-ADP-RateLimit-Reset` from Unix Timestamp to ISO 8601 UTC in all examples (Sections 2.3, 5.4)
 - Updated Rate Limited (429) response example with ISO 8601 timestamp
 - Updated OpenAPI RateLimited response schema: Header X-ADP-RateLimit-Reset now `string` with `format: date-time`
 - Added migration note (Section 10.3): Detailed timestamp format change explanation
 - All three ADP specs now use ISO 8601 UTC consistently
 
-**Consistency fixes:** Added Discovery-Versioning, Pagination-Section, Zeitformat-Vereinheitlichung
+**Consistency fixes:** Added Discovery-Versioning, Pagination-Section, timestamp format unification
 
-*Ende der HTTP Binding Spezifikation v0.2.0*
+*End of HTTP Binding Specification v0.2.0*
