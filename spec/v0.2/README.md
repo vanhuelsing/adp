@@ -12,13 +12,13 @@ ADP v0.2.0 introduces a complete HTTP binding and authentication layer, along wi
 
 | Feature | Status | Documentation |
 |---------|--------|---|
-| **Authentication Layer** | ✅ New | `auth.md` |
-| **HTTP Binding** | ✅ New | `http-binding.md` |
-| **Multimodal Pricing** | ✅ New | `pricing-multimodal.md` |
-| **DealIntentAck** | ✅ New | `http-binding.md` (Section 2.5) |
-| **Error Code Registry** | ✅ New | `http-binding.md` (Section 3) |
-| **Rate Limiting** | ✅ New | `auth.md` (Section 3) |
-| **Idempotency** | ✅ New | `auth.md` (Section 4) |
+| **Authentication Layer** | New | `auth.md` |
+| **HTTP Binding** | New | `http-binding.md` |
+| **Multimodal Pricing** | New | `pricing-multimodal.md` |
+| **DealIntentAck** | New | `http-binding.md` (Section 2.5) |
+| **Error Code Registry** | New | `http-binding.md` (Section 3) |
+| **Rate Limiting** | New | `auth.md` (Section 3) |
+| **Idempotency** | New | `auth.md` (Section 4) |
 
 ## File Index
 
@@ -108,10 +108,10 @@ json-schema-validate schemas/pricing-multimodal.schema.json examples/deal-offer-
 
 All example JSON files in `examples/` are:
 
-- ✅ Valid JSON (test with `python3 -m json.tool`)
-- ✅ Using UUID v4 for IDs
-- ✅ Using ISO 8601 UTC for timestamps
-- ✅ Consistent with the specifications
+- Valid JSON (test with `python3 -m json.tool`)
+- Using UUID v4 for IDs
+- Using ISO 8601 UTC for timestamps
+- Consistent with the specifications
 
 Use these examples as templates for implementing v0.2.0.
 
@@ -142,5 +142,3 @@ Refer to the specifications:
 - **Examples?** → Check `examples/` directory
 
 ---
-
-**ADP Protocol** — Making AI procurement transparent and fair.

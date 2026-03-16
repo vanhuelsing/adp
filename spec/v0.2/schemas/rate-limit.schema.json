@@ -21,5 +21,6 @@
       "description": "ISO 8601 UTC timestamp when the rate limit resets"
     }
   },
-  "required": ["X-ADP-RateLimit-Limit", "X-ADP-RateLimit-Remaining", "X-ADP-RateLimit-Reset"]
+  "required": ["X-ADP-RateLimit-Limit", "X-ADP-RateLimit-Remaining", "X-ADP-RateLimit-Reset"],
+  "additionalProperties": false
 }

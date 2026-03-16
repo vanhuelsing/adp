@@ -1,6 +1,6 @@
 # ADP Implementation Guide
 
-Implement ADP in an afternoon.
+A practical guide to integrating ADP.
 
 ---
 
@@ -164,31 +164,39 @@ For each offer:
 ## Pricing Calculation
 
 ```python
+# Modifier types that affect only input price (not output)
+INPUT_ONLY_MODIFIERS = {"cache_read", "cache_write"}
+
 def calculate_cost(input_mtok, output_mtok, pricing):
     """Calculate monthly cost based on pricing object."""
-    
+
     # Step 1: Determine applicable tier (flat-rate)
     input_price = pricing["base"]["input_per_mtok"]
     output_price = pricing["base"]["output_per_mtok"]
-    
+
     total_mtok = input_mtok + output_mtok
-    for tier in sorted(pricing.get("tiers", []), 
+    for tier in sorted(pricing.get("tiers", []),
                        key=lambda t: t["threshold_mtok_monthly"]):
         if total_mtok > tier["threshold_mtok_monthly"]:
             input_price = tier["input_per_mtok"]
-            output_price = tier["output_per_mtok"]
-    
-    # Step 2: Apply modifiers in sequence
+            output_price = tier.get("output_per_mtok", output_price)
+
+    # Step 2: Apply modifiers in declaration order.
+    # Modifiers of type cache_read / cache_write affect input_price only.
     for modifier in pricing.get("modifiers", []):
+        modifier_type = modifier.get("type", "")
+        input_only = modifier_type in INPUT_ONLY_MODIFIERS
+
         if "discount_pct" in modifier:
             factor = 1 - modifier["discount_pct"] / 100
             input_price *= factor
-            output_price *= factor
+            if not input_only:
+                output_price *= factor
         elif "input_per_mtok" in modifier:
             input_price = modifier["input_per_mtok"]
-            if "output_per_mtok" in modifier:
+            if not input_only and "output_per_mtok" in modifier:
                 output_price = modifier["output_per_mtok"]
-    
+
     # Step 3: Calculate total
     return (input_mtok * input_price) + (output_mtok * output_price)
 
@@ -220,31 +228,3 @@ With flat-rate tiers, crossing a threshold can make the total cost **lower**:
 
 This is intentional and matches how major providers structure volume discounts.
 
----
-
-## Validation Checklist
-
-### DealRequest validation
-
-- [ ] `adp.version` follows semver
-- [ ] `adp.id` is valid UUID v4
-- [ ] `adp.timestamp` is ISO 8601 UTC
-- [ ] `requester.agent_id` is present
-- [ ] `requester.is_automated` is boolean
-- [ ] `budget.currency` is ISO 4217 (3 uppercase letters)
-- [ ] `valid_until` is in the future (if present)
-
-### DealOffer validation
-
-- [ ] All required provider fields present
-- [ ] All required model fields present
-- [ ] `model.task_classes` is non-empty array
-- [ ] `pricing.base.input_per_mtok` and `output_per_mtok` are numbers
-- [ ] `valid_until` is after `valid_from`
-
-### DealIntent validation
-
-- [ ] `intent.binding` is `false`
-- [ ] `intent.accepted_offer_id` references a valid offer
-- [ ] `activation.type` is valid enum value
-- [ ] `activation.redirect_url` present if `activation.type === "redirect"`

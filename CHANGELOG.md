@@ -66,11 +66,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Error Code Registry**: Centralized in HTTP Binding spec (Section 3) instead of scattered across specs
 
 ### Breaking Changes
-- ⚠️ **Authentication Required**: All authenticated endpoints now require `Authorization` header (API Key or OAuth 2.0)
-- ⚠️ **Rate Limit Headers**: Providers MUST return `X-ADP-RateLimit-*` headers on authenticated endpoints
-- ⚠️ **Timestamp Format**: `X-ADP-RateLimit-Reset` changed from Unix integer to ISO 8601 string
-- ⚠️ **DealIntentAck**: `/adp/intent` now returns 202 with `DealIntentAck` (new message type)
-- ⚠️ **Error Code Standardization**: Errors must use codes from central registry (http-binding.md Section 3)
+- **BREAKING: Authentication Required**: All authenticated endpoints now require `Authorization` header (API Key or OAuth 2.0)
+- **BREAKING: Rate Limit Headers**: Providers MUST return `X-ADP-RateLimit-*` headers on authenticated endpoints
+- **BREAKING: Timestamp Format**: `X-ADP-RateLimit-Reset` changed from Unix integer to ISO 8601 string
+- **BREAKING: DealIntentAck**: `/adp/intent` now returns 202 with `DealIntentAck` (new message type)
+- **BREAKING: Error Code Standardization**: Errors must use codes from central registry (http-binding.md Section 3)
 
 ### Migration Guide (v0.1.1 → v0.2.0)
 See `spec/v0.2/README.md` for detailed migration steps for agents and providers.

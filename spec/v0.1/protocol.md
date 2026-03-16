@@ -42,7 +42,7 @@ ADP (apideals Deal Protocol) is a JSON-based message protocol enabling software 
 
 | Principle | Description |
 |-----------|-------------|
-| **Simplicity** | Implement in an afternoon |
+| **Simplicity** | Low barrier to entry |
 | **JSON-native** | No XML, no Protobuf |
 | **Additive evolution** | New fields = OK; removed fields = breaking change |
 | **Agent-readable** | Clear semantics, no free text for structured data |
@@ -70,11 +70,11 @@ Every ADP message starts with this header:
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `version` | `string` | ✅ | Protocol version (semver) |
-| `type` | `enum` | ✅ | Message type |
-| `id` | `string` (UUID v4) | ✅ | Unique message ID |
-| `timestamp` | `string` (ISO 8601 UTC) | ✅ | Creation time, always UTC |
-| `correlation_id` | `string` (UUID v4) | ⚠️ | References triggering message. **Required** for `DealOffer`, `DealIntent`, `DealError`. Optional (null) for `DealRequest` only. |
+| `version` | `string` | Yes | Protocol version (semver) |
+| `type` | `enum` | Yes | Message type |
+| `id` | `string` (UUID v4) | Yes | Unique message ID |
+| `timestamp` | `string` (ISO 8601 UTC) | Yes | Creation time, always UTC |
+| `correlation_id` | `string` (UUID v4) | Conditional | References triggering message. **Required** for `DealOffer`, `DealIntent`, `DealError`. Optional (null) for `DealRequest` only. |
 
 ### 2.2 DealRequest
 
@@ -133,15 +133,15 @@ Agent asks: *"I need an LLM API with these requirements."*
 
 | Path | Type | Required | Description |
 |------|------|----------|-------------|
-| `requester.agent_id` | `string` | ✅ | Unique agent identifier (URN-style recommended) |
-| `requester.is_automated` | `boolean` | ✅ | `true` for autonomous AI agents (EU AI Act Art. 50) |
-| `requester.name` | `string` | ❌ | Human-readable name |
-| `requester.contact.email` | `string` | ❌ | Contact email |
-| `requirements.task_classes` | `array<enum>` | ❌ | `general`, `reasoning`, `coding`, `creative`, `classification`, `extraction`, `embedding`, `multimodal` |
-| `requirements.compliance` | `array<enum>` | ❌ | See [Compliance](#4-compliance--capabilities) |
-| `budget.currency` | `string` (ISO 4217) | ✅ | `USD`, `EUR`, etc. |
-| `valid_until` | `string` (ISO 8601) | ❌ | Request expiration time |
-| `request_ttl_hours` | `integer` | ❌ | Data retention limit (GDPR Art. 17), default 24 |
+| `requester.agent_id` | `string` | Yes | Unique agent identifier (URN-style recommended) |
+| `requester.is_automated` | `boolean` | Yes | `true` for autonomous AI agents (EU AI Act Art. 50) |
+| `requester.name` | `string` | No | Human-readable name |
+| `requester.contact.email` | `string` | No | Contact email |
+| `requirements.task_classes` | `array<enum>` | No | `general`, `reasoning`, `coding`, `creative`, `classification`, `extraction`, `embedding`, `multimodal` |
+| `requirements.compliance` | `array<enum>` | No | See [Compliance](#4-compliance--capabilities) |
+| `budget.currency` | `string` (ISO 4217) | Yes | `USD`, `EUR`, etc. |
+| `valid_until` | `string` (ISO 8601) | No | Request expiration time |
+| `request_ttl_hours` | `integer` | No | Data retention limit (GDPR Art. 17), default 24 |
 
 ### 2.3 DealOffer
 
@@ -256,12 +256,12 @@ Agent signals: *"I intend to accept this offer."*
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| `intent.binding` | ✅ | Always `false` in v0.1 |
-| `intent.requires_human_confirmation` | ❌ | Default: `true` |
-| `intent.party_type` | ❌ | `business` or `consumer` |
-| `intent.accepted_offer_id` | ✅ | UUID of the accepted DealOffer |
-| `intent.activation.type` | ✅ | `redirect`, `api_provision` (v0.2+), or `manual` |
-| `intent.activation.redirect_url` | ⚠️ | Required if `activation.type === "redirect"` |
+| `intent.binding` | Yes | Always `false` in v0.1 |
+| `intent.requires_human_confirmation` | No | Default: `true` |
+| `intent.party_type` | No | `business` or `consumer` |
+| `intent.accepted_offer_id` | Yes | UUID of the accepted DealOffer |
+| `intent.activation.type` | Yes | `redirect`, `api_provision` (v0.2+), or `manual` |
+| `intent.activation.redirect_url` | Conditional | Required if `activation.type === "redirect"` |
 
 ### 2.5 DealError
 
@@ -431,7 +431,7 @@ def calculate_cost(input_mtok, output_mtok, pricing):
 | `data_residency_eu` | Data stays in EU/EWR |
 | `pci_dss` | PCI DSS Level 1 compliant |
 
-> ⚠️ **Self-Declared Compliance:** Tags with `compliance_verified_by: "self-declared"` are provider assertions. Verify independently for your use case.
+> **Note:** Tags with `compliance_verified_by: "self-declared"` are provider assertions. Verify independently for your use case.
 
 ### 4.2 Capabilities
 
@@ -491,11 +491,11 @@ https://<provider-domain>/.well-known/adp.json
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| `adp_supported` | ✅ | Always `true` |
-| `adp_versions` | ✅ | Supported ADP versions |
-| `offer_endpoint` | ⚠️ | POST endpoint for DealRequests. **Required** unless `static_offers_url` is provided. |
-| `models_endpoint` | ❌ | GET endpoint for all offers |
-| `static_offers_url` | ⚠️ | Static JSON with all offers. May substitute `offer_endpoint` for read-only/price-list providers. |
+| `adp_supported` | Yes | Always `true` |
+| `adp_versions` | Yes | Supported ADP versions |
+| `offer_endpoint` | Conditional | POST endpoint for DealRequests. **Required** unless `static_offers_url` is provided. |
+| `models_endpoint` | No | GET endpoint for all offers |
+| `static_offers_url` | Conditional | Static JSON with all offers. May substitute `offer_endpoint` for read-only/price-list providers. |
 
 > **Discovery Rule:** A valid ADP provider MUST expose at least one of `offer_endpoint` (for live requests) or `static_offers_url` (for static price lists). Providers that expose neither are non-conforming.
 
@@ -515,8 +515,8 @@ ADP follows [Semantic Versioning 2.0](https://semver.org/):
 
 | Version | Content | Status |
 |---------|---------|--------|
-| **v0.1.1** | Core Messages, Pricing, Discovery, Compliance | ✅ Released |
-| **[v0.2.0](../v0.2/README.md)** | Auth, HTTP Binding, Multimodal Pricing, DealIntentAck | 📝 Draft |
+| **v0.1.1** | Core Messages, Pricing, Discovery, Compliance | Released |
+| **[v0.2.0](../v0.2/README.md)** | Auth, HTTP Binding, Multimodal Pricing, DealIntentAck | Draft |
 | **v0.3.0** | Counter-Offers, DealConfirm, Usage-Reporting, Pagination | Planned |
 | **v1.0.0** | Payment-Escrow, Community Governance, Formal JSON Schemas | Planned |
 
@@ -561,24 +561,11 @@ CC-BY 4.0 for specifications (better for standards/docs), Apache 2.0 for code/SD
 
 ## 8. Security Considerations
 
-ADP v0.1.1 ist bewusst transport-agnostisch und enthält keine integrierte Authentifizierung, Autorisierung oder kryptographische Signaturen. Diese Designentscheidung ermöglicht eine schnelle Implementierung, erfordert aber zusätzliche Sicherheitsmaßnahmen auf Transportschicht.
+ADP v0.1.1 is deliberately transport-agnostic and does not include built-in authentication, authorization, or cryptographic signatures. This design choice enables rapid implementation but requires additional security measures at the transport layer.
 
-### Kritische Bedrohungen
+The primary risks in v0.1 are provider impersonation (forged offers with phishing URLs), replay attacks (reuse of valid messages), and man-in-the-middle attacks over insecure transport. Without signatures, offer prices, redirect URLs, and compliance claims can be tampered with.
 
-Die wichtigsten Risiken in v0.1 sind **Provider Impersonation** (gefälschte Angebote mit Phishing-URLs), **Replay-Attacken** (Wiederverwendung gültiger Nachrichten) und **Man-in-the-Middle-Angriffe** bei unsicherem Transport. Ohne Signaturen können Angebotspreise, Redirect-URLs und Compliance-Behauptungen manipuliert werden.
-
-### Empfohlene Gegenmaßnahmen
-
-Bis v0.2 mit integrierten Sicherheitsmechanismen verfügbar ist, müssen Implementierer:
-
-- **TLS 1.3** für alle Kommunikationswege erzwingen
-- **API-Keys** außerhalb des ADP-JSON-Schemas implementieren (HTTP-Header)
-- **Rate Limiting** auf Basis von `DealError` mit `code: "RATE_LIMITED"` etablieren
-- **JSON-Schema-Validierung** mit strikten Payload-Limits (max. 250 KB für `DealOffer`)
-- **URL-Validierung** (nur HTTPS, keine private IPs) für alle `redirect_url` und `terms_url`
-- **Data Retention** gemäß `request_ttl_hours` für GDPR-Konformität implementieren
-
-Ausführliche Sicherheitsrichtlinien, Threat Model und Empfehlungen für v0.2 (JWS-Signaturen, Nonces, Certificate Pinning) finden sich in [`docs/security-considerations.md`](../../docs/security-considerations.md).
+Until v0.2 introduces built-in security mechanisms, implementers must enforce TLS 1.3 for all communication, implement API keys outside the ADP JSON schema (via HTTP headers), apply rate limiting, validate JSON payloads against the schema with strict size limits, and verify all URLs (HTTPS only, no private IPs). Data retention must follow `request_ttl_hours` for GDPR compliance. For the full threat model, detailed guidelines, and v0.2 security roadmap (JWS signatures, nonces, certificate pinning), see [`docs/security-considerations.md`](../../docs/security-considerations.md).
 
 ---
 

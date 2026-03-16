@@ -21,7 +21,7 @@
         },
         "timestamp": {
           "type": "string",
-          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,3})?Z$"
         },
         "correlation_id": {
           "oneOf": [
@@ -158,11 +158,11 @@
         },
         "valid_from": {
           "type": "string",
-          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,3})?Z$"
         },
         "valid_until": {
           "type": "string",
-          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,3})?Z$"
         },
         "terms_url": {
           "type": "string",
@@ -172,5 +172,6 @@
       "required": ["provider", "model", "pricing", "compliance", "valid_from", "valid_until"]
     }
   },
-  "required": ["adp", "offer"]
+  "required": ["adp", "offer"],
+  "additionalProperties": false
 }

@@ -31,5 +31,6 @@
       "description": "Unix timestamp for signature (10 digits)"
     }
   },
-  "required": ["Authorization", "X-ADP-Version"]
+  "required": ["Authorization", "X-ADP-Version"],
+  "additionalProperties": false
 }

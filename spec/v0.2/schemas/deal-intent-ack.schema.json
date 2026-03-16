@@ -61,5 +61,6 @@
       "required": ["status"]
     }
   },
-  "required": ["adp", "acknowledgment"]
+  "required": ["adp", "acknowledgment"],
+  "additionalProperties": false
 }

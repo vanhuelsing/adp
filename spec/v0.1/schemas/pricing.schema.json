@@ -146,5 +146,6 @@
       }
     }
   },
-  "required": ["currency", "base"]
+  "required": ["currency", "base"],
+  "additionalProperties": false
 }

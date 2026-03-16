@@ -4,10 +4,10 @@ The **apideals Deal Protocol (ADP)** — An open protocol for AI agents to disco
 
 ## Quick Links
 
-- 🌐 **Website**: https://vanhuelsing.github.io/adp/
-- 📖 **Specification**: [spec/v0.1/protocol.md](spec/v0.1/protocol.md)
-- 💻 **GitHub**: https://github.com/vanhuelsing/adp
-- 📦 **npm**: `@adp/sdk` (coming soon)
+- **Website**: https://vanhuelsing.github.io/adp/
+- **Specification**: [spec/v0.1/protocol.md](spec/v0.1/protocol.md)
+- **GitHub**: https://github.com/vanhuelsing/adp
+- **npm**: `@adp/sdk` (coming soon)
 
 ## Repository Structure
 

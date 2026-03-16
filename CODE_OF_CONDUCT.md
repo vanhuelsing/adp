@@ -1,18 +1,15 @@
 # Code of Conduct
 
-## Our Standards
+This project follows the [Contributor Covenant](https://www.contributor-covenant.org/) v2.1.
 
-- Be respectful and constructive
-- Focus on technical merit
-- Welcome diverse perspectives
-- Assume good intent
+## Summary
 
-## Unacceptable Behavior
+We are committed to providing a welcoming and inclusive environment. All participants are expected to be respectful, constructive, and professional.
 
-- Personal attacks or harassment
-- Dismissing contributions without explanation
-- Spam or off-topic promotion
+Unacceptable behavior includes harassment, personal attacks, trolling, and publishing others' private information.
 
 ## Enforcement
 
-Report violations to adp@apideals.ai or open a private issue. Maintainers may remove comments or ban violators.
+Instances of unacceptable behavior may be reported to adp@apideals.ai. Maintainers will review and respond to all complaints. Violations may result in temporary or permanent bans.
+
+For the full text, see https://www.contributor-covenant.org/version/2/1/code_of_conduct/

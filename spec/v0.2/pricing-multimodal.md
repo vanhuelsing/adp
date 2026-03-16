@@ -1,35 +1,35 @@
 # ADP v0.2.0 — Multimodal Pricing Specification
 
 **Version:** 0.2.0-draft  
-**Spezifikation:** Erweiterung des Pricing-Schemas für Bilder, Audio, Video  
-**Basierend auf:** ADP v0.1.1 (Section 3: Pricing Schema)  
-**Status:** Draft  
-**Autor:** Protocol Architect
+**Specification:** Extension of the Pricing Schema for Images, Audio, Video
+**Based on:** ADP v0.1.1 (Section 3: Pricing Schema)
+**Status:** Draft
+**Author:** Protocol Architect
 
 ---
 
-## 1. Überblick
+## 1. Overview
 
-Dieses Dokument erweitert das ADP Pricing Schema um multimodale Inhalte. Während v0.1.1 nur Token-basiertes Text-Pricing unterstützte, ermöglicht v0.2.0 die Preisgestaltung für Bilder, Audio und Video.
+This document extends the ADP Pricing Schema to cover multimodal content. While v0.1.1 only supported token-based text pricing, v0.2.0 enables pricing for images, audio, and video.
 
-### Design-Prinzipien
+### Design Principles
 
-| Prinzip | Umsetzung |
-|---------|-----------|
-| **Backwards Compatible** | `pricing.base` bleibt für reine Text-APIs |
-| **Industry-Standard Units** | Megapixel, Minuten, Frames — nichts selbst erfinden |
-| **Flexibel** | Provider können nur die Modalitäten definieren, die sie nutzen |
-| **Berechenbar** | Klare Formeln für Gesamtkosten |
+| Principle | Implementation |
+|-----------|---------------|
+| **Backwards Compatible** | `pricing.base` remains for text-only APIs |
+| **Industry-Standard Units** | Megapixels, minutes, frames — no custom inventions |
+| **Flexible** | Providers can define only the modalities they use |
+| **Predictable** | Clear formulas for total costs |
 
 ---
 
-## 2. Neue Modalitäten
+## 2. New Modalities
 
-### 2.1 Übersicht
+### 2.1 Overview
 
-| Modality | Input Unit | Output Unit | Beispiel-Anbieter |
+| Modality | Input Unit | Output Unit | Example Providers |
 |----------|------------|-------------|-------------------|
-| **Text** | $/MTok | $/MTok | Alle LLMs |
+| **Text** | $/MTok | $/MTok | All LLMs |
 | **Image Input** | $/Megapixel | — | GPT-4o Vision, Claude Vision |
 | **Image Output** | — | $/Image oder $/Megapixel | DALL-E, Midjourney, Stable Diffusion |
 | **Audio Input** | $/Minute | — | Whisper, Gemini Audio |
@@ -37,22 +37,22 @@ Dieses Dokument erweitert das ADP Pricing Schema um multimodale Inhalte. Währen
 | **Video Input** | $/Frame oder $/Second | — | Gemini 2.0 Flash Video |
 | **Video Output** | — | $/Frame oder $/Second | Runway, Pika¹ |
 
-¹ **Deferred to v0.3** — Video-Output-Pricing-APIs sind noch zu instabil für Standardisierung. Definierte Preismodelle sind in Entwicklung für zukünftige Versionen.
+¹ **Deferred to v0.3** — Video output pricing APIs are still too unstable for standardization. Defined pricing models are in development for future versions.
 
-### 2.2 Warum diese Units?
+### 2.2 Why These Units?
 
-| Modality | Unit | Begründung |
-|----------|------|------------|
-| Image | Megapixel | Standard in der Bildverarbeitung (MP = Million Pixels) |
-| Audio | Minute | Intuitiv für Nutzer ("5 Minuten Audio") |
-| Audio Output | Character | TTS-Anbieter (ElevenLabs) nutzen Zeichen-basierte Preise |
-| Video | Frame/Second | Frame für kurze Clips, Second für längere Videos |
+| Modality | Unit | Rationale |
+|----------|------|-----------|
+| Image | Megapixel | Industry standard in image processing (MP = Million Pixels) |
+| Audio | Minute | Intuitive for users ("5 minutes of audio") |
+| Audio Output | Character | TTS providers (ElevenLabs) use character-based pricing |
+| Video | Frame/Second | Frame for short clips, second for longer videos |
 
 ---
 
-## 3. Schema-Erweiterung
+## 3. Schema Extension
 
-### 3.1 Neues Pricing-Objekt
+### 3.1 New Pricing Object
 
 ```json
 {
@@ -105,7 +105,7 @@ Dieses Dokument erweitert das ADP Pricing Schema um multimodale Inhalte. Währen
 
 ### 3.2 Text (Default)
 
-Das Text-Pricing verschiebt sich vom `base`-Objekt in `modalities.text`. `base` bleibt aus Kompatibilitätsgründen erhalten.
+Text pricing moves from the `base` object into `modalities.text`. `base` is retained for backwards compatibility.
 
 ```json
 {
@@ -125,11 +125,11 @@ Das Text-Pricing verschiebt sich vom `base`-Objekt in `modalities.text`. `base` 
 }
 ```
 
-**Regel (UPDATED - v0.2.0 Consistency):** Wenn `modalities.text` vorhanden ist, MÜSSEN `base.input_per_mtok` und `base.output_per_mtok` identische Werte haben wie `modalities.text.input_per_mtok` und `modalities.text.output_per_mtok`. Dies stellt sicher, dass v0.1.1 Clients (die nur `base` lesen) und v0.2.0 Clients (die `modalities.text` bevorzugen) dieselben Preise sehen.
+**Rule (UPDATED - v0.2.0 Consistency):** When `modalities.text` is present, `base.input_per_mtok` and `base.output_per_mtok` MUST have identical values to `modalities.text.input_per_mtok` and `modalities.text.output_per_mtok`. This ensures that v0.1.1 clients (which only read `base`) and v0.2.0 clients (which prefer `modalities.text`) see the same prices.
 
-**Validierung:** Validatoren SOLLEN bei Abweichung zwischen `base` und `modalities.text` einen Warning ausgeben und Abweichungen flaggen. Wenn `modalities.text` existiert, ist ein Mismatch ein Konsistenzfehler.
+**Validation:** Validators SHOULD emit a warning when `base` and `modalities.text` diverge and flag discrepancies. When `modalities.text` exists, a mismatch is a consistency error.
 
-**Beispiel (KORRIGIERT):**
+**Example (CORRECTED):**
 ```json
 {
   "pricing": {
@@ -148,7 +148,7 @@ Das Text-Pricing verschiebt sich vom `base`-Objekt in `modalities.text`. `base` 
 }
 ```
 
-✅ Konsistent: `base` und `modalities.text` haben identische Input/Output-Werte.
+Consistent: `base` and `modalities.text` have identical input/output values.
 
 ### 3.3 Image Input
 
@@ -175,7 +175,7 @@ Das Text-Pricing verschiebt sich vom `base`-Objekt in `modalities.text`. `base` 
 }
 ```
 
-**Beispiel: GPT-4o Vision**
+**Example: GPT-4o Vision**
 ```json
 {
   "image_input": {
@@ -186,14 +186,14 @@ Das Text-Pricing verschiebt sich vom `base`-Objekt in `modalities.text`. `base` 
 }
 ```
 
-**Berechnung:**
+**Calculation:**
 ```
-cost = max(actual_megapixels, minimum_megapixels) × per_megapixel
+cost = max(actual_megapixels, minimum_megapixels) x per_megapixel
 
-Beispiel:
-- 1920x1080 Bild = 2.07 Megapixel
-- Mindestabrechnung: 0.25 MP
-- Kosten: 2.07 × $0.50 = $1.035
+Example:
+- 1920x1080 image = 2.07 Megapixels
+- Minimum billing: 0.25 MP
+- Cost: 2.07 x $0.50 = $1.035
 ```
 
 ### 3.4 Image Output
@@ -217,7 +217,7 @@ Beispiel:
 }
 ```
 
-**Beispiel: DALL-E 3**
+**Example: DALL-E 3**
 ```json
 {
   "image_output": {
@@ -252,7 +252,7 @@ Beispiel:
 }
 ```
 
-**Beispiel: Whisper API**
+**Example: Whisper API**
 ```json
 {
   "audio_input": {
@@ -263,14 +263,14 @@ Beispiel:
 }
 ```
 
-**Berechnung:**
+**Calculation:**
 ```
-cost = ceil(audio_seconds / 60, 0.1) × per_minute
+cost = ceil(audio_seconds / 60, 0.1) x per_minute
 
-Beispiel:
-- 3 Minuten 45 Sekunden = 3.75 Minuten
-- Gerundet auf 0.1-Minuten-Schritte: 3.8 Minuten
-- Kosten: 3.8 × $0.006 = $0.0228
+Example:
+- 3 minutes 45 seconds = 3.75 minutes
+- Rounded to 0.1-minute increments: 3.8 minutes
+- Cost: 3.8 x $0.006 = $0.0228
 ```
 
 ### 3.6 Audio Output (TTS)
@@ -290,7 +290,7 @@ Beispiel:
 }
 ```
 
-**Beispiel: ElevenLabs**
+**Example: ElevenLabs**
 ```json
 {
   "audio_output": {
@@ -302,7 +302,7 @@ Beispiel:
 }
 ```
 
-**Beispiel: OpenAI TTS**
+**Example: OpenAI TTS**
 ```json
 {
   "audio_output": {
@@ -330,25 +330,25 @@ Beispiel:
 }
 ```
 
-**Berechnung (Frame-basiert):**
+**Calculation (Frame-based):**
 ```
-cost = frame_count × per_frame
+cost = frame_count x per_frame
 
-Beispiel:
-- 30 Sekunden Video @ 30 FPS = 900 Frames
-- Kosten: 900 × $0.001 = $0.90
-```
-
-**Berechnung (Second-basiert):**
-```
-cost = duration_seconds × per_second
-
-Beispiel:
-- 30 Sekunden Video
-- Kosten: 30 × $0.03 = $0.90
+Example:
+- 30 seconds of video @ 30 FPS = 900 frames
+- Cost: 900 x $0.001 = $0.90
 ```
 
-**Beispiel: Gemini 2.0 Flash Video**
+**Calculation (Second-based):**
+```
+cost = duration_seconds x per_second
+
+Example:
+- 30 seconds of video
+- Cost: 30 x $0.03 = $0.90
+```
+
+**Example: Gemini 2.0 Flash Video**
 ```json
 {
   "video_input": {
@@ -361,11 +361,11 @@ Beispiel:
 
 ---
 
-## 4. Gemischte Modalitäten (Mixed Modality)
+## 4. Mixed Modalities
 
-### 4.1 Bundle-Pricing
+### 4.1 Bundle Pricing
 
-Manche Modelle (z.B. GPT-4o) unterstützen Text + Bilder in einem Request.
+Some models (e.g. GPT-4o) support text + images in a single request.
 
 ```json
 {
@@ -395,9 +395,9 @@ Manche Modelle (z.B. GPT-4o) unterstützen Text + Bilder in einem Request.
 }
 ```
 
-### 4.2 Token-Äquivalente
+### 4.2 Token Equivalents
 
-Einige Anbieter rechnen Bilder/Audio in Token um:
+Some providers convert images/audio into tokens:
 
 ```json
 {
@@ -411,21 +411,21 @@ Einige Anbieter rechnen Bilder/Audio in Token um:
 }
 ```
 
-Dies signalisiert, dass Bild-Input über das Text-Pricing abgerechnet wird.
+This signals that image input is billed via text pricing.
 
-**Verantwortlichkeit für Kostenberechnung:**
+**Responsibility for Cost Calculation:**
 
-- **Provider** MUSS die finale Kostenberechnung durchführen und im Invoice/Usage-Report die tatsächlichen Kosten angeben. Der Provider hat die vollständige Sichtbarkeit auf alle intern relevanten Faktoren (z.B. exakte Tile-Größen nach Rescaling).
-  
-- **Agent** KANN auf Basis der `token_equivalent`-Informationen eine Kostenschätzung vornehmen (z.B. für Budget-Prüfung vor dem Request). Diese Schätzung ist **informativ und nicht bindend** — der Provider kann die tatsächlichen Kosten korrigieren.
+- **Provider** MUST perform the final cost calculation and report actual costs in the invoice/usage report. The provider has full visibility into all internally relevant factors (e.g. exact tile sizes after rescaling).
 
-- **Hinweis:** Die Tile-Logik ist provider-spezifisch:
-  - GPT-4o: 512×512 Tiles, max 2048×2048 Rescaling
-  - Andere Provider können andere Logiken haben
-  
-  Die `token_equivalent`-Felder sind informativ — die tatsächliche Token-Zahl kann (und wird oft) abweichen von Agent-Schätzungen.
+- **Agent** MAY use the `token_equivalent` information to estimate costs (e.g. for budget checks before the request). This estimate is **informative and non-binding** — the provider may correct the actual costs.
 
-- **Best Practice für Provider:** Provider die `pricing_via_text: true` setzen, SOLLEN in ihrem DealOffer die typische Token-Anzahl pro Bild-Größe als `notes`-Feld dokumentieren. Beispiel:
+- **Note:** Tile logic is provider-specific:
+  - GPT-4o: 512x512 tiles, max 2048x2048 rescaling
+  - Other providers may use different logic
+
+  The `token_equivalent` fields are informative — the actual token count can (and often will) differ from agent estimates.
+
+- **Best Practice for Providers:** Providers that set `pricing_via_text: true` SHOULD document the typical token count per image size in the `notes` field of their DealOffer. Example:
   ```json
   {
     "image_input": {
@@ -599,7 +599,7 @@ Dies signalisiert, dass Bild-Input über das Text-Pricing abgerechnet wird.
 
 ---
 
-## 6. Beispiele
+## 6. Examples
 
 ### 6.1 GPT-4o (Text + Vision)
 
@@ -637,12 +637,12 @@ Dies signalisiert, dass Bild-Input über das Text-Pricing abgerechnet wird.
 }
 ```
 
-**Kostenbeispiel Vision-Request:**
+**Cost Example Vision Request:**
 ```
-- 1000 Input-Tokens Text: 1K × $2.50/MTok = $0.0025
-- 1920x1080 Bild: ~12 Tiles (Low detail) = 2040 Tokens = $0.0051
-- 200 Output-Tokens: 0.2K × $10.00/MTok = $0.002
-- Gesamt: ~$0.0096
+- 1000 input tokens text: 1K x $2.50/MTok = $0.0025
+- 1920x1080 image: ~12 tiles (low detail) = 2040 tokens = $0.0051
+- 200 output tokens: 0.2K x $10.00/MTok = $0.002
+- Total: ~$0.0096
 ```
 
 ### 6.2 DALL-E 3 (Image Generation)
@@ -746,24 +746,24 @@ Dies signalisiert, dass Bild-Input über das Text-Pricing abgerechnet wird.
 
 ---
 
-## 7. Berechnungslogik
+## 7. Calculation Logic
 
-### 7.1 Berechnungsreihenfolge (Calculation Pipeline)
+### 7.1 Calculation Order (Calculation Pipeline)
 
-Die Kostenberechnung folgt einer strikten Reihenfolge:
+Cost calculation follows a strict order:
 
-1. **Tiers** — Bestimme den Volumen-Tier basierend auf monatlicher Nutzung
-2. **Bundles** — Wende Bundle-Pricing (wenn vorhanden) an für kombinierte Modalitäten
-3. **Modifiers** — Wende Rabatte/Aufschläge auf die Ergebnis-Kosten an
+1. **Tiers** — Determine the volume tier based on monthly usage
+2. **Bundles** — Apply bundle pricing (if present) for combined modalities
+3. **Modifiers** — Apply discounts/surcharges to the resulting costs
 
-**Beispiel: Text + Bild, mit Batch-Modifier**
+**Example: Text + Image, with Batch Modifier**
 ```
-Step 1: Text-Kosten = 1K tokens × $2.50/MTok = $2.50
-Step 2: Bild-Kosten = 2 MP × $0.50/MP = $1.00
-Step 3: Bundle-Check — existiert "text+image_input" Bundle? 
-        → Ja: Bundle-Preis = $2.50 (für beide zusammen)
-Step 4: Modifiers — Batch-Rabatt = 20%
-        → Finale Kosten: $2.50 × 0.80 = $2.00
+Step 1: Text cost = 1K tokens x $2.50/MTok = $2.50
+Step 2: Image cost = 2 MP x $0.50/MP = $1.00
+Step 3: Bundle check — does a "text+image_input" bundle exist?
+        -> Yes: Bundle price = $2.50 (for both combined)
+Step 4: Modifiers — Batch discount = 20%
+        -> Final cost: $2.50 x 0.80 = $2.00
 ```
 
 ### 7.2 Pseudocode
@@ -772,13 +772,13 @@ Step 4: Modifiers — Batch-Rabatt = 20%
 def calculate_cost(pricing, usage):
     total_cost = 0
     
-    # Step 1: Bestimme Tier basierend auf monatlichem Volumen
+    # Step 1: Determine tier based on monthly volume
     applied_tier = determine_tier(pricing["tiers"], usage)
-    
-    # Step 2: Berechne Modalitäts-Kosten
+
+    # Step 2: Calculate modality costs
     modal_costs = {}
-    
-    # Text-Kosten
+
+    # Text costs
     if "text" in usage:
         text = usage["text"]
         text_pricing = applied_tier.get("modalities", {}).get("text", pricing["modalities"]["text"])
@@ -787,23 +787,23 @@ def calculate_cost(pricing, usage):
         output_cost = text["output_mtok"] * text_pricing["output_per_mtok"]
         modal_costs["text"] = input_cost + output_cost
     
-    # Image Input-Kosten
+    # Image input costs
     if "image_input" in usage:
         image = usage["image_input"]
         image_pricing = applied_tier.get("modalities", {}).get("image_input", pricing["modalities"]["image_input"])
         
         if "token_equivalent" in image_pricing:
-            # Token-basierte Abrechnung (z.B. GPT-4o Vision)
+            # Token-based billing (e.g. GPT-4o Vision)
             tokens = image["tiles"] * image_pricing["token_equivalent"]["tokens_per_tile"]
             cost = tokens / 1000000 * pricing["modalities"]["text"]["input_per_mtok"]
         else:
-            # Megapixel-basierte Abrechnung
+            # Megapixel-based billing
             megapixels = max(image["megapixels"], image_pricing.get("minimum_megapixels", 0))
             cost = megapixels * image_pricing["per_megapixel"]
         
         modal_costs["image_input"] = cost
     
-    # Image Output-Kosten
+    # Image output costs
     if "image_output" in usage:
         image = usage["image_output"]
         image_pricing = applied_tier.get("modalities", {}).get("image_output", pricing["modalities"]["image_output"])
@@ -815,7 +815,7 @@ def calculate_cost(pricing, usage):
         
         modal_costs["image_output"] = cost
     
-    # Audio Input-Kosten
+    # Audio input costs
     if "audio_input" in usage:
         audio = usage["audio_input"]
         audio_pricing = applied_tier.get("modalities", {}).get("audio_input", pricing["modalities"]["audio_input"])
@@ -823,7 +823,7 @@ def calculate_cost(pricing, usage):
         minutes = max(audio["minutes"], audio_pricing.get("minimum_minutes", 0))
         modal_costs["audio_input"] = minutes * audio_pricing["per_minute"]
     
-    # Audio Output-Kosten
+    # Audio output costs
     if "audio_output" in usage:
         audio = usage["audio_output"]
         audio_pricing = applied_tier.get("modalities", {}).get("audio_output", pricing["modalities"]["audio_output"])
@@ -833,7 +833,7 @@ def calculate_cost(pricing, usage):
         elif "minutes" in audio:
             modal_costs["audio_output"] = audio["minutes"] * audio_pricing.get("per_minute", 0)
     
-    # Video Input-Kosten
+    # Video input costs
     if "video_input" in usage:
         video = usage["video_input"]
         video_pricing = applied_tier.get("modalities", {}).get("video_input", pricing["modalities"]["video_input"])
@@ -843,43 +843,43 @@ def calculate_cost(pricing, usage):
         elif "per_frame" in video_pricing:
             modal_costs["video_input"] = video["frames"] * video_pricing["per_frame"]
     
-    # Step 3: Bundle-Pricing — überschreibt individuelle Modalitäts-Preise
+    # Step 3: Bundle pricing — overrides individual modality prices
     if "bundles" in pricing:
         for bundle in pricing["bundles"]:
-            # Prüfe ob alle Modalitäten im Bundle in der Nutzung vorhanden sind
+            # Check if all modalities in the bundle are present in usage
             bundle_modalities = set(bundle["includes"])
             usage_modalities = set(usage.keys())
             
             if bundle_modalities.issubset(usage_modalities):
-                # Bundle trifft zu — ersetze individuelle Kosten mit Bundle-Preis
+                # Bundle applies — replace individual costs with bundle price
                 bundle_cost = calculate_bundle_cost(bundle["pricing"], usage)
                 
-                # Entferne ursprüngliche Kosten der im Bundle enthaltenen Modalitäten
+                # Remove original costs for modalities included in the bundle
                 for modality in bundle["includes"]:
                     if modality in modal_costs:
                         del modal_costs[modality]
                 
-                # Addiere Bundle-Kosten
+                # Add bundle costs
                 total_cost += bundle_cost
-                break  # Nur der erste zutreffende Bundle wird angewendet
-    
-    # Addiere verbleibende Modalitäts-Kosten (nicht im Bundle enthalten)
+                break  # Only the first matching bundle is applied
+
+    # Add remaining modality costs (not included in bundle)
     total_cost += sum(modal_costs.values())
     
-    # Step 4: Modifiers (Rabatte/Aufschläge)
+    # Step 4: Modifiers (discounts/surcharges)
     if "modifiers" in pricing:
         for modifier in pricing["modifiers"]:
             if modifier["type"] == "batch" and usage.get("batch_enabled"):
                 total_cost *= (1 - modifier["discount_pct"] / 100)
             elif modifier["type"] == "cache_read" and usage.get("cached_tokens", 0) > 0:
-                # Cache-Read: günstigere Token-Kosten
+                # Cache-Read: cheaper token costs
                 total_cost = apply_cache_modifier(total_cost, modifier)
     
     return total_cost
 
 
 def calculate_bundle_cost(bundle_pricing, usage):
-    """Berechne Kosten für ein Bundle basierend auf dem Bundle-Pricing."""
+    """Calculate costs for a bundle based on the bundle pricing."""
     cost = 0
     
     if "text_input_per_mtok" in bundle_pricing and "text" in usage:
@@ -893,14 +893,14 @@ def calculate_bundle_cost(bundle_pricing, usage):
     return cost
 ```
 
-### 7.3 Zahlenbeispiel: GPT-4o Vision + Batch
+### 7.3 Numerical Example: GPT-4o Vision + Batch
 
-**Szenario:**
-- Modell: GPT-4o
-- Request: 500 Tokens Text Input + 1920×1080 Bild (2.07 MP)
-- Modifier: Batch-Processing (20% Rabatt)
+**Scenario:**
+- Model: GPT-4o
+- Request: 500 tokens text input + 1920x1080 image (2.07 MP)
+- Modifier: Batch processing (20% discount)
 
-**Preise:**
+**Prices:**
 ```json
 {
   "modalities": {
@@ -924,47 +924,47 @@ def calculate_bundle_cost(bundle_pricing, usage):
 }
 ```
 
-**Berechnung:**
+**Calculation:**
 
 ```
-Step 1: Tier-Bestimmung
-  → Kein Tier definiert, verwende Standard-Preise
+Step 1: Tier determination
+  -> No tier defined, use standard prices
 
-Step 2: Modalitäts-Kosten
-  Text Input: 500 tokens / 1,000,000 = 0.0005 MTok
-             0.0005 × $2.50 = $0.00125
-  
-  Bild Input: 2.07 MP × $0.50/MP = $1.035
-              → ODER Token-äquivalent: 
-                ~2 Tiles × 170 = 340 Tokens
-                340 / 1,000,000 × $2.50 = $0.00085
-                (Verwende Tile-Methode gemäß Spec)
-  
-  Zwischen-Kosten: $0.00125 + $1.035 ≈ $1.036
+Step 2: Modality costs
+  Text input: 500 tokens / 1,000,000 = 0.0005 MTok
+              0.0005 x $2.50 = $0.00125
 
-Step 3: Bundle-Pricing
-  → Kein Bundle definiert, überschreibe nicht
+  Image input: 2.07 MP x $0.50/MP = $1.035
+               -> OR token equivalent:
+                 ~2 tiles x 170 = 340 tokens
+                 340 / 1,000,000 x $2.50 = $0.00085
+                 (Use tile method per spec)
 
-Step 4: Modifiers (Batch = 20% Rabatt)
-  Final Cost: $1.036 × (1 - 0.20) = $1.036 × 0.80 = $0.829
+  Intermediate cost: $0.00125 + $1.035 = $1.036
+
+Step 3: Bundle pricing
+  -> No bundle defined, do not override
+
+Step 4: Modifiers (Batch = 20% discount)
+  Final cost: $1.036 x (1 - 0.20) = $1.036 x 0.80 = $0.829
 ```
 
-**Result:** $0.83 (gerundet)
+**Result:** $0.83 (rounded)
 
 ---
 
-## 8. Migration von v0.1.1
+## 8. Migration from v0.1.1
 
 ### 8.1 Breaking Changes
 
 | v0.1.1 | v0.2.0 | Migration |
 |--------|--------|-----------|
-| Nur `pricing.base` | `pricing.base` + `pricing.modalities` | Beides unterstützen |
-| Keine Bild/Audio/Video | Multimodal | Neue Felder optional hinzufügen |
+| Only `pricing.base` | `pricing.base` + `pricing.modalities` | Support both |
+| No image/audio/video | Multimodal | Add new fields optionally |
 
 ### 8.2 Backwards Compatibility
 
-**Für Provider (nur Text):**
+**For Providers (text only):**
 ```json
 {
   "pricing": {
@@ -975,9 +975,9 @@ Step 4: Modifiers (Batch = 20% Rabatt)
   }
 }
 ```
-Dies ist weiterhin gültig.
+This remains valid.
 
-**Für Provider (Multimodal):**
+**For Providers (multimodal):**
 ```json
 {
   "pricing": {
@@ -1000,17 +1000,17 @@ Dies ist weiterhin gültig.
 
 ---
 
-## Appendix: Zusammenfassung
+## Appendix: Summary
 
 | Modality | Input Unit | Output Unit | Backwards Compatible | Status |
 |----------|------------|-------------|---------------------|--------|
-| Text | $/MTok | $/MTok | ✅ (base bleibt) | ✅ Stable |
-| Image Input | $/Megapixel | — | ✅ Neu | ✅ Stable |
-| Image Output | — | $/Image | ✅ Neu | ✅ Stable |
-| Audio Input | $/Minute | — | ✅ Neu | ✅ Stable |
-| Audio Output | — | $/Character | ✅ Neu | ✅ Stable |
-| Video Input | $/Frame oder $/Second | — | ✅ Neu | ✅ Stable |
-| Video Output | — | $/Frame oder $/Second | — | 🔄 Deferred to v0.3 |
+| Text | $/MTok | $/MTok | Yes (base remains) | Stable |
+| Image Input | $/Megapixel | — | Yes (new) | Stable |
+| Image Output | — | $/Image | Yes (new) | Stable |
+| Audio Input | $/Minute | — | Yes (new) | Stable |
+| Audio Output | — | $/Character | Yes (new) | Stable |
+| Video Input | $/Frame or $/Second | — | Yes (new) | Stable |
+| Video Output | — | $/Frame or $/Second | — | Deferred to v0.3 |
 
 ---
 
@@ -1018,36 +1018,36 @@ Dies ist weiterhin gültig.
 
 ### 2026-03-12 — Consistency fixes
 
-**Fix 5: `base` vs. `modalities.text` Ambiguität — Konsistenz-Regel hinzugefügt**
-- Updated Section 3.2 (Text Default) mit neuer Konsistenz-Regel
-- `base` und `modalities.text` MÜSSEN identische Werte haben wenn beide existieren
-- Added Validierungs-Hinweis: Validatoren sollen bei Abweichungen warnen
-- Verhindert verschiedene Preisansichten für v0.1.1 vs. v0.2.0 Clients
-- Added korrigiertes Beispiel
+**Fix 5: `base` vs. `modalities.text` ambiguity — consistency rule added**
+- Updated Section 3.2 (Text Default) with new consistency rule
+- `base` and `modalities.text` MUST have identical values when both exist
+- Added validation note: validators should warn on discrepancies
+- Prevents different price views for v0.1.1 vs. v0.2.0 clients
+- Added corrected example
 
-**Fix 8: `video_output` fehlt im JSON Schema — Verschiebung zu v0.3 dokumentiert**
-- Added Fußnote in Section 2.1 Übersichtstabelle: "Video Output¹ Deferred to v0.3"
-- Added Begründung: "Video-Output-Pricing-APIs sind noch zu instabil für Standardisierung"
-- Added Kommentar im Section 5 JSON Schema nach `videoInputPricing` 
-- Updated Appendix-Tabelle: Video Output Status als "🔄 Deferred to v0.3"
-- Macht klar dass Video Output bewusst nicht definiert ist
+**Fix 8: `video_output` missing from JSON Schema — deferral to v0.3 documented**
+- Added footnote in Section 2.1 overview table: "Video Output¹ Deferred to v0.3"
+- Added rationale: "Video output pricing APIs are still too unstable for standardization"
+- Added comment in Section 5 JSON Schema after `videoInputPricing`
+- Updated appendix table: Video Output status as "Deferred to v0.3"
+- Makes clear that Video Output is intentionally not defined
 
-**Fix 10: Bundle Pricing ohne Berechnungspfad**
-- Expanded Section 7.1 with new "Berechnungsreihenfolge (Calculation Pipeline)" subsection
-- Documented strict ordering: Tiers → Bundles → Modifiers
-- Added detailed pseudocode with Bundle-check logic and tier application
+**Fix 10: Bundle Pricing without calculation path**
+- Expanded Section 7.1 with new "Calculation Order (Calculation Pipeline)" subsection
+- Documented strict ordering: Tiers -> Bundles -> Modifiers
+- Added detailed pseudocode with bundle-check logic and tier application
 - Added new `calculate_bundle_cost()` helper function in pseudocode
-- Added Section 7.3: Zahlenbeispiel (GPT-4o Vision + Batch-Modifier with concrete cost calculation)
+- Added Section 7.3: Numerical example (GPT-4o Vision + Batch modifier with concrete cost calculation)
 - Bundle pricing now explicitly shows how it overrides individual modality prices
 
-**Fix 13: Token-Äquivalente — wer rechnet?**
-- Added "Verantwortlichkeit für Kostenberechnung" section to 4.2
+**Fix 13: Token equivalents — who calculates?**
+- Added "Responsibility for Cost Calculation" section to 4.2
 - Clarified: **Provider** is responsible for final cost calculation (has full visibility)
 - Clarified: **Agent** can estimate costs for budget checks (estimates are informative only)
 - Added note: Tile logic is provider-specific; token_equivalent fields are informative
 - Best practice: Providers should document typical token counts per image size in `notes` field
-- Example added: GPT-4o token counts by resolution (512×512, 1024×1024, 2048×2048)
+- Example added: GPT-4o token counts by resolution (512x512, 1024x1024, 2048x2048)
 
-**Consistency fixes:** Added base/modalities.text-Konsistenz-Regel, Video Output Deferred-Status, Bundle-Berechnungslogik, Token-Äquivalente-Verantwortlichkeit
+**Consistency fixes:** Added base/modalities.text consistency rule, Video Output deferred status, bundle calculation logic, token equivalents responsibility
 
-*Ende der Multimodal Pricing Spezifikation v0.2.0*
+*End of Multimodal Pricing Specification v0.2.0*

@@ -134,5 +134,6 @@
       "description": "Timestamp of last discovery update (ISO 8601 UTC)"
     }
   },
-  "required": ["adp_supported", "adp_versions"]
+  "required": ["adp_supported", "adp_versions"],
+  "additionalProperties": false
 }

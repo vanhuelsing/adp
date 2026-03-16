@@ -50,5 +50,6 @@
       "description": "URL to privacy policy"
     }
   },
-  "required": ["compliance_verified_by"]
+  "required": ["compliance_verified_by"],
+  "additionalProperties": false
 }
