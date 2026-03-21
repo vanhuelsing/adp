@@ -4,7 +4,7 @@
 **Specification:** Auth & Security Layer for ADP  
 **Based on:** ADP v0.1.1  
 **Status:** Draft  
-**Author:** Protocol Architect
+**Author:** vanhuelsing
 
 ---
 

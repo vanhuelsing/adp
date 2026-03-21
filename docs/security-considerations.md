@@ -129,9 +129,9 @@ Agents MUST respect `retry_after_ms` when present. When no value is provided, ag
 When using HTTP transport, providers SHOULD include standard rate-limit headers:
 
 ```
-X-RateLimit-Limit: 100
-X-RateLimit-Remaining: 99
-X-RateLimit-Reset: 1647000000
+X-ADP-RateLimit-Limit: 100
+X-ADP-RateLimit-Remaining: 99
+X-ADP-RateLimit-Reset: 1647000000
 ```
 
 ---

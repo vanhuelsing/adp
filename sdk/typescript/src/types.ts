@@ -1,6 +1,6 @@
 export interface ADPHeader {
   version: string;
-  type: 'DealRequest' | 'DealOffer' | 'DealIntent' | 'DealError';
+  type: 'DealRequest' | 'DealOffer' | 'DealIntent' | 'DealError' | 'DealIntentAck';
   id: string;
   timestamp: string;
   correlation_id: string | null;
@@ -197,6 +197,17 @@ export interface DealIntent {
   };
 }
 
+export interface Acknowledgment {
+  status: 'received' | 'processing' | 'accepted' | 'rejected';
+  reference_id?: string;
+  notes?: string;
+}
+
+export interface DealIntentAck {
+  adp: ADPHeader;
+  acknowledgment: Acknowledgment;
+}
+
 export interface FieldError {
   field: string;
   code: string;
@@ -268,4 +279,4 @@ export type Certification =
   | 'hipaa' 
   | 'fedramp';
 
-export type ADPMessage = DealRequest | DealOffer | DealIntent | DealError;
+export type ADPMessage = DealRequest | DealOffer | DealIntent | DealError | DealIntentAck;

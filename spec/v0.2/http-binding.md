@@ -4,7 +4,7 @@
 **Specification:** Transport Layer for ADP over HTTP/HTTPS  
 **Based on:** ADP v0.1.1  
 **Status:** Draft  
-**Author:** Protocol Architect
+**Author:** vanhuelsing
 
 ---
 

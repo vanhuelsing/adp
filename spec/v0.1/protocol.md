@@ -1,7 +1,7 @@
 # ADP Specification v0.1.1
 
-**Version:** 0.1.1-draft  
-**Status:** Draft  
+**Version:** 0.1.1
+**Status:** Released
 **Author/Publisher:** vanhuelsing (https://github.com/vanhuelsing)  
 **Contact:** adp@apideals.ai  
 **License:** CC-BY 4.0 (spec) / Apache 2.0 (code)  

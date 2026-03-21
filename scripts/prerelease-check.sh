@@ -13,7 +13,6 @@ required_files=(
   "LICENSE-CODE"
   "CONTRIBUTING.md"
   "CODE_OF_CONDUCT.md"
-  "index.html"
   "spec/v0.1/protocol.md"
   "spec/v0.1/schemas/adp-header.schema.json"
   "spec/v0.1/schemas/deal-request.schema.json"

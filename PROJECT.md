@@ -16,14 +16,16 @@ The **apideals Deal Protocol (ADP)** — An open protocol for AI agents to disco
 │   ├── protocol.md      # Full spec
 │   ├── schemas/         # JSON Schemas (Draft 2020-12)
 │   └── examples/        # Message examples
-├── sdk/                 # SDKs
-│   └── typescript/      # TypeScript SDK (@adp/sdk)
+├── sdk/
+│   ├── python/           # Python SDK (Apache-2.0)
+│   └── typescript/                 # SDKs
+│   ├── typescript/      # TypeScript SDK (@adp/sdk)
+│   └── python/          # Python SDK (adp-sdk)
 ├── docs/                # Documentation
 │   ├── implementation-guide.md
 │   ├── security-considerations.md
 │   └── faq.md
-├── assets/              # Logo and branding
-└── index.html           # GitHub Pages landing page
+└── assets/              # Logo and branding
 ```
 
 ## Development
@@ -34,7 +36,9 @@ git clone https://github.com/vanhuelsing/adp.git
 cd adp
 
 # Validate examples
-cd sdk/typescript
+cd sdk/
+│   ├── python/           # Python SDK (Apache-2.0)
+│   └── typescript/typescript
 npm install
 npm run validate-examples
 

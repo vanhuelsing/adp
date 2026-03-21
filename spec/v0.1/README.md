@@ -7,7 +7,7 @@
 
 - [`protocol.md`](protocol.md) — Full specification with all fields and design decisions
 - [`examples/`](examples/) — JSON message examples
-- [`schemas/`](schemas/) — JSON Schemas *(coming in v0.1.x)*
+- [`schemas/`](schemas/) — JSON Schemas (Draft 2020-12)
 
 ## Quick Links
 

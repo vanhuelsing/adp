@@ -86,7 +86,11 @@ const offer: DealOffer = {
 npm install @adp/sdk
 ```
 
-> Python and Go SDKs are not yet available. Contributions welcome.
+```bash
+pip install adp-sdk
+```
+
+> Go SDK is not yet available. Contributions welcome.
 
 ## Message Types
 

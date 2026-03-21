@@ -150,7 +150,15 @@ For each offer:
   "intent": {
     "binding": false,
     "requires_human_confirmation": true,
+    "requester": {
+      "agent_id": "agent:yourorg:yourbot",
+      "is_automated": true
+    },
     "accepted_offer_id": "offer-uuid-here",
+    "accepted_pricing_snapshot": {
+      "input_per_mtok": 2.00,
+      "output_per_mtok": 8.00
+    },
     "activation": {
       "type": "redirect",
       "redirect_url": "https://provider.com/signup"
