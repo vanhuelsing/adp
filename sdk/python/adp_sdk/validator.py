@@ -91,3 +91,36 @@ __all__ = [
     "validate_deal_offer_result",
     "validate_deal_intent_result",
 ]
+
+
+def validate_deal_error(data: Any) -> bool:
+    """Validate a DealError message."""
+    return validate_deal_error_result(data).valid
+
+
+def validate_deal_error_result(data: Any) -> ValidationResult:
+    """Validate a DealError message with detailed results."""
+    base = _validate_base(data)
+    if not base.valid:
+        return base
+    if not isinstance(data.get("error"), dict):
+        return ValidationResult(valid=False, errors=['Missing or invalid "error" field'])
+    error = data["error"]
+    if "code" not in error or "message" not in error:
+        return ValidationResult(valid=False, errors=['DealError.error must have "code" and "message"'])
+    return ValidationResult(valid=True, errors=[])
+
+
+def validate_deal_intent_ack(data: Any) -> bool:
+    """Validate a DealIntentAck message."""
+    return validate_deal_intent_ack_result(data).valid
+
+
+def validate_deal_intent_ack_result(data: Any) -> ValidationResult:
+    """Validate a DealIntentAck message with detailed results."""
+    base = _validate_base(data)
+    if not base.valid:
+        return base
+    if not isinstance(data.get("ack"), dict):
+        return ValidationResult(valid=False, errors=['Missing or invalid "ack" field'])
+    return ValidationResult(valid=True, errors=[])

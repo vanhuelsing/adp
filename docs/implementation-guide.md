@@ -147,6 +147,15 @@ For each offer:
     "timestamp": "2026-03-10T12:00:10Z",
     "correlation_id": "offer-uuid-here"
   },
+  "requester": {
+    "agent_id": "my-agent-v1",
+    "agent_version": "1.0.0"
+  },
+  "accepted_pricing_snapshot": {
+    "input_per_mtok": 3.00,
+    "output_per_mtok": 15.00,
+    "currency": "USD"
+  },
   "intent": {
     "binding": false,
     "requires_human_confirmation": true,

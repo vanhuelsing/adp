@@ -20,3 +20,12 @@ build:
 clean:
 	@rm -rf sdk/typescript/dist
 	@rm -rf sdk/typescript/node_modules
+
+# Python SDK
+test-python:
+	cd sdk/python && pip install -e ".[dev]" && pytest
+
+lint-python:
+	cd sdk/python && pip install -e ".[dev]" && ruff check .
+
+test-all: test test-python

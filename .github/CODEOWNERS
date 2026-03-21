@@ -1,0 +1,12 @@
+# Default owner
+* @vanhuelsing
+
+# Spec
+/spec/ @vanhuelsing
+
+# SDKs
+/sdk/typescript/ @vanhuelsing
+/sdk/python/ @vanhuelsing
+
+# CI
+/.github/ @vanhuelsing

@@ -98,3 +98,13 @@ export function validateADPMessage(data: unknown): ValidationResult & { type?: s
       };
   }
 }
+
+export function validateDealIntentAck(message: unknown): ValidationResult {
+  const base = validateBase(message);
+  if (!base.valid) return base;
+  const msg = message as Record<string, unknown>;
+  if (!msg.ack || typeof msg.ack !== 'object') {
+    return { valid: false, errors: ['Missing or invalid "ack" field'] };
+  }
+  return { valid: true, errors: [] };
+}

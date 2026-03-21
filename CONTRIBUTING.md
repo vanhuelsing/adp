@@ -33,6 +33,13 @@ For protocol changes:
 
 ## What We Need
 
+### Python SDK (`sdk/python/`)
+- Bug fixes and type improvements
+- Additional validator coverage
+- Test coverage expansion
+- PyPI packaging improvements
+
+
 - **Implementer feedback** — What was confusing or missing?
 - **Provider perspective** — What would make adoption easier?
 - **Agent developer input** — What fields does your agent need?
