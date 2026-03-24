@@ -524,6 +524,26 @@
       border-top: 1px solid var(--border);
     }
 
+    .footer-disclaimer {
+      font-size: 0.72rem;
+      color: var(--muted);
+      opacity: 0.7;
+      margin-top: 16px;
+      text-align: center;
+      line-height: 1.6;
+      max-width: 760px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .footer-disclaimer a {
+      color: var(--muted);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      opacity: 0.8;
+    }
+    .footer-disclaimer a:hover { opacity: 1; }
+
     /* ─── RESPONSIVE ─── */
     @media (max-width: 640px) {
       section { padding: 64px 16px; }
@@ -590,8 +610,8 @@
               <div class="code-stat-label">Providers</div>
             </div>
             <div>
-              <span class="code-stat-num">23%</span>
-              <div class="code-stat-label">Avg savings</div>
+              <span class="code-stat-num">up to 23%*</span>
+              <div class="code-stat-label">savings</div>
             </div>
             <div>
               <span class="code-stat-num">150ms</span>
@@ -623,11 +643,27 @@
         <p class="tagline">Built for developers, by developers.</p>
       </div>
       <ul class="footer-links">
-        <li><a href="/privacy">Privacy</a></li>
+        <li><a href="/privacy.html">Privacy Policy</a></li>
+        <li><a href="/impressum.html">Legal Notice / Impressum</a></li>
       </ul>
     </div>
     <div class="footer-copy">© 2026 APIDeals.ai — The LLM Compute Exchange</div>
+    <div class="footer-disclaimer">
+      Prices are indicative and sourced from public provider pages. Not guaranteed to be accurate or current. Always check the provider's official pricing. Provider names are trademarks of their respective owners.<br>
+      * Based on routing optimization across available providers. Actual savings may vary.<br>
+      <span id="footer-last-updated"></span>
+    </div>
   </footer>
+
+  <script>
+    (function () {
+      var d = new Date();
+      var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+      var str = 'Last updated: ' + months[d.getUTCMonth()] + ' ' + d.getUTCDate() + ', ' + d.getUTCFullYear() + ' UTC';
+      var el = document.getElementById('footer-last-updated');
+      if (el) el.textContent = str;
+    })();
+  </script>
 
 </div>
 
